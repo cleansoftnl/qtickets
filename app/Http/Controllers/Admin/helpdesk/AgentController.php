@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Admin\helpdesk;
 
 // controller
@@ -29,7 +28,8 @@ use Lang;
  *
  * @author      Ladybird <info@ladybirdweb.com>
  */
-class AgentController extends Controller {
+class AgentController extends Controller
+{
 
     /**
      * Create a new controller instance.
@@ -40,7 +40,8 @@ class AgentController extends Controller {
      *
      * @return void
      */
-    public function __construct(PhpMailController $PhpMailController) {
+    public function __construct(PhpMailController $PhpMailController)
+    {
         // creating an instance for the PhpmailController
         $this->PhpMailController = $PhpMailController;
         // checking authentication
@@ -54,7 +55,8 @@ class AgentController extends Controller {
      *
      * @return type view
      */
-    public function index() {
+    public function index()
+    {
         try {
             return view('themes.default1.admin.helpdesk.agent.agents.index');
         } catch (Exception $e) {
@@ -66,14 +68,15 @@ class AgentController extends Controller {
      * creating a new agent.
      *
      * @param Assign_team_agent $team_assign_agent
-     * @param Timezones         $timezone
-     * @param Groups            $group
-     * @param Department        $department
-     * @param Teams             $team_all
+     * @param Timezones $timezone
+     * @param Groups $group
+     * @param Department $department
+     * @param Teams $team_all
      *
      * @return type view
      */
-    public function create(Timezones $timezone, Groups $group, Department $department, Teams $team_all, CountryCode $code) {
+    public function create(Timezones $timezone, Groups $group, Department $department, Teams $team_all, CountryCode $code)
+    {
         try {
             // gte all the teams
             $team = $team_all->where('status', '=', 1)->get();
@@ -89,7 +92,6 @@ class AgentController extends Controller {
             $phonecode = $code->where('iso', '=', $location->iso_code)->first();
             // returns to the page with all the variables and their datas
             $send_otp = DB::table('common_settings')->select('status')->where('option_name', '=', 'send_otp')->first();
-
             return view('themes.default1.admin.helpdesk.agent.agents.create', compact('assign', 'teams', 'agents', 'timezones', 'groups', 'departments', 'team', 'send_otp'))->with('phonecode', $phonecode->phonecode);
         } catch (Exception $e) {
             // returns if try fails with exception meaagse
@@ -100,16 +102,17 @@ class AgentController extends Controller {
     /**
      * store a new agent.
      *
-     * @param User              $user
-     * @param AgentRequest      $request
+     * @param User $user
+     * @param AgentRequest $request
      * @param Assign_team_agent $team_assign_agent
      *
      * @return type Response
      */
-    public function store(User $user, AgentRequest $request) {
+    public function store(User $user, AgentRequest $request)
+    {
         $user_name = strtolower($request->get('user_name'));
         $permission = $request->input('permission');
-        $request->merge([ 'user_name' => $user_name]);
+        $request->merge(['user_name' => $user_name]);
         if ($request->get('country_code') == '' && ($request->get('phone_number') != '' || $request->get('mobile') != '')) {
             return redirect()->back()->with(['fails2' => Lang::get('lang.country-code-required-error'), 'country_code' => 1])->withInput();
         } else {
@@ -161,7 +164,6 @@ class AgentController extends Controller {
             if ($request->input('active') == '0' || $request->input('active') == 0) {
                 \Event::fire(new \App\Events\LoginEvent($request));
             }
-
             return redirect('agents')->with('success', Lang::get('lang.agent_creation_success'));
         } else {
             // returns if fails
@@ -182,7 +184,8 @@ class AgentController extends Controller {
      *
      * @return type Response
      */
-    public function edit($id, User $user, Assign_team_agent $team_assign_agent, Timezones $timezone, Groups $group, Department $department, Teams $team, CountryCode $code) {
+    public function edit($id, User $user, Assign_team_agent $team_assign_agent, Timezones $timezone, Groups $group, Department $department, Teams $team, CountryCode $code)
+    {
         try {
             $location = GeoIP::getLocation();
             $phonecode = $code->where('iso', '=', $location->iso_code)->first();
@@ -195,7 +198,6 @@ class AgentController extends Controller {
             $table = $team_assign_agent->where('agent_id', $id)->first();
             $teams = $team->pluck('id', 'name')->toArray();
             $assign = $team_assign_agent->where('agent_id', $id)->pluck('team_id')->toArray();
-
             return view('themes.default1.admin.helpdesk.agent.agents.edit', compact('teams', 'assign', 'table', 'teams1', 'selectedTeams', 'user', 'timezones', 'groups', 'departments', 'team', 'exp', 'counted'))->with('phonecode', $phonecode->phonecode);
         } catch (Exception $e) {
             return redirect('agents')->with('fail', Lang::get('lang.failed_to_edit_agent'));
@@ -212,10 +214,11 @@ class AgentController extends Controller {
      *
      * @return type Response
      */
-    public function update($id, User $user, AgentUpdate $request, Assign_team_agent $team_assign_agent) {
+    public function update($id, User $user, AgentUpdate $request, Assign_team_agent $team_assign_agent)
+    {
         $permission = $request->input('permission');
         $user_name = strtolower($request->get('user_name'));
-        $request->merge([ 'user_name' => $user_name]);
+        $request->merge(['user_name' => $user_name]);
         if ($request->get('country_code') == '' && ($request->get('phone_number') != '' || $request->get('mobile') != '')) {
             return redirect()->back()->with(['fails2' => Lang::get('lang.country-code-required-error'), 'country_code' => 1])->withInput();
         } else {
@@ -249,7 +252,7 @@ class AgentController extends Controller {
             $user->primary_dpt = $request->primary_department;
             $user->agent_tzone = $request->agent_time_zone;
             $user->save();
-            $user->permision()->updateOrCreate(['user_id'=>$user->id], ['permision'=>json_encode($permission)]);
+            $user->permision()->updateOrCreate(['user_id' => $user->id], ['permision' => json_encode($permission)]);
             return redirect('agents')->with('success', Lang::get('lang.agent_updated_sucessfully'));
         } catch (Exception $e) {
             return redirect('agents')->with('fails', Lang::get('lang.unable_to_update_agent') . '<li>' . $e->errorInfo[2] . '</li>');
@@ -259,15 +262,16 @@ class AgentController extends Controller {
     /**
      * Remove the specified agent from storage.
      *
-     * @param type              $id
-     * @param User              $user
+     * @param type $id
+     * @param User $user
      * @param Assign_team_agent $team_assign_agent
      *
      * @throws Exception
      *
      * @return type Response
      */
-    public function destroy($id, User $user, Assign_team_agent $team_assign_agent) {
+    public function destroy($id, User $user, Assign_team_agent $team_assign_agent)
+    {
         /* Becouse of foreign key we delete team_assign_agent first */
         error_reporting(E_ALL & ~E_NOTICE);
         $team_assign_agent = $team_assign_agent->where('agent_id', $id);
@@ -291,7 +295,8 @@ class AgentController extends Controller {
      *
      * @return string
      */
-    public function generateRandomString($length = 10) {
+    public function generateRandomString($length = 10)
+    {
         // list of supported characters
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         // character length checked

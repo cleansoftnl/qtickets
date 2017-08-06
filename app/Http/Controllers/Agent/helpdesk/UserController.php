@@ -1,10 +1,10 @@
 <?php
-
 namespace App\Http\Controllers\Agent\helpdesk;
 
 // controllers
 use App\Http\Controllers\Common\PhpMailController;
 use App\Http\Controllers\Controller;
+
 // requests
 /*  Include Sys_user Model  */
 use App\Http\Requests\helpdesk\ChangepasswordRequest;
@@ -60,8 +60,8 @@ class UserController extends Controller
      *
      * @return void
      */
-     protected $ticket_policy;
-    
+    protected $ticket_policy;
+
     public function __construct(PhpMailController $PhpMailController)
     {
         $this->PhpMailController = $PhpMailController;
@@ -83,17 +83,15 @@ class UserController extends Controller
     {
         try {
             /* get all values in Sys_user */
-
             $table = \ Datatable::table()
-            ->addColumn(Lang::get('lang.name'),
-                Lang::get('lang.email'),
-                Lang::get('lang.phone'),
-                Lang::get('lang.status'),
-                Lang::get('lang.last_login'),
-                Lang::get('lang.role'),
-                Lang::get('lang.action'))  // these are the column headings to be shown
+                ->addColumn(Lang::get('lang.name'),
+                    Lang::get('lang.email'),
+                    Lang::get('lang.phone'),
+                    Lang::get('lang.status'),
+                    Lang::get('lang.last_login'),
+                    Lang::get('lang.role'),
+                    Lang::get('lang.action'))// these are the column headings to be shown
                 ->noScript();
-
             return view('themes.default1.agent.helpdesk.user.index', compact('table'));
         } catch (Exception $e) {
             return redirect()->back()->with('fails', $e->getMessage());
@@ -120,7 +118,6 @@ class UserController extends Controller
     {
         $type = $request->input('profiletype');
         $search = $request->input('searchTerm');
-
         if ($type === 'agents') {
             $users = User::where('role', '=', 'agent')->where('is_delete', '=', 0);
         } elseif ($type === 'users') {
@@ -136,115 +133,104 @@ class UserController extends Controller
         } else {
             $users = User::where('role', '!=', 'admin')->where('is_delete', '=', 0);
         }
-
         $users = $users->select('user_name', 'email', 'mobile', 'active', 'updated_at', 'role', 'id', 'last_name', 'country_code', 'phone_number');
-
         if ($search !== '') {
             $users = $users->where(function ($query) use ($search) {
-                $query->where('user_name', 'LIKE', '%'.$search.'%');
-                $query->orWhere('email', 'LIKE', '%'.$search.'%');
-                $query->orWhere('first_name', 'LIKE', '%'.$search.'%');
-                $query->orWhere('last_name', 'LIKE', '%'.$search.'%');
-                $query->orWhere('mobile', 'LIKE', '%'.$search.'%');
-                $query->orWhere('updated_at', 'LIKE', '%'.$search.'%');
-                $query->orWhere('country_code', 'LIKE', '%'.$search.'%');
+                $query->where('user_name', 'LIKE', '%' . $search . '%');
+                $query->orWhere('email', 'LIKE', '%' . $search . '%');
+                $query->orWhere('first_name', 'LIKE', '%' . $search . '%');
+                $query->orWhere('last_name', 'LIKE', '%' . $search . '%');
+                $query->orWhere('mobile', 'LIKE', '%' . $search . '%');
+                $query->orWhere('updated_at', 'LIKE', '%' . $search . '%');
+                $query->orWhere('country_code', 'LIKE', '%' . $search . '%');
             });
         }
         // displaying list of users with chumper datatables
         // return \Datatable::collection(User::where('role', "!=", "admin")->get())
-       return \Datatables::of($users)
-                        /* column username */
-                        ->removeColumn('id', 'last_name', 'country_code', 'phone_number')
-                        ->addColumn('user_name', function ($model) {
-                            if ($model->first_name) {
-                                $string = strip_tags($model->first_name.' '.$model->last_name);
-                            } else {
-                                $string = strip_tags($model->user_name);
-                            }
-                            if (strlen($string) > 30) {
-                                // truncate string
-                                $stringCut = mb_substr($string, 0, 30, 'UTF-8').'...';
-                            } else {
-                                $stringCut = $string;
-                            }
-
-                            return "<a href='".route('user.show', $model->id)."' title='".$string."''>".$stringCut.'</a>';
-                        })
-                        /* column email */
-                        ->addColumn('email', function ($model) {
-                            $email = "<a href='".route('user.show', $model->id)."'>".$model->email.'</a>';
-
-                            return $email;
-                        })
-                        /* column phone */
-                        ->addColumn('mobile', function ($model) {
-                            $phone = '';
-                            if ($model->phone_number) {
-                                $phone = $model->ext.' '.$model->phone_number;
-                            }
-                            $mobile = '';
-                            if ($model->mobile) {
-                                $mobile = $model->mobile;
-                            }
-                            $phone = $phone.'&nbsp;&nbsp;&nbsp;'.$mobile;
-
-                            return $phone;
-                        })
-                        /* column account status */
-                        ->addColumn('active', function ($model) {
-                            $status = $model->active;
-                            if ($status == 1) {
-                                $stat = '<button class="btn btn-success btn-xs">Active</button>';
-                            } else {
-                                $stat = '<button class="btn btn-danger btn-xs">Inactive</button>';
-                            }
-
-                            return $stat;
-                        })
-                        /* column last login date */
-                        ->addColumn('updated_at', function ($model) {
-                            $t = $model->updated_at;
-
-                            return faveoDate($t);
-                        })
-                        /* column Role */
-                        ->addColumn('role', function ($model) {
-                            $role = $model->role;
-
-                            return $role;
-                        })
-                        /* column actions */
-                        ->addColumn('Actions', function ($model) {
-                            if ($model->is_delete == 0) {
-                                return '<a href="'.route('user.edit', $model->id).'" class="btn btn-warning btn-xs">'.\Lang::get('lang.edit').'</a>&nbsp; <a href="'.route('user.show', $model->id).'" class="btn btn-primary btn-xs">'.\Lang::get('lang.view').'</a>';
-                            } else {
-                                if (Auth::user()->role == 'admin') {
-                                    // @if(Auth::user()->role == 'admin')
-
-                           return '<a href="'.route('user.show', $model->id).'" class="btn btn-primary btn-xs">'.\Lang::get('lang.view').'</a>';
-                                }
-
-                                if (Auth::user()->role == 'agent') {
-                                    // @if(Auth::user()->role == 'admin')
-                             if ($model->role == 'user') {
-                                 return '<a href="'.route('user.show', $model->id).'" class="btn btn-primary btn-xs">'.\Lang::get('lang.view').'</a>';
-                             }
-                                }
-                            }
-                        })
-                        ->make();
+        return \Datatables::of($users)
+            /* column username */
+            ->removeColumn('id', 'last_name', 'country_code', 'phone_number')
+            ->addColumn('user_name', function ($model) {
+                if ($model->first_name) {
+                    $string = strip_tags($model->first_name . ' ' . $model->last_name);
+                } else {
+                    $string = strip_tags($model->user_name);
+                }
+                if (strlen($string) > 30) {
+                    // truncate string
+                    $stringCut = mb_substr($string, 0, 30, 'UTF-8') . '...';
+                } else {
+                    $stringCut = $string;
+                }
+                return "<a href='" . route('user.show', $model->id) . "' title='" . $string . "''>" . $stringCut . '</a>';
+            })
+            /* column email */
+            ->addColumn('email', function ($model) {
+                $email = "<a href='" . route('user.show', $model->id) . "'>" . $model->email . '</a>';
+                return $email;
+            })
+            /* column phone */
+            ->addColumn('mobile', function ($model) {
+                $phone = '';
+                if ($model->phone_number) {
+                    $phone = $model->ext . ' ' . $model->phone_number;
+                }
+                $mobile = '';
+                if ($model->mobile) {
+                    $mobile = $model->mobile;
+                }
+                $phone = $phone . '&nbsp;&nbsp;&nbsp;' . $mobile;
+                return $phone;
+            })
+            /* column account status */
+            ->addColumn('active', function ($model) {
+                $status = $model->active;
+                if ($status == 1) {
+                    $stat = '<button class="btn btn-success btn-xs">Active</button>';
+                } else {
+                    $stat = '<button class="btn btn-danger btn-xs">Inactive</button>';
+                }
+                return $stat;
+            })
+            /* column last login date */
+            ->addColumn('updated_at', function ($model) {
+                $t = $model->updated_at;
+                return faveoDate($t);
+            })
+            /* column Role */
+            ->addColumn('role', function ($model) {
+                $role = $model->role;
+                return $role;
+            })
+            /* column actions */
+            ->addColumn('Actions', function ($model) {
+                if ($model->is_delete == 0) {
+                    return '<a href="' . route('user.edit', $model->id) . '" class="btn btn-warning btn-xs">' . \Lang::get('lang.edit') . '</a>&nbsp; <a href="' . route('user.show', $model->id) . '" class="btn btn-primary btn-xs">' . \Lang::get('lang.view') . '</a>';
+                } else {
+                    if (Auth::user()->role == 'admin') {
+                        // @if(Auth::user()->role == 'admin')
+                        return '<a href="' . route('user.show', $model->id) . '" class="btn btn-primary btn-xs">' . \Lang::get('lang.view') . '</a>';
+                    }
+                    if (Auth::user()->role == 'agent') {
+                        // @if(Auth::user()->role == 'admin')
+                        if ($model->role == 'user') {
+                            return '<a href="' . route('user.show', $model->id) . '" class="btn btn-primary btn-xs">' . \Lang::get('lang.view') . '</a>';
+                        }
+                    }
+                }
+            })
+            ->make();
     }
 
     public function restoreUser($id)
     {
         // dd($id);
-         // $delete_all = Input::get('delete_all');
+        // $delete_all = Input::get('delete_all');
         $users = User::where('id', '=', $id)->first();
         $users->is_delete = 0;
         $users->active = 1;
         $users->ban = 0;
         $users->save();
-
         return redirect('user')->with('success', Lang::get('lang.user_restore_successfully'));
     }
 
@@ -261,7 +247,6 @@ class UserController extends Controller
             $location = GeoIP::getLocation();
             $phonecode = $code->where('iso', '=', $location->iso_code)->first();
             $org = Organization::pluck('name', 'id')->toArray();
-
             return view('themes.default1.agent.helpdesk.user.create', compact('org', 'settings', 'email_mandatory'))->with('phonecode', $phonecode->phonecode);
         } catch (Exception $e) {
             return redirect()->back()->with('fails', $e->errorInfo[2]);
@@ -334,10 +319,9 @@ class UserController extends Controller
                 if (($request->input('active') == '0' || $request->input('active') == 0) || ($email_mandatory->status == '0') || $email_mandatory->status == 0) {
                     \Event::fire(new \App\Events\LoginEvent($request));
                 }
-
                 return redirect('user')->with('success', Lang::get('lang.User-Created-Successfully'));
             }
-//            $user->save();
+            //            $user->save();
             /* redirect to Index page with Success Message */
             return redirect('user')->with('success', Lang::get('lang.User-Created-Successfully'));
         } catch (Exception $e) {
@@ -364,7 +348,6 @@ class UserController extends Controller
                 $n = rand(0, $alphaLength);
                 $pass[] = $alphabet[$n];
             }
-
             return implode($pass);
         } catch (Exception $e) {
             /* redirect to Index page with Fails Message */
@@ -390,10 +373,8 @@ class UserController extends Controller
             $user->save();
             $name = $user->first_name;
             $email = $user->email;
-
             $this->PhpMailController->sendmail($from = $this->PhpMailController
-                    ->mailfrom('1', '0'), $to = ['name' => $name, 'email' => $email], $message = ['subject' => null, 'scenario' => 'reset_new_password'], $template_variables = ['user' => $name, 'user_password' => $password]);
-
+                ->mailfrom('1', '0'), $to = ['name' => $name, 'email' => $email], $message = ['subject' => null, 'scenario' => 'reset_new_password'], $template_variables = ['user' => $name, 'user_password' => $password]);
             return redirect('user')->with('success', Lang::get('lang.password_change_successfully'));
         } catch (Exception $e) {
             return redirect('user')->with('fails', $e->getMessage());
@@ -401,7 +382,7 @@ class UserController extends Controller
     }
 
     /**
-     * @param type    $id
+     * @param type $id
      * @param Request $request
      *
      * @return type
@@ -414,7 +395,6 @@ class UserController extends Controller
             $user->assign_group = $request->group;
             $user->primary_dpt = $request->primary_department;
             $user->save();
-
             return redirect('user')->with('success', Lang::get('lang.role_change_successfully'));
         } catch (Exception $e) {
             /* redirect to Index page with Fails Message */
@@ -423,7 +403,7 @@ class UserController extends Controller
     }
 
     /**
-     * @param type    $id
+     * @param type $id
      * @param Request $request
      *
      * @return type
@@ -436,7 +416,6 @@ class UserController extends Controller
             $user->assign_group = $request->group;
             $user->primary_dpt = $request->primary_department;
             $user->save();
-
             return redirect('user')->with('success', Lang::get('lang.role_change_successfully'));
         } catch (Exception $e) {
             /* redirect to Index page with Fails Message */
@@ -462,7 +441,6 @@ class UserController extends Controller
             $user->primary_dpt = null;
             $user->remember_token = null;
             $user->save();
-
             return redirect('user')->with('success', Lang::get('lang.role_change_successfully'));
         } catch (Exception $e) {
             /* redirect to Index page with Fails Message */
@@ -480,7 +458,6 @@ class UserController extends Controller
     {
         // try {
         $delete_all = Input::get('delete_all');
-
         $delete_all = Input::get('delete_all');
         $users = User::where('id', '=', $id)->first();
         if ($users->role == 'user') {
@@ -489,11 +466,9 @@ class UserController extends Controller
             $users->active = 0;
             $users->ban = 1;
             $users->save();
-
             return redirect('user')->with('success', Lang::get('lang.user_delete_successfully'));
         }
         // }
-
         if ($users->role == 'agent') {
             if ($delete_all == null) {
                 $UserEmail = Input::get('assign_to');
@@ -516,30 +491,26 @@ class UserController extends Controller
                     // if ($ticket_logic4 = User_org::where('user_id', '=', $id)->get()) {
                     //     $ticket_logic4 = User_org::where('user_id', '=', $id)->update(['user_id' => $assign_to[1]]);
                     // }
-
-                        // $thread2 = Ticket_Thread::where('ticket_id', '=', $ticket->id)->first();
-                        // $thread2->body = 'This Ticket have been Reassigned to' .' '.  $assignee;
-                        // $thread2->save();
-                        // UserNotification::where('notification_id', '=', $ticket->id)->delete();
-                        // $users = User::where('id', '=', $id)->get();
-                        // $organization = User_org::where('user_id', '=', $id)->delete();
-                        // Assign_team_agent::where('agent_id', '=', $id)->update(['agent_id' => $assign_to[1]]);
-           $tickets = Tickets::where('assigned_to', '=', $id)->get();
-
+                    // $thread2 = Ticket_Thread::where('ticket_id', '=', $ticket->id)->first();
+                    // $thread2->body = 'This Ticket have been Reassigned to' .' '.  $assignee;
+                    // $thread2->save();
+                    // UserNotification::where('notification_id', '=', $ticket->id)->delete();
+                    // $users = User::where('id', '=', $id)->get();
+                    // $organization = User_org::where('user_id', '=', $id)->delete();
+                    // Assign_team_agent::where('agent_id', '=', $id)->update(['agent_id' => $assign_to[1]]);
+                    $tickets = Tickets::where('assigned_to', '=', $id)->get();
                     foreach ($tickets as $ticket) {
                         // code...
-
-            $ticket->assigned_to = $assign_to[1];
+                        $ticket->assigned_to = $assign_to[1];
                         $user_detail = User::where('id', '=', $assign_to[1])->first();
-                        $assignee = $user_detail->first_name.' '.$user_detail->last_name;
+                        $assignee = $user_detail->first_name . ' ' . $user_detail->last_name;
                         $ticket_number = $ticket->ticket_number;
                         $ticket->save();
-
                         $thread = new Ticket_Thread();
                         $thread->ticket_id = $ticket->id;
                         $thread->user_id = Auth::user()->id;
                         $thread->is_internal = 1;
-                        $thread->body = 'This Ticket has been assigned to '.$assignee;
+                        $thread->body = 'This Ticket has been assigned to ' . $assignee;
                         $thread->save();
                     }
                     $user = User::find($id);
@@ -547,10 +518,8 @@ class UserController extends Controller
                     $users->active = 0;
                     $users->ban = 1;
                     $users->save();
-
                     return redirect('user')->with('success', Lang::get('lang.agent_delete_successfully_and_ticket_assign_to_another_agent'));
                 }
-
                 // if (User_org::where('user_id', '=', $id)) {
                 //     DB::table('user_assign_organization')->where('user_id', '=', $id)->delete();
                 // }
@@ -559,31 +528,28 @@ class UserController extends Controller
                 $users->active = 0;
                 $users->ban = 1;
                 $users->save();
-
                 return redirect('user')->with('success', Lang::get('lang.agent_delete_successfully'));
             } elseif ($delete_all == 1) {
                 if ($delete_all) {
                     // dd('here');
-              $tickets = Tickets::where('assigned_to', '=', $id)->get();
-              // dd($tickets);
-             foreach ($tickets as $ticket) {
-                 $ticket->assigned_to = null;
-                 $ticket_number = $ticket->ticket_number;
-                 $ticket->save();
-
-                 $thread = new Ticket_Thread();
-                 $thread->ticket_id = $ticket->id;
-                 $thread->user_id = Auth::user()->id;
-                 $thread->is_internal = 1;
-                 $thread->body = 'This Ticket has been unassigned ';
-                 $thread->save();
-             }
+                    $tickets = Tickets::where('assigned_to', '=', $id)->get();
+                    // dd($tickets);
+                    foreach ($tickets as $ticket) {
+                        $ticket->assigned_to = null;
+                        $ticket_number = $ticket->ticket_number;
+                        $ticket->save();
+                        $thread = new Ticket_Thread();
+                        $thread->ticket_id = $ticket->id;
+                        $thread->user_id = Auth::user()->id;
+                        $thread->is_internal = 1;
+                        $thread->body = 'This Ticket has been unassigned ';
+                        $thread->save();
+                    }
                     // $users = User::where('id', '=', $id)->get();
                     $user = User::find($id);
                     $users->is_delete = 1;
                     $users->active = 0;
                     $users->save();
-
                     return redirect('user')->with('success', Lang::get('lang.agent_delete_successfully'));
                 } else {
                     // Assign_team_agent::where('agent_id', '=', $id)->delete();
@@ -592,15 +558,14 @@ class UserController extends Controller
                     $users->is_delete = 1;
                     $users->active = 0;
                     $users->save();
-
                     return redirect('user')->with('success', Lang::get('lang.agent_delete_successfully'));
                 }
             } else {
             }
         }
         // } catch (Exception $e) {
-            /* redirect to Index page with Fails Message */
-            // return redirect('user')->with('fails', $e->getMessage());
+        /* redirect to Index page with Fails Message */
+        // return redirect('user')->with('fails', $e->getMessage());
         // }
     }
 
@@ -618,7 +583,7 @@ class UserController extends Controller
             $users = User::where('id', '=', $id)->first();
             $policy = $this->ticket_policy;
             if (count($users) > 0) {
-                return view('themes.default1.agent.helpdesk.user.show', compact('users','policy'));
+                return view('themes.default1.agent.helpdesk.user.show', compact('users', 'policy'));
             } else {
                 return redirect()->back()->with('fails', Lang::get('lang.user-not-found'));
             }
@@ -638,11 +603,9 @@ class UserController extends Controller
     public function edit($id, CountryCode $code)
     {
         try {
-
             // dd('here');
             $settings = CommonSettings::select('status')->where('option_name', '=', 'send_otp')->first();
             $email_mandatory = CommonSettings::select('status')->where('option_name', '=', 'email_mandatory')->first();
-
             $user = new User();
             /* select the field where id = $id(request Id) */
             $users = $user->whereId($id)->first();
@@ -651,10 +614,8 @@ class UserController extends Controller
             $orgs = Organization::all();
             // dd($org);
             $organization_id = User_org::where('user_id', '=', $id)->pluck('org_id')->first();
-
             // $org_name=Organization::where('id','=',$org_id)->pluck('name')->first();
             // dd($org_name);
-
             return view('themes.default1.agent.helpdesk.user.edit', compact('users', 'orgs', '$settings', '$email_mandatory', 'organization_id'))->with('phonecode', $phonecode->phonecode);
         } catch (Exception $e) {
             return redirect()->back()->with('fails', $e->getMessage());
@@ -693,7 +654,6 @@ class UserController extends Controller
             $users->save();
             if ($request->input('org_id') != '') {
                 $orgid = $request->input('org_id');
-
                 $this->storeUserOrgRelation($id, $orgid);
             }
             /* redirect to Index page with Success Message */
@@ -733,8 +693,8 @@ class UserController extends Controller
         $status = $settings->status;
         try {
             return view('themes.default1.agent.helpdesk.user.profile-edit', compact('user'))
-                            ->with(['phonecode' => $phonecode->phonecode,
-                                'verify'        => $status, ]);
+                ->with(['phonecode' => $phonecode->phonecode,
+                    'verify' => $status,]);
         } catch (Exception $e) {
             return redirect()->back()->with('fails', $e->getMessage());
         }
@@ -770,13 +730,13 @@ class UserController extends Controller
                 $name = Input::file('profile_pic')->getClientOriginalName();
                 // dd($name);
                 // dd(str_replace(" ", "_", $name));
-            // fetching upload destination path
+                // fetching upload destination path
                 $destinationPath = 'uploads/profilepic';
-            // adding a random value to profile picture filename
-                $fileName = rand(0000, 9999).'.'.str_replace(' ', '_', $name);
-            // moving the picture to a destination folder
+                // adding a random value to profile picture filename
+                $fileName = rand(0000, 9999) . '.' . str_replace(' ', '_', $name);
+                // moving the picture to a destination folder
                 Input::file('profile_pic')->move($destinationPath, $fileName);
-            // saving filename to database
+                // saving filename to database
                 $user->profile_pic = $fileName;
             }
             if ($request->get('mobile')) {
@@ -811,7 +771,6 @@ class UserController extends Controller
             $user->password = Hash::make($request->input('new_password'));
             try {
                 $user->save();
-
                 return redirect('profile-edit')->with('success1', Lang::get('lang.password_updated_sucessfully'));
             } catch (Exception $e) {
                 return redirect('profile-edit')->with('fails', $e->getMessage());
@@ -831,7 +790,6 @@ class UserController extends Controller
     public function UserAssignOrg($id)
     {
         $org_name = Input::get('org');
-
         if ($org_name) {
             $org = Organization::where('name', '=', $org_name)->pluck('id')->first();
             if ($org) {
@@ -839,7 +797,6 @@ class UserController extends Controller
                 $user_org->org_id = $org;
                 $user_org->user_id = $id;
                 $user_org->save();
-
                 return 1;
             } else {
                 return 0;
@@ -852,7 +809,6 @@ class UserController extends Controller
     public function UsereditAssignOrg($id)
     {
         $org_name = Input::get('org');
-
         if ($org_name) {
             $org = Organization::where('name', '=', $org_name)->pluck('id')->first();
             if ($org) {
@@ -860,7 +816,6 @@ class UserController extends Controller
                 $user_org->org_id = $org;
                 $user_org->user_id = $id;
                 $user_org->save();
-
                 return 1;
             } else {
                 return 0;
@@ -877,7 +832,6 @@ class UserController extends Controller
         $user_org->org_id = $id;
         $user_org->user_id = $org;
         $user_org->save();
-
         return 1;
     }
 
@@ -885,7 +839,6 @@ class UserController extends Controller
     {
         $user_org = User_org::where('org_id', '=', $id)->first();
         $user_org->delete();
-
         return redirect()->back()->with('success1', Lang::get('lang.the_user_has_been_removed_from_this_organization'));
     }
 
@@ -923,7 +876,6 @@ class UserController extends Controller
             $org->address = Input::get('address');
             $org->internal_notes = Input::get('internal');
             $org->save();
-
             $user_org = new User_org();
             $user_org->org_id = $org->id;
             $user_org->user_id = $id;
@@ -965,7 +917,7 @@ class UserController extends Controller
         }
         $org_relations->create([
             'user_id' => $userid,
-            'org_id'  => $orgid,
+            'org_id' => $orgid,
         ]);
     }
 
@@ -984,13 +936,13 @@ class UserController extends Controller
             $date = $request->input('date');
             $date = str_replace(' ', '', $date);
             $date_array = explode(':', $date);
-            $first = $date_array[0].' 00:00:00';
-            $second = $date_array[1].' 23:59:59';
+            $first = $date_array[0] . ' 00:00:00';
+            $second = $date_array[1] . ' 23:59:59';
             $first_date = $this->convertDate($first);
             $second_date = $this->convertDate($second);
             $users = $this->getUsers($first_date, $second_date);
             $excel_controller = new \App\Http\Controllers\Common\ExcelController();
-            $filename = 'users'.$date;
+            $filename = 'users' . $date;
             $excel_controller->export($filename, $users);
         } catch (Exception $ex) {
             return redirect()->back()->with('fails', $ex->getMessage());
@@ -1000,7 +952,6 @@ class UserController extends Controller
     public function convertDate($date)
     {
         $converted_date = date('Y-m-d H:i:s', strtotime($date));
-
         return $converted_date;
     }
 
@@ -1008,14 +959,13 @@ class UserController extends Controller
     {
         $user = new User();
         $users = $user->leftJoin('user_assign_organization', 'users.id', '=', 'user_assign_organization.user_id')
-                ->leftJoin('organization', 'user_assign_organization.org_id', '=', 'organization.id')
-                ->whereBetween('users.created_at', [$first, $last])
-                ->where('role', 'user')
-                ->where('active', 1)
-                ->select('users.user_name as Username', 'users.email as Email', 'users.first_name as Fisrtname', 'users.last_name as Lastname', 'organization.name as Organization')
-                ->get()
-                ->toArray();
-
+            ->leftJoin('organization', 'user_assign_organization.org_id', '=', 'organization.id')
+            ->whereBetween('users.created_at', [$first, $last])
+            ->where('role', 'user')
+            ->where('active', 1)
+            ->select('users.user_name as Username', 'users.email as Email', 'users.first_name as Fisrtname', 'users.last_name as Lastname', 'organization.name as Organization')
+            ->get()
+            ->toArray();
         return $users;
     }
 
@@ -1025,7 +975,6 @@ class UserController extends Controller
             $sms = DB::table('sms')->get();
             if (count($sms) > 0) {
                 \Event::fire(new \App\Events\LoginEvent($request));
-
                 return 1;
             }
         } else {
@@ -1038,7 +987,7 @@ class UserController extends Controller
         // dd(Input::all());
         // $user = User::select('id', 'mobile', 'user_name')->where('email', '=', $request->input('email'))->first();
         $otp = Otp::select('otp', 'updated_at')->where('user_id', '=', Input::get('u_id'))
-                ->first();
+            ->first();
         if ($otp != null) {
             $otp_length = strlen(Input::get('otp'));
             if (($otp_length == 6 && !preg_match('/[a-z]/i', Input::get('otp')))) {
@@ -1050,30 +999,26 @@ class UserController extends Controller
                 $interval = $time1->diff($time2);
                 if ($interval->i > 10 || $interval->h > 0) {
                     $message = Lang::get('lang.otp-expired');
-
                     return $message;
                 } else {
                     if (Hash::check(Input::get('otp'), $otp->otp)) {
                         Otp::where('user_id', '=', Input::get('u_id'))
-                                ->update(['otp' => '']);
+                            ->update(['otp' => '']);
                         // User::where('id', '=', $user->id)
                         //     ->update(['active' => 1]);
                         // $this->openTicketAfterVerification($user->id);
                         return 1;
                     } else {
                         $message = Lang::get('lang.otp-not-matched');
-
                         return $message;
                     }
                 }
             } else {
                 $message = Lang::get('lang.otp-invalid');
-
                 return $message;
             }
         } else {
             $message = Lang::get('lang.otp-not-matched');
-
             return $message;
         }
     }
@@ -1082,16 +1027,17 @@ class UserController extends Controller
     {
         $users = User::where('role', '<>', 'user')->where('active', '=', 1)->orderBy('first_name')->get();
         foreach ($users as $user) {
-            echo "<option value='user_$user->id'>".$user->name().'</option>';
+            echo "<option value='user_$user->id'>" . $user->name() . '</option>';
         }
     }
-    
+
     /**
-     * 
+     *
      * @param Request $request
      * @return string
      */
-    public function settingsUpdateStatus(Request $request) {
+    public function settingsUpdateStatus(Request $request)
+    {
         try {
             if (!$this->ticket_policy->emailVerification()) {
                 return redirect('dashboard')->with('fails', 'Permission denied');
@@ -1106,11 +1052,12 @@ class UserController extends Controller
     }
 
     /**
-     * 
+     *
      * @param Request $request
      * @return string
      */
-    public function settingsUpdateBan(Request $request) {
+    public function settingsUpdateBan(Request $request)
+    {
         try {
             if (!$this->ticket_policy->ban()) {
                 return redirect('dashboard')->with('fails', 'Permission denied');
@@ -1118,11 +1065,11 @@ class UserController extends Controller
             $user_id = $request->user_id;
             $user_ban = $request->settings_ban;
             $user = User::where('id', $user_id)->update(['ban' => $user_ban]);
-//            $spam_status_type = \App\Model\helpdesk\Ticket\Ticket_Status::whereHas('type', function($query) {
-//                        $query->where('name', 'spam');
-//                    })->first();
+            //            $spam_status_type = \App\Model\helpdesk\Ticket\Ticket_Status::whereHas('type', function($query) {
+            //                        $query->where('name', 'spam');
+            //                    })->first();
             if ($user->role != 'user') {
-                $user->ticketsAssigned()->whereHas('statuses.type', function($query) {
+                $user->ticketsAssigned()->whereHas('statuses.type', function ($query) {
                     $query->where('name', 'open');
                 })->update(['assigned_to' => null]);
             }
@@ -1132,7 +1079,8 @@ class UserController extends Controller
         }
     }
 
-    public function settingsUpdateMobileVerify(Request $request) {
+    public function settingsUpdateMobileVerify(Request $request)
+    {
         try {
             if (!$this->ticket_policy->mobileVerification()) {
                 return redirect('dashboard')->with('fails', 'Permission denied');
@@ -1145,5 +1093,5 @@ class UserController extends Controller
             return $e->getMessage();
         }
     }
-    
+
 }

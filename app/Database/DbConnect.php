@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Database;
 
 use Config;
 use DB;
 
-class DbConnect {
+class DbConnect
+{
 
     /**
      * The name of the database we're connecting to on the fly.
@@ -27,7 +27,8 @@ class DbConnect {
      * @param  array $options
      * @return void
      */
-    public function __construct($options = null) {
+    public function __construct($options = null)
+    {
         // Set the database
         $database = $options['database'];
         $this->database = $database;
@@ -49,7 +50,8 @@ class DbConnect {
      *
      * @return \Illuminate\Database\Connection
      */
-    public function getConnection() {
+    public function getConnection()
+    {
         return $this->connection;
     }
 
@@ -59,14 +61,15 @@ class DbConnect {
      * @var    string $table
      * @return \Illuminate\Database\Query\Builder
      */
-    public function getTable($table = null) {
+    public function getTable($table = null)
+    {
         return $this->getConnection()->table($table);
     }
 
-    public function dropTables() {
+    public function dropTables()
+    {
         $tables = $this->getConnection()->getDoctrineSchemaManager()->listTableNames();
         $droplist = implode(',', $tables);
-
         $this->getConnection()->beginTransaction();
         //turn off referential integrity
         $this->getConnection()->statement('SET FOREIGN_KEY_CHECKS = 0');

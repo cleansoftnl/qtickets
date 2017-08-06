@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Http\Controllers\Installer\helpdesk\InstallController;
 
-class Install extends Command {
+class Install extends Command
+{
 
     /**
      * The name and signature of the console command.
@@ -27,7 +27,8 @@ class Install extends Command {
      *
      * @return void
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->install = new InstallController();
         parent::__construct();
     }
@@ -37,24 +38,24 @@ class Install extends Command {
      *
      * @return mixed
      */
-    public function handle() {
+    public function handle()
+    {
         try {
             $this->appEnv();
             if ($this->confirm('Do you want to intall faveo?')) {
-                
-                    $default = $this->choice(
-                            'Which sql engine would you like to use?', ['mysql']
-                    );
-                    $host = $this->ask('Enter your sql host');
-                    $database = $this->ask('Enter your database name');
-                    $dbusername = $this->ask('Enter your database username');
-                    $dbpassword = $this->ask('Enter your database password (blank if not entered)', false);
-                    $port = $this->ask('Enter your sql port (blank if not entered)', false);
-                    $this->install->env($default, $host, $port, $database, $dbusername, $dbpassword);
-                    $this->info('.env file has created');
-                    $this->call('preinsatall:check');
-                    $this->alert("please run 'php artisan install:db'");
-                
+                $default = $this->choice(
+                    'Which sql engine would you like to use?', ['mysql']
+                );
+                $host = $this->ask('Enter your sql host');
+                $database = $this->ask('Enter your database name');
+                $dbusername = $this->ask('Enter your database username');
+                $dbpassword = $this->ask('Enter your database password (blank if not entered)', false);
+                $port = $this->ask('Enter your sql port (blank if not entered)', false);
+                $this->install->env($default, $host, $port, $database, $dbusername, $dbpassword);
+                $this->info('.env file has created');
+                $this->call('preinsatall:check');
+                $this->alert("please run 'php artisan install:db'");
+
             } else {
                 $this->info('We hope, you will try next time');
             }
@@ -63,8 +64,8 @@ class Install extends Command {
         }
     }
 
-
-    public function appEnv() {
+    public function appEnv()
+    {
         $extensions = [
             'curl',
             'ctype',
@@ -79,7 +80,7 @@ class Install extends Command {
             'mysqli',
             'bcmath',
             'iconv',
-                //'ioncube_loader_dar_5.6',
+            //'ioncube_loader_dar_5.6',
         ];
         $result = [];
         foreach ($extensions as $key => $extension) {
@@ -96,11 +97,8 @@ class Install extends Command {
         } else {
             $result['php']['status'] = "PHP version doesn't supports please upgrade to 5.6+";
         }
-
         $headers = ['Extension', 'Status'];
         $this->table($headers, $result);
     }
-
-    
 
 }

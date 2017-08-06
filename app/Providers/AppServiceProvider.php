@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Providers;
 
 use App\Model\Update\BarNotification;
@@ -10,7 +9,8 @@ use Queue;
 use View;
 use Laravel\Dusk\DuskServiceProvider;
 
-class AppServiceProvider extends ServiceProvider {
+class AppServiceProvider extends ServiceProvider
+{
 
     /**
      * Register any application services.
@@ -21,7 +21,8 @@ class AppServiceProvider extends ServiceProvider {
      *
      * @return void
      */
-    public function register() {
+    public function register()
+    {
         $this->app->bind('Illuminate\Contracts\Auth\Registrar');
         require_once __DIR__ . '/../Http/helpers.php';
         if ($this->app->environment('local', 'testing')) {
@@ -29,7 +30,8 @@ class AppServiceProvider extends ServiceProvider {
         }
     }
 
-    public function boot() {
+    public function boot()
+    {
         Queue::failing(function (JobFailed $event) {
             loging('Failed Job - ' . $event->connectionName, json_encode([$event->job->payload(), 'error' => $event->exception->getMessage()]));
         });
@@ -39,23 +41,20 @@ class AppServiceProvider extends ServiceProvider {
         \Event::listen('cron.collectJobs', function () {
             \Cron::add('example1', '* * * * *', function () {
                 $this->index();
-
                 return 'No';
             });
-
             \Cron::add('example2', '*/2 * * * *', function () {
                 // Do some crazy things successfully every two minute
             });
-
             \Cron::add('disabled job', '0 * * * *', function () {
                 // Do some crazy things successfully every hour
             }, false);
         });
-
         $this->composer();
     }
 
-    public function composer() {
+    public function composer()
+    {
         \View::composer('themes.default1.update.notification', function () {
             $notification = new BarNotification();
             $not = [

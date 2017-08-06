@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Console\Commands;
 
 use App\Http\Controllers\Agent\helpdesk\MailController;
@@ -61,7 +60,6 @@ class TicketFetch extends Command
         $ticket = new \App\Http\Controllers\Agent\helpdesk\TicketController($PhpMailController, $NotificationController);
         $work = new TicketWorkflowController($ticket);
         $controller = new MailController($work);
-
         return $controller;
     }
 }

@@ -1,9 +1,9 @@
 <?php
-
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use DB;
+
 class DropTables extends Command
 {
     /**
@@ -37,12 +37,9 @@ class DropTables extends Command
      */
     public function handle()
     {
-
         $colname = 'Tables_in_' . env('DB_DATABASE');
-
         $droplist = \Schema::getConnection()->getDoctrineSchemaManager()->listTableNames();
         $droplist = implode(',', $droplist);
-
         DB::beginTransaction();
         //turn off referential integrity
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
@@ -50,9 +47,7 @@ class DropTables extends Command
         //turn referential integrity back on
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
         DB::commit();
+        $this->comment(PHP_EOL . "If no errors showed up, all tables were dropped" . PHP_EOL);
 
-        $this->comment(PHP_EOL."If no errors showed up, all tables were dropped".PHP_EOL);
-
-    
     }
 }

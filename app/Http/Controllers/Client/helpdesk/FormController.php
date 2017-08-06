@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Client\helpdesk;
 
 // controllers
@@ -35,7 +34,8 @@ use Redirect;
  *
  * @author      Ladybird <info@ladybirdweb.com>
  */
-class FormController extends Controller {
+class FormController extends Controller
+{
 
     /**
      * Create a new controller instance.
@@ -43,7 +43,8 @@ class FormController extends Controller {
      *
      * @return void
      */
-    public function __construct(TicketWorkflowController $TicketWorkflowController) {
+    public function __construct(TicketWorkflowController $TicketWorkflowController)
+    {
         $this->middleware('board');
         // creating a TicketController instance
         $this->TicketWorkflowController = $TicketWorkflowController;
@@ -56,7 +57,8 @@ class FormController extends Controller {
      *
      * @return type
      */
-    public function getForm(Help_topic $topic, CountryCode $code) {
+    public function getForm(Help_topic $topic, CountryCode $code)
+    {
         if (\Config::get('database.install') == '%0%') {
             return \Redirect::route('licence');
         }
@@ -75,7 +77,6 @@ class FormController extends Controller {
             } else {
                 $phonecode = '';
             }
-
             return view('themes.default1.client.helpdesk.form', compact('topics', 'codes', 'email_mandatory'))->with('phonecode', $phonecode);
         } else {
             return \Redirect::route('home');
@@ -90,13 +91,14 @@ class FormController extends Controller {
      *
      * @return type string
      */
-    public function postForm($id, Help_topic $topic) {
+    public function postForm($id, Help_topic $topic)
+    {
         if ($id != 0) {
             $helptopic = $topic->where('id', '=', $id)->first();
             $custom_form = $helptopic->custom_form;
             $values = Fields::where('forms_id', '=', $custom_form)->get();
             if (!$values) {
-                
+
             }
             if ($values) {
                 foreach ($values as $form_data) {
@@ -142,7 +144,8 @@ class FormController extends Controller {
      * @param type Request $request
      * @param type User    $user
      */
-    public function postedForm(User $user, Request $request, Ticket $ticket_settings, Ticket_source $ticket_source, Ticket_attachments $ta, CountryCode $code) {
+    public function postedForm(User $user, Request $request, Ticket $ticket_settings, Ticket_source $ticket_source, Ticket_attachments $ta, CountryCode $code)
+    {
         try {
             $phone = "";
             $collaborator = null;
@@ -181,7 +184,6 @@ class FormController extends Controller {
             } elseif ($user) {
                 $phonecode = $user->country_code;
             }
-
             if ($request->has('Group')) {
                 $helptopic = $request->input('Group');
                 $department = Help_topic::where('id', '=', $helptopic)->first()->value('department');
@@ -210,7 +212,6 @@ class FormController extends Controller {
             } else {
                 $priority = null;
             }
-
             if ($request->input('Status')) {
                 $status = $ticket_settings->first()->status;
             } else {
@@ -226,11 +227,9 @@ class FormController extends Controller {
             } else {
                 $attachments = null;
             }
-            
             \Event::fire(new \App\Events\ClientTicketFormPost($form_extras, $email, $source));
-            $response = $this->TicketWorkflowController->workflow($email, $name, $subject, $details, $phone, $phonecode, $mobile_number, $helptopic, $sla, $priority, $source, $collaborator, $department, $assignto, $team_assign, $status, $form_extras, $auto_response,$attachments);
-            
-             
+            $response = $this->TicketWorkflowController->workflow($email, $name, $subject, $details, $phone, $phonecode, $mobile_number, $helptopic, $sla, $priority, $source, $collaborator, $department, $assignto, $team_assign, $status, $form_extras, $auto_response, $attachments);
+
         } catch (\Exception $e) {
             $result = $e->getMessage();
             return response()->json(compact('result'), 500);
@@ -247,23 +246,20 @@ class FormController extends Controller {
      *
      * @return type view
      */
-    public function post_ticket_reply($id, Request $request) {
+    public function post_ticket_reply($id, Request $request)
+    {
         try {
             if ($comment != null) {
                 $tickets = Tickets::where('id', '=', $id)->first();
                 $thread = Ticket_Thread::where('ticket_id', '=', $tickets->id)->first();
-
                 $subject = $thread->title . '[#' . $tickets->ticket_number . ']';
                 $body = $request->input('comment');
-
                 $user_cred = User::where('id', '=', $tickets->user_id)->first();
-
                 $fromaddress = $user_cred->email;
                 $fromname = $user_cred->user_name;
                 $phone = '';
                 $phonecode = '';
                 $mobile_number = '';
-
                 $helptopic = $tickets->help_topic_id;
                 $sla = $tickets->sla;
                 $priority = $tickets->priority_id;
@@ -275,9 +271,7 @@ class FormController extends Controller {
                 $team_assign = null;
                 $ticket_status = null;
                 $auto_response = 0;
-
                 $this->TicketWorkflowController->workflow($fromaddress, $fromname, $subject, $body, $phone, $phonecode, $mobile_number, $helptopic, $sla, $priority, $source, $collaborator, $dept, $assign, $team_assign, $ticket_status, $form_data, $auto_response);
-
                 return \Redirect::back()->with('success1', Lang::get('lang.successfully_replied'));
             } else {
                 return \Redirect::back()->with('fails1', Lang::get('lang.please_fill_some_data'));
@@ -287,7 +281,8 @@ class FormController extends Controller {
         }
     }
 
-    public function getCustomForm(Request $request) {
+    public function getCustomForm(Request $request)
+    {
         $html = '';
         $helptopic_id = $request->input('helptopic');
         $helptopics = new Help_topic();
@@ -302,7 +297,6 @@ class FormController extends Controller {
             $form_controller = new \App\Http\Controllers\Admin\helpdesk\FormController($fields, $forms);
             $html = $form_controller->renderForm($custom_form);
         }
-
         return $html;
     }
 

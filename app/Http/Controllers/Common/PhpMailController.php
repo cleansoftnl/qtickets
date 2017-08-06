@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Common;
 
 use App\Http\Controllers\Controller;
@@ -13,11 +12,12 @@ use Auth;
 use Exception;
 use Mail;
 
-class PhpMailController extends Controller {
+class PhpMailController extends Controller
+{
 
-    public function fetch_smtp_details($id) {
+    public function fetch_smtp_details($id)
+    {
         $emails = Emails::where('id', '=', $id)->first();
-
         return $emails;
     }
 
@@ -26,14 +26,14 @@ class PhpMailController extends Controller {
      *
      * @return type
      */
-    public function company() {
+    public function company()
+    {
         $company = Company::Where('id', '=', '1')->first();
         if ($company->company_name == null) {
             $company = 'Support Center';
         } else {
             $company = $company->company_name;
         }
-
         return $company;
     }
 
@@ -45,34 +45,33 @@ class PhpMailController extends Controller {
      *
      * @return type integer
      */
-    public function mailfrom($reg, $dept_id) {
+    public function mailfrom($reg, $dept_id)
+    {
         $email_id = '';
         $emails = Emails::where('department', '=', $dept_id)->first();
-
         $email = Email::find(1);
         if ($emails && $emails->sending_status) {
             $email_id = $emails->id;
         } else {
             $email_id = $email->sys_email;
         }
-
         return $email_id;
     }
 
-    public function sendmail($from, $to, $message, $template_variables, $thread = '', $auto_respond = "") {
+    public function sendmail($from, $to, $message, $template_variables, $thread = '', $auto_respond = "")
+    {
         $this->setQueue();
         $job = new \App\Jobs\SendEmail($from, $to, $message, $template_variables, $thread, $auto_respond);
         dispatch($job);
     }
 
-    public function sendEmail($from, $to, $message, $template_variables, $thread = "", $auto_respond = "") {
+    public function sendEmail($from, $to, $message, $template_variables, $thread = "", $auto_respond = "")
+    {
         $from_address = $this->fetch_smtp_details($from);
         if ($from_address == null) {
             throw new Exception('Invalid Email Configuration', 601);
         }
-
         $this->setMailConfig($from_address);
-
         $recipants = $this->checkElement('email', $to);
         $recipantname = $this->checkElement('name', $to);
         $cc = $this->checkElement('cc', $to);
@@ -87,11 +86,11 @@ class PhpMailController extends Controller {
             $subject = checkArray('subject', $content_array);
         }
         $send = $this->laravelMail($recipants, $recipantname, $subject, $content, $cc, $attachment, $thread, $auto_respond);
-
         return $send;
     }
 
-    public function setMailConfig($from_address) {
+    public function setMailConfig($from_address)
+    {
         $username = $from_address->email_address;
         $fromname = $from_address->email_name;
         $password = $from_address->password;
@@ -127,71 +126,70 @@ class PhpMailController extends Controller {
         }
     }
 
-    public function setServices($emailid, $protocol) {
+    public function setServices($emailid, $protocol)
+    {
         $service = new \App\Model\MailJob\FaveoMail();
         $services = $service->where('email_id', $emailid)->pluck('value', 'key')->toArray();
         $controller = new \App\Http\Controllers\Admin\helpdesk\EmailsController();
         $controller->setServiceConfig($protocol, $services);
     }
 
-    public function checkElement($element, $array) {
+    public function checkElement($element, $array)
+    {
         $value = '';
         if (is_array($array)) {
             if (array_key_exists($element, $array)) {
                 $value = $array[$element];
             }
         }
-
         return $value;
     }
 
-    public function laravelMail($to, $toname, $subject, $data, $cc = '', $attach = '', $thread = '', $auto_respond = '') {
+    public function laravelMail($to, $toname, $subject, $data, $cc = '', $attach = '', $thread = '', $auto_respond = '')
+    {
         $mail = Mail::send('emails.mail', ['data' => $data, 'thread' => $thread], function ($m) use ($to, $subject, $toname, $cc, $attach, $thread, $auto_respond) {
-                    $m->to($to, $toname)->subject($subject);
-                    if ($auto_respond) {
-                        $swiftMessage = $m->getSwiftMessage();
-                        $headers = $swiftMessage->getHeaders();
-                        $headers->addTextHeader('X-Autoreply', 'true');
-                        $headers->addTextHeader('Auto-Submitted', 'auto-replied');
-                        $headers->addTextHeader('Content-Transfer-Encoding', 'base64');
-                    }
-                    if ($cc != null) {
-                        foreach ($cc as $cc_email) {
-                            //mail to collaborators
-                            $m->cc($cc_email);
+            $m->to($to, $toname)->subject($subject);
+            if ($auto_respond) {
+                $swiftMessage = $m->getSwiftMessage();
+                $headers = $swiftMessage->getHeaders();
+                $headers->addTextHeader('X-Autoreply', 'true');
+                $headers->addTextHeader('Auto-Submitted', 'auto-replied');
+                $headers->addTextHeader('Content-Transfer-Encoding', 'base64');
+            }
+            if ($cc != null) {
+                foreach ($cc as $cc_email) {
+                    //mail to collaborators
+                    $m->cc($cc_email);
+                }
+            }
+            if ($thread && is_object($thread)) {
+                $attach = $thread->attach()
+                    ->where('poster', 'ATTACHMENT')
+                    ->select('driver', 'name', 'path', 'type', \DB::raw('type as mime'), \DB::raw('name as file_name'), \DB::raw('path as file_path'), \DB::raw('path as file_path'), \DB::raw('path as file_path'), \DB::raw('file as data'), 'poster', 'file')->get()->toArray();
+            }
+            $size = count($attach);
+            if ($size > 0) {
+                for ($i = 0; $i < $size; $i++) {
+                    if (is_array($attach) && array_key_exists($i, $attach)) {
+                        $mode = 'normal';
+                        $file = $attach[$i]['file'];
+                        if (checkArray('poster', $attach[$i])) {
+                            $file = $attach[$i]['file'];
                         }
-                    }
-                    if ($thread && is_object($thread)) {
-                        
-                        $attach = $thread->attach()
-                                        ->where('poster', 'ATTACHMENT')
-                                        ->select('driver','name','path','type',\DB::raw('type as mime'), \DB::raw('name as file_name'), \DB::raw('path as file_path'), \DB::raw('path as file_path'), \DB::raw('path as file_path'), \DB::raw('file as data'), 'poster','file')->get()->toArray();
-                    }
-                    $size = count($attach);
-                    if ($size > 0) {
-                        for ($i = 0; $i < $size; $i++) {
-                            if (is_array($attach) && array_key_exists($i, $attach)) {
-                                $mode = 'normal';
-                                $file = $attach[$i]['file'];
-                                if (checkArray('poster', $attach[$i])) {
-                                    $file = $attach[$i]['file'];
-                                }
-                                if (checkArray('poster', $attach[$i]) && checkArray('data', $attach[$i])) {
-                                    $file = $attach[$i]['data'];
-                                    $mode = 'data';
-                                }
-                                if (is_array($attach[$i]) && array_key_exists('mode', $attach[$i])) {
-                                    $mode = $attach[$i]['mode'];
-                                }
-
-                                $name = $attach[$i]['file_name'];
-                                $mime = $attach[$i]['mime'];
-
-                                $this->attachmentMode($m, $file, $name, $mime, $mode);
-                            }
+                        if (checkArray('poster', $attach[$i]) && checkArray('data', $attach[$i])) {
+                            $file = $attach[$i]['data'];
+                            $mode = 'data';
                         }
+                        if (is_array($attach[$i]) && array_key_exists('mode', $attach[$i])) {
+                            $mode = $attach[$i]['mode'];
+                        }
+                        $name = $attach[$i]['file_name'];
+                        $mime = $attach[$i]['mime'];
+                        $this->attachmentMode($m, $file, $name, $mime, $mode);
                     }
-                });
+                }
+            }
+        });
         //$this->updateFilePermission($attach, $mode);
         if (is_object($mail) || (is_object($mail) && $mail->getStatusCode() == 200)) {
             $mail = 1;
@@ -199,7 +197,8 @@ class PhpMailController extends Controller {
         return $mail;
     }
 
-    public function updateFilePermission($attach, $mode) {
+    public function updateFilePermission($attach, $mode)
+    {
         $size = count($attach);
         if ($size > 0) {
             for ($i = 0; $i < $size; $i++) {
@@ -213,7 +212,8 @@ class PhpMailController extends Controller {
         }
     }
 
-    public function setQueue() {
+    public function setQueue()
+    {
         $short = 'database';
         $field = [
             'driver' => 'database',
@@ -231,19 +231,22 @@ class PhpMailController extends Controller {
         $this->setQueueConfig($short, $field);
     }
 
-    public function setQueueConfig($short, $field) {
+    public function setQueueConfig($short, $field)
+    {
         \Config::set('queue.default', $short);
         foreach ($field as $key => $value) {
             \Config::set("queue.connections.$short.$key", $value);
         }
     }
 
-    public function attachmentMode($message, $file, $name, $mime, $mode) {
+    public function attachmentMode($message, $file, $name, $mime, $mode)
+    {
         $m = $message->attachData(base64_decode($file, true), $name, ['mime' => $mime]);
         return $m;
     }
 
-    public function mailTemplate($template_type, $template_variables, $message, $from, $subject) {
+    public function mailTemplate($template_type, $template_variables, $message, $from, $subject)
+    {
         $content = $this->checkElement('body', $message);
         $ticket_number = $this->checkElement('ticket_number', $template_variables);
         $template = TemplateType::where('name', '=', $template_type)->first();
@@ -253,7 +256,6 @@ class PhpMailController extends Controller {
         if ($template) {
             $temp = $this->set($set, $ticket_number, $message, $template);
             $contents = $temp['content'];
-
             $variables = $this->templateVariables($template_variables, $content, $from);
             foreach ($variables as $k => $v) {
                 $messagebody = str_replace($k, $v, $contents);
@@ -269,11 +271,11 @@ class PhpMailController extends Controller {
         if (checkArray('subject', $temp)) {
             $subject = checkArray('subject', $temp);
         }
-
         return ['content' => $content, 'subject' => $subject];
     }
 
-    public function templateVariables($template_variables, $content, $from) {
+    public function templateVariables($template_variables, $content, $from)
+    {
         $agent = $this->checkElement('agent', $template_variables);
         // template variables
         if ($agent == '' && Auth::user()) {
@@ -315,11 +317,11 @@ class PhpMailController extends Controller {
             '{!!$internal_content!!}' => checkArray('internal_content', $template_variables),
             '{!!$user_profile_link!!}' => checkArray('user_profile_link', $template_variables),
         ];
-
         return $variables;
     }
 
-    public function set($set, $ticket_number, $message, $template) {
+    public function set($set, $ticket_number, $message, $template)
+    {
         $contents = null;
         $subject = null;
         if (isset($set['id'])) {
@@ -336,7 +338,6 @@ class PhpMailController extends Controller {
                 }
             }
         }
-
         return ['content' => $contents, 'subject' => $subject];
     }
 

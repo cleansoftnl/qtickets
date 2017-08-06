@@ -1,5 +1,4 @@
 <?php
-
 namespace App\FaveoStorage\Controllers;
 
 use Storage;
@@ -9,7 +8,8 @@ use Config;
 use App\Model\helpdesk\Ticket\Ticket_attachments;
 use App\Model\helpdesk\Ticket\Ticket_Thread;
 
-class StorageController extends Controller {
+class StorageController extends Controller
+{
 
     protected $default;
     protected $driver;
@@ -27,7 +27,8 @@ class StorageController extends Controller {
     protected $rackspace_endpoint;
     protected $rackspace_url_type;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->default = $this->defaults();
         $this->driver = $this->driver();
         $this->root = $this->root();
@@ -44,14 +45,15 @@ class StorageController extends Controller {
         $this->rackspace_username = $this->rackspaceUsername();
     }
 
-    protected function settings($option) {
+    protected function settings($option)
+    {
         $settings = new CommonSettings();
-        $value = $settings->getOptionValue('storage', $option,true);
-        
+        $value = $settings->getOptionValue('storage', $option, true);
         return $value;
     }
 
-    public function defaults() {
+    public function defaults()
+    {
         $default = "local";
         if ($this->settings('default')) {
             $default = $this->settings('default');
@@ -59,11 +61,13 @@ class StorageController extends Controller {
         return $default;
     }
 
-    public function driver() {
+    public function driver()
+    {
         return $this->settings('default');
     }
 
-    public function root($type = 'private-root') {
+    public function root($type = 'private-root')
+    {
         $root = $this->settings($type);
         if (!$root && $type == 'private-root') {
             $root = storage_path('app/private');
@@ -75,47 +79,58 @@ class StorageController extends Controller {
         return $root . DIRECTORY_SEPARATOR . $carbon->year . DIRECTORY_SEPARATOR . $carbon->month . DIRECTORY_SEPARATOR . $carbon->day;
     }
 
-    public function s3Key() {
+    public function s3Key()
+    {
         return $this->settings('s3_key');
     }
 
-    public function s3Region() {
+    public function s3Region()
+    {
         return $this->settings('s3_region');
     }
 
-    public function s3Secret() {
+    public function s3Secret()
+    {
         return $this->settings('s3_secret');
     }
 
-    public function s3Bucket() {
+    public function s3Bucket()
+    {
         return $this->settings('s3_bucket');
     }
 
-    public function rackspaceKey() {
+    public function rackspaceKey()
+    {
         return $this->settings('root');
     }
 
-    public function rackspaceRegion() {
+    public function rackspaceRegion()
+    {
         return $this->settings('rackspace_region');
     }
 
-    public function rackspaceUsername() {
+    public function rackspaceUsername()
+    {
         return $this->settings('rackspace_username');
     }
 
-    public function rackspaceContainer() {
+    public function rackspaceContainer()
+    {
         return $this->settings('rackspace_container');
     }
 
-    public function rackspaceEndpoint() {
+    public function rackspaceEndpoint()
+    {
         return $this->settings('rackspace_endpoint');
     }
 
-    public function rackspaceUrlType() {
+    public function rackspaceUrlType()
+    {
         return $this->settings('rackspace_url_type');
     }
 
-    protected function setFileSystem() {
+    protected function setFileSystem()
+    {
         $config = $this->config();
         //dd($config);
         foreach ($config as $key => $con) {
@@ -129,7 +144,8 @@ class StorageController extends Controller {
         return Config::get('filesystem');
     }
 
-    protected function config() {
+    protected function config()
+    {
         return [
             'default' => $this->default,
             'cloud' => 's3',
@@ -137,8 +153,8 @@ class StorageController extends Controller {
         ];
     }
 
-    protected function disks() {
-
+    protected function disks()
+    {
         return [
             "local" => [
                 'driver' => "local",
@@ -163,10 +179,10 @@ class StorageController extends Controller {
         ];
     }
 
-    public function upload($data, $filename, $type, $size, $disposition, $thread_id, $attachment) {
+    public function upload($data, $filename, $type, $size, $disposition, $thread_id, $attachment)
+    {
         $upload = new Ticket_attachments();
         $name = $upload->whereName($filename)->select('name')->first();
-        
         if ($name) {
             $filename = str_random(5) . "_" . $filename;
         }
@@ -189,7 +205,8 @@ class StorageController extends Controller {
         return $filename;
     }
 
-    public function uploadInLocal($attachment, $upload_path, $filename) {
+    public function uploadInLocal($attachment, $upload_path, $filename)
+    {
         if (!\File::exists($upload_path)) {
             \File::makeDirectory($upload_path, 0777, true);
         }
@@ -201,7 +218,8 @@ class StorageController extends Controller {
         }
     }
 
-    public function saveAttachments($thread_id, $attachments = [], $inline = []) {
+    public function saveAttachments($thread_id, $attachments = [], $inline = [])
+    {
         if (is_array($attachments) || is_array($inline)) {
             $ticket_thread = Ticket_Thread::find($thread_id);
             if (!$ticket_thread) {
@@ -215,12 +233,11 @@ class StorageController extends Controller {
         return $thread;
     }
 
-    public function saveObjectAttachments($thread_id, $attachment) {
-        
+    public function saveObjectAttachments($thread_id, $attachment)
+    {
         $disposition = 'ATTACHMENT';
         if (is_object($attachment)) {
             if (method_exists($attachment, 'getStructure')) {
-                
                 $structure = $attachment->getStructure();
                 if (isset($structure->disposition)) {
                     $disposition = $structure->disposition;
@@ -241,14 +258,14 @@ class StorageController extends Controller {
         return $thread;
     }
 
-    public function updateBody($attachment, $thread_id, $filename) {
+    public function updateBody($attachment, $thread_id, $filename)
+    {
         if (method_exists($attachment, 'getStructure')) {
             $structure = $attachment->getStructure();
             $disposition = 'ATTACHMENT';
             if (isset($structure->disposition)) {
                 $disposition = $structure->disposition;
             }
-            
             if ($disposition == 'INLINE' || $disposition == 'inline') {
                 $id = str_replace(">", "", str_replace("<", "", $structure->id));
                 //dd($disposition,$filename,'cid:' . $id);
@@ -256,16 +273,15 @@ class StorageController extends Controller {
                 $thread = $threads->find($thread_id);
                 $body = $thread->body;
                 $body = str_replace('cid:' . $id, $filename, $body);
-                
                 $thread->body = $body;
                 $thread->save();
-                
                 return $thread;
             }
         }
     }
 
-    public function getFile($drive, $name, $root) {
+    public function getFile($drive, $name, $root)
+    {
         if ($drive != "database") {
             $root = $root . "/" . $name;
             if (\File::exists($root)) {

@@ -1,7 +1,5 @@
 <?php
-
 return [
-
     /*
       |--------------------------------------------------------------------------
       | JWT Authentication Secret
@@ -11,7 +9,6 @@ return [
       | A helper command is provided for this: `php artisan jwt:generate`
       |
      */
-
     'secret' => env('JWT_SECRET', 'HC2GpXn74xm4unWCrog4f0xPr9IgLfQf'),
     /*
       |--------------------------------------------------------------------------
@@ -97,7 +94,6 @@ return [
       |
      */
     'providers' => [
-
         /*
           |--------------------------------------------------------------------------
           | User Provider
@@ -107,7 +103,6 @@ return [
           | on the subject claim
           |
          */
-
         'user' => 'Tymon\JWTAuth\Providers\User\EloquentUserAdapter',
         /*
           |--------------------------------------------------------------------------

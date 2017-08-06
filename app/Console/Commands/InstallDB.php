@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Http\Controllers\Installer\helpdesk\InstallController;
 
-class InstallDB extends Command {
+class InstallDB extends Command
+{
 
     /**
      * The name and signature of the console command.
@@ -27,7 +27,8 @@ class InstallDB extends Command {
      *
      * @return void
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->install = new InstallController();
         parent::__construct();
     }
@@ -37,7 +38,8 @@ class InstallDB extends Command {
      *
      * @return mixed
      */
-    public function handle() {
+    public function handle()
+    {
         try {
             if ($this->confirm('Do you want to migrate tables now?')) {
                 $env = base_path() . DIRECTORY_SEPARATOR . '.env';
@@ -65,14 +67,15 @@ class InstallDB extends Command {
         }
     }
 
-    public function updateAppUrl() {
+    public function updateAppUrl()
+    {
         $url = $this->ask('Enter your app url (with http/https and www/non www)');
         if (str_finish($url, '/')) {
             $url = rtrim($url, "/ ");
         }
         $systems = new \App\Model\helpdesk\Settings\System();
-        $system = $systems->updateOrCreate(['id'=>1],[
-            'url'=>$url
+        $system = $systems->updateOrCreate(['id' => 1], [
+            'url' => $url
         ]);
         $this->info('Thank you! Faveo has been installed successfully');
     }

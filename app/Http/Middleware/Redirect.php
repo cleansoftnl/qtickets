@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Middleware;
 
 use Closure;
@@ -10,7 +9,7 @@ class Redirect
      * Handle an incoming request.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
+     * @param \Closure $next
      *
      * @return mixed
      */
@@ -25,11 +24,10 @@ class Redirect
         $segments = $request->segments();
         if (count($segments) > 0) {
             foreach ($segments as $segment) {
-                $seg .= '/'.$segment;
+                $seg .= '/' . $segment;
             }
         }
-        $url = $url.$seg;
-
+        $url = $url . $seg;
         return redirect($url);
     }
 
@@ -38,12 +36,11 @@ class Redirect
         $url = $request->root();
         if (isInstall()) {
             $schema = new \App\Model\helpdesk\Settings\CommonSettings();
-            $row = $schema->getOptionValue('url', 'app_url',true);
+            $row = $schema->getOptionValue('url', 'app_url', true);
             if ($row) {
                 $url = $row->option_value;
             }
         }
-
         return $url;
     }
 }

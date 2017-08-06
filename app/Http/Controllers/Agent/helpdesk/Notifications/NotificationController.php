@@ -1,6 +1,6 @@
 <?php
-
 namespace App\Http\Controllers\Agent\helpdesk\Notifications;
+
 //models
 use App\Http\Controllers\Agent\helpdesk\Notifications\Notification;
 use App\Model\helpdesk\Settings\CommonSettings;
@@ -9,7 +9,8 @@ use DB;
 use Schema;
 use Lang;
 
-class NotificationController extends Notification {
+class NotificationController extends Notification
+{
 
     public $ticketid = NULL;
     public $key = NULL;
@@ -24,11 +25,12 @@ class NotificationController extends Notification {
     public $authUserid = NULL;
     public $save_in_thread = true;
     public $auto_respond = true;
-    public $thread=NULL;
+    public $thread = NULL;
 
-    public function saved($array) {
+    public function saved($array)
+    {
         $change = checkArray('changes', $array);
-        if(checkArray('note', $change)){
+        if (checkArray('note', $change)) {
             $this->auto_respond = false;
             $this->save_in_thread = false;
         }
@@ -38,11 +40,12 @@ class NotificationController extends Notification {
         $this->send_mail = $send;
         if ($change && $model) {
             $this->authUserid = $model->user_id;
-            $this->saveInThread($change, $model,$system);
+            $this->saveInThread($change, $model, $system);
         }
     }
 
-    public function saveInThread($change, $model,$system=false) {
+    public function saveInThread($change, $model, $system = false)
+    {
         $this->setParameter('change', $change);
         $this->setParameter('model', $model);
         $ticket_id = $this->getTicketId($model);
@@ -52,9 +55,9 @@ class NotificationController extends Notification {
         $body = $this->getBody($change, $model);
         $tickets = $this->ticket($ticket_id);
         $type = $this->type($tickets);
-        if(!$system){
-            $userid = $this->by($change,true);
-        }else{
+        if (!$system) {
+            $userid = $this->by($change, true);
+        } else {
             $userid = NULL;
         }
         $user = $this->authUser();
@@ -63,19 +66,18 @@ class NotificationController extends Notification {
         $notification = [];
         if ($body && $this->save_in_thread) {
             $thread = \App\Model\helpdesk\Ticket\Ticket_Thread::create([
-                        'thread_type' => $type,
-                        'body' => $body,
-                        'ticket_id' => $ticket_id,
-                        'is_internal' => $internal,
-                        'user_id' => $userid,
-                        'poster' => $poster,
+                'thread_type' => $type,
+                'body' => $body,
+                'ticket_id' => $ticket_id,
+                'is_internal' => $internal,
+                'user_id' => $userid,
+                'poster' => $poster,
             ]);
             $this->content_saved_thread_id = $thread;
         }
         $ticket_subject = $tickets->thread()->whereNotNull('title')->where('title', '!=', '')->select('title')->first();
         $this->setFrom($tickets);
-        
-        if ($ticket_subject && $tickets && (count($change)>1 || !checkArray('duedate', $change))&& !checkArray('body', $change)) {
+        if ($ticket_subject && $tickets && (count($change) > 1 || !checkArray('duedate', $change)) && !checkArray('body', $change)) {
             $notification[] = [
                 $key => [
                     'from' => $this->from,
@@ -85,7 +87,7 @@ class NotificationController extends Notification {
                     'variable' => [
                         'internal_content' => $body,
                         'by' => $user,
-                        'ticket_number'=> $tickets->ticket_number,
+                        'ticket_number' => $tickets->ticket_number,
                     ],
                     'ticketid' => $ticket_id,
                 ],
@@ -99,19 +101,21 @@ class NotificationController extends Notification {
         }
     }
 
-    public function getInternalKey($change) {
+    public function getInternalKey($change)
+    {
         $key = 'internal_activity_alert';
         if (is_array($change) && key_exists('dept_id', $change)) {
             $key = 'ticket_transfer_alert';
         }
-        if(is_array($change) && key_exists('assigned_to', $change)){
+        if (is_array($change) && key_exists('assigned_to', $change)) {
             $key = 'ticket_assign_alert';
         }
         $this->key = $key;
         return $key;
     }
 
-    public function authUserid($key) {
+    public function authUserid($key)
+    {
         $id = NULL;
         if ($key == 'duedate') {
             return $id;
@@ -124,7 +128,8 @@ class NotificationController extends Notification {
         return $id;
     }
 
-    public function authUser() {
+    public function authUser()
+    {
         $name = 'System';
         if (\Auth::user()) {
             $name = \Auth::user()->name();
@@ -132,7 +137,8 @@ class NotificationController extends Notification {
         return $name;
     }
 
-    public function poster($id, $force_support = false) {
+    public function poster($id, $force_support = false)
+    {
         $poster = 'support';
         if ($id && $force_support == false) {
             $poster = 'client';
@@ -140,12 +146,13 @@ class NotificationController extends Notification {
         return $poster;
     }
 
-    public function saveInNotification() {
+    public function saveInNotification()
+    {
         if ($this->isMode('system') && $this->model) {
             $message = $this->getBody($this->change, $this->model, true);
             //dd($this->change, $this->model, true,$message);
             $to_array = $this->getField('id', false);
-//            echo "$this->key<br>";
+            //            echo "$this->key<br>";
             $to = '';
             if ($to_array->count() > 0) {
                 $to = $to_array->implode(',');
@@ -153,71 +160,73 @@ class NotificationController extends Notification {
             $by = $this->by();
             if ($message) {
                 $noti = \App\Model\helpdesk\Notification\Notification::create([
-                            'message' => $message,
-                            'to' => $to,
-                            'by' => $by,
-                            'table' => $this->table($this->model),
-                            'row_id' => $this->rowId($this->model),
-                            'url' => $this->getUrl($this->model),
+                    'message' => $message,
+                    'to' => $to,
+                    'by' => $by,
+                    'table' => $this->table($this->model),
+                    'row_id' => $this->rowId($this->model),
+                    'url' => $this->getUrl($this->model),
                 ]);
                 //$this->mobilePush($noti->id, $to_array);
             }
         }
     }
 
-    public function mobilePush($notification_id, $to) {
+    public function mobilePush($notification_id, $to)
+    {
         //dd($notification_id);
         $fcm = new \App\Http\Controllers\Common\PushNotificationController();
         $noti = \App\Model\helpdesk\Notification\Notification::
-                where('id',$notification_id)
-                ->with([
-                    'requester' => function($query) {
-                        return $query->select('first_name', 
-                                'last_name',
-                                'user_name',
-                                'profile_pic',
-                                'email',
-                                'id');
-                    }])
-                ->select(
-                        'notifications.message'
-                        , 'notifications.created_at'
-                        ,'notifications.table as scenario'
-                        , 'by'
-                        , 'notifications.id as notification_id'
-                        ,'row_id as id'
-                )
-                ->first()
-                ->toArray();
+        where('id', $notification_id)
+            ->with([
+                'requester' => function ($query) {
+                    return $query->select('first_name',
+                        'last_name',
+                        'user_name',
+                        'profile_pic',
+                        'email',
+                        'id');
+                }])
+            ->select(
+                'notifications.message'
+                , 'notifications.created_at'
+                , 'notifications.table as scenario'
+                , 'by'
+                , 'notifications.id as notification_id'
+                , 'row_id as id'
+            )
+            ->first()
+            ->toArray();
         \App\User::whereIn('id', $to)
-                ->where('role', '!=', 'user')
-                ->select('fcm_token', 'i_token')
-                ->chunk(10, function($agents) use($noti, $fcm) {
-                    foreach ($agents as $agent) {
-                        $fcm->response($agent->token(), $noti);
-                    }
-                });
+            ->where('role', '!=', 'user')
+            ->select('fcm_token', 'i_token')
+            ->chunk(10, function ($agents) use ($noti, $fcm) {
+                foreach ($agents as $agent) {
+                    $fcm->response($agent->token(), $noti);
+                }
+            });
     }
 
-    public function by($change = "",$null=false) {
+    public function by($change = "", $null = false)
+    {
         $by = $this->authUserid;
-
         if (!$by) {
             $by = $this->userid;
         }
         if (!$by && \Auth::user()) {
             $by = \Auth::user()->id;
         }
-        if (!$by && $null==false) {
+        if (!$by && $null == false) {
             $by = NULL;
         }
-        if(!$by && $null!=false){
+        if (!$by && $null != false) {
             $by = null;
         }
         return $by;
     }
 
-    public function getUrl($model) {
+    public function getUrl($model)
+    {
         $table = $model->getTable();
         $id = $model->id;
         if ($table == 'ticket_thread') {
@@ -233,7 +242,8 @@ class NotificationController extends Notification {
         return $url;
     }
 
-    public function table($model) {
+    public function table($model)
+    {
         $table = $model->getTable();
         if ($table == 'ticket_thread') {
             $table = 'tickets';
@@ -241,7 +251,8 @@ class NotificationController extends Notification {
         return $table;
     }
 
-    public function rowId($model) {
+    public function rowId($model)
+    {
         $table = $model->getTable();
         $id = $model->id;
         if ($table == 'ticket_thread') {
@@ -250,7 +261,8 @@ class NotificationController extends Notification {
         return $id;
     }
 
-    public function send() {
+    public function send()
+    {
         //echo "is active => ".$this->isActive($this->key)."<br>";
         if ($this->isActive($this->key)) {
             $this->sendEmail();
@@ -259,7 +271,8 @@ class NotificationController extends Notification {
         }
     }
 
-    public function sendEmail() {
+    public function sendEmail()
+    {
         //echo "is mode email and this send mail => ".$this->isMode('email') && $this->send_mail."<br>";
         if ($this->isMode('email') && $this->send_mail) {
             $emails = $this->getField();
@@ -271,7 +284,8 @@ class NotificationController extends Notification {
         }
     }
 
-    public function getField($field = "email", $schma = true, $collect = false, $collection_fields = "") {
+    public function getField($field = "email", $schma = true, $collect = false, $collection_fields = "")
+    {
         $persons = $this->getPersons();
         $collection = collect();
         $ticket = $this->getTicket();
@@ -285,31 +299,31 @@ class NotificationController extends Notification {
         if ($schma == true) {
             $unique = \App\User::whereNotNull($field)->whereIn('id', $unique)->pluck($field, 'first_name')->toArray();
         }
-        if($collect == true){
-            if(sizeof($collection_fields) > 0) {      
-                $unique = \App\User::whereNotNull($field)->select($collection_fields)->whereIn('id', $unique)->get();     
+        if ($collect == true) {
+            if (sizeof($collection_fields) > 0) {
+                $unique = \App\User::whereNotNull($field)->select($collection_fields)->whereIn('id', $unique)->get();
             } else {
-                $unique = \App\User::whereNotNull($field)->whereIn('id', $unique)->get();     
-            }     
+                $unique = \App\User::whereNotNull($field)->whereIn('id', $unique)->get();
+            }
         }
         return $unique;
     }
 
-    public function getAgentIdByDependency($person, $ticket) {
+    public function getAgentIdByDependency($person, $ticket)
+    {
         $agents = [];
         switch ($person) {
             case "department_members": // pass department id
                 if ($ticket) {
                     $modelid = $ticket->dept_id;
-                    $agents = \App\User::where('primary_dpt',$modelid)
-                            ->select('users.id as department_members')
-                            ->where('role','!=','user')
-                            ->where('users.active', '=', 1)
-                            ->where('users.ban', '=', 0)
-                            ->where('users.is_delete', '=', 0)
-                            ->get()
-                            ->toArray()
-                            ;
+                    $agents = \App\User::where('primary_dpt', $modelid)
+                        ->select('users.id as department_members')
+                        ->where('role', '!=', 'user')
+                        ->where('users.active', '=', 1)
+                        ->where('users.ban', '=', 0)
+                        ->where('users.is_delete', '=', 0)
+                        ->get()
+                        ->toArray();
 
                 }
                 return $agents;
@@ -317,31 +331,30 @@ class NotificationController extends Notification {
                 if ($ticket) {
                     $modelid = $ticket->team_id;
                     $agents = \App\Model\helpdesk\Agent\Assign_team_agent::
-                            where('team_assign_agent.team_id', $modelid)
-                            ->join('users','team_assign_agent.agent_id','=','users.id')
-                            ->select('users.id as team_members')
-                            ->where('users.active','=',1)
-                            ->where('users.ban','=',0)
-                            ->where('users.is_delete','=',0)
-                            ->get()
-                            ->toArray()
-                            ;
+                    where('team_assign_agent.team_id', $modelid)
+                        ->join('users', 'team_assign_agent.agent_id', '=', 'users.id')
+                        ->select('users.id as team_members')
+                        ->where('users.active', '=', 1)
+                        ->where('users.ban', '=', 0)
+                        ->where('users.is_delete', '=', 0)
+                        ->get()
+                        ->toArray();
                 }
                 return $agents;
             case "agent":
                 $agents = \App\User::where('role', 'agent')
-                    ->where('active',1)
-                    ->where('ban',0)
-                    ->where('is_delete',0)
+                    ->where('active', 1)
+                    ->where('ban', 0)
+                    ->where('is_delete', 0)
                     ->select('id')
                     ->get()
                     ->toArray();
                 return $agents;
             case "admin":
                 $agents = \App\User::where('role', 'admin')
-                    ->where('active',1)
-                    ->where('ban',0)
-                    ->where('is_delete',0)
+                    ->where('active', 1)
+                    ->where('ban', 0)
+                    ->where('is_delete', 0)
                     ->select('id as admin')
                     ->get()
                     ->toArray();
@@ -349,19 +362,18 @@ class NotificationController extends Notification {
             case "user": // pass ticket user id
                 if ($ticket) {
                     $modelid = $ticket->user()
-                            ->where('active',1)
-                            ->where('ban',0)
-                            ->where('is_delete',0)
-                            ->value('id')
-                            ;
+                        ->where('active', 1)
+                        ->where('ban', 0)
+                        ->where('is_delete', 0)
+                        ->value('id');
                     $agents = ['user' => $modelid];
                 }
                 return $agents;
             case "agent_admin":
                 $agents = \App\User::where('role', '!=', 'user')
-                    ->where('active',1)
-                    ->where('ban',0)
-                    ->where('is_delete',0)
+                    ->where('active', 1)
+                    ->where('ban', 0)
+                    ->where('is_delete', 0)
                     ->select('id as agent_admin')
                     ->get()
                     ->toArray();
@@ -370,27 +382,27 @@ class NotificationController extends Notification {
                 if ($ticket) {
                     $modelid = $ticket->dept_id;
                     $agents = \App\Model\helpdesk\Agent\Department::where('department.id', $modelid)
-                            ->join('users','department.manager','=','users.id')
-                            ->select('users.id as department_manager')
-                            ->where('users.active','=',1)
-                            ->where('users.ban','=',0)
-                            ->where('users.is_delete','=',0)
-                            ->get()
-                            ->toArray();
+                        ->join('users', 'department.manager', '=', 'users.id')
+                        ->select('users.id as department_manager')
+                        ->where('users.active', '=', 1)
+                        ->where('users.ban', '=', 0)
+                        ->where('users.is_delete', '=', 0)
+                        ->get()
+                        ->toArray();
                 }
                 return $agents;
             case "team_lead": //pass team id
                 if ($ticket) {
                     $modelid = $ticket->team_id;
                     $agents = \App\Model\helpdesk\Agent\Teams::where('teams.id', $modelid)
-                            ->where('status', 1)
-                            ->join('users','teams.team_lead','=','users.id')
-                            ->select('users.id as team_lead')
-                            ->where('users.active','=',1)
-                            ->where('users.ban','=',0)
-                            ->where('users.is_delete','=',0)
-                            ->get()
-                            ->toArray();
+                        ->where('status', 1)
+                        ->join('users', 'teams.team_lead', '=', 'users.id')
+                        ->select('users.id as team_lead')
+                        ->where('users.active', '=', 1)
+                        ->where('users.ban', '=', 0)
+                        ->where('users.is_delete', '=', 0)
+                        ->get()
+                        ->toArray();
                 }
                 return $agents;
             case "organization_manager"://pass user id
@@ -401,12 +413,12 @@ class NotificationController extends Notification {
                 }
                 if ($modelid) {
                     $org = \App\Model\helpdesk\Agent_panel\User_org::where('user_assign_organization.user_id', $modelid)
-                            ->join('users','user_assign_organization.user_id','=','users.id')
-                            ->where('users.active','=',1)
-                            ->where('users.ban','=',0)
-                            ->where('users.is_delete','=',0)
-                            ->select('user_assign_organization.org_id')
-                            ->first();
+                        ->join('users', 'user_assign_organization.user_id', '=', 'users.id')
+                        ->where('users.active', '=', 1)
+                        ->where('users.ban', '=', 0)
+                        ->where('users.is_delete', '=', 0)
+                        ->select('user_assign_organization.org_id')
+                        ->first();
                     if ($org) {
                         $orgid = $org->org_id;
                         $agents = \App\Model\helpdesk\Agent_panel\Organization::where('id', $orgid)->select('head as organization_manager')->get()->toArray();
@@ -416,50 +428,49 @@ class NotificationController extends Notification {
             case "last_respondent":
                 if ($ticket) {
                     $agents = $ticket->thread()
-                            ->whereNotNull('ticket_thread.user_id')
-                            ->join('users',function($join){
-                                return $join->on('ticket_thread.user_id','=','users.id')
-                                        ->where('users.active','=',1)
-                                        ->where('users.ban','=',0)
-                                        ->where('users.is_delete','=',0);  
-                            })
-                            ->orderBy('ticket_thread.id', 'desc')
-                            ->select('users.id as last_respondent')
-                            ->first()
-                            ->toArray();
+                        ->whereNotNull('ticket_thread.user_id')
+                        ->join('users', function ($join) {
+                            return $join->on('ticket_thread.user_id', '=', 'users.id')
+                                ->where('users.active', '=', 1)
+                                ->where('users.ban', '=', 0)
+                                ->where('users.is_delete', '=', 0);
+                        })
+                        ->orderBy('ticket_thread.id', 'desc')
+                        ->select('users.id as last_respondent')
+                        ->first()
+                        ->toArray();
                 }
                 return $agents;
             case "assigned_agent_team":
                 if ($ticket) {
                     $assigned = $ticket->assigned()
-                            ->where('users.active','=',1)
-                            ->where('users.ban','=',0)
-                            ->where('users.is_delete','=',0)
-                            ->value('id')
-//                            ->get()
-                            ;
+                        ->where('users.active', '=', 1)
+                        ->where('users.ban', '=', 0)
+                        ->where('users.is_delete', '=', 0)
+                        ->value('id')//                            ->get()
+                    ;
                     $agents = ['assigned_agent_team' => $assigned];
                 }
                 return $agents;
             case "all_department_manager":
                 $agents = \App\Model\helpdesk\Agent\Department::
-                    select('department.manager as all_department_manager')
-                    ->join('users',function($join){
-                        $join->on('department.manager','=','users.id')
-                                ->where('users.active','=',1)
-                                ->where('users.ban','=',0)
-                                ->where('users.is_delete','=',0);
+                select('department.manager as all_department_manager')
+                    ->join('users', function ($join) {
+                        $join->on('department.manager', '=', 'users.id')
+                            ->where('users.active', '=', 1)
+                            ->where('users.ban', '=', 0)
+                            ->where('users.is_delete', '=', 0);
                     })
                     ->get()
                     ->toArray();
                 return $agents;
             case "all_team_lead":
                 $agents = \App\Model\helpdesk\Agent\Teams::where('teams.status', 1)
-                    ->join('users',function($join){
-                        $join->on('teams.team_lead','=','users.id')
-                             ->where('users.active','=',1)
-                             ->where('users.ban','=',0)
-                             ->where('users.is_delete','=',0);  
+                    ->join('users', function ($join) {
+                        $join->on('teams.team_lead', '=', 'users.id')
+                            ->where('users.active', '=', 1)
+                            ->where('users.ban', '=', 0)
+                            ->where('users.is_delete', '=', 0);
                     })
                     ->select('teams.team_lead as all_team_lead')
                     ->get()
@@ -469,26 +480,27 @@ class NotificationController extends Notification {
                 //dd($this);
                 if ($ticket) {
                     $agents = ['client' => $ticket->user_id];
-                }
-                elseif ($this->userid) {
+                } elseif ($this->userid) {
                     $agents = ['client' => $this->userid];
                 }
                 return $agents;
         }
     }
 
-    public function sendSms() {
+    public function sendSms()
+    {
         if ($this->isMode('sms')) {
             //put check for SMS plugin and settings 
             if ($this->checkPluginSetup()) {
-                
+
             } else {
                 loging('aler & notification', Lang::get('lang.can-not-send-message-sms-plugin-not-active'), 'info');
             }
         }
     }
 
-    public function getTicketId($model) {
+    public function getTicketId($model)
+    {
         switch ($model->getTable()) {
             case "tickets":
                 return $model->id;
@@ -497,13 +509,14 @@ class NotificationController extends Notification {
         }
     }
 
-    public function ticket($id) {
+    public function ticket($id)
+    {
         return \App\Model\helpdesk\Ticket\Tickets::where('id', $id)->first();
     }
 
-    public function getType($change) {
+    public function getType($change)
+    {
         if ($change) {
-
             if (checkArray('response_due', $change)) {
                 return 'response_due';
             }
@@ -514,7 +527,8 @@ class NotificationController extends Notification {
         }
     }
 
-    public function getBody($change, $model, $inapp = false) {
+    public function getBody($change, $model, $inapp = false)
+    {
         $auth_username = "System";
         if (\Auth::user()) {
             $auth_username = "<a href=" . faveoUrl('user/' . \Auth::user()->id) . ">" . \Auth::user()->user_name . "</a>";
@@ -522,13 +536,13 @@ class NotificationController extends Notification {
         return $this->getSchemas($change, $model, $auth_username, $inapp);
     }
 
-    public function getSchemas($change, $model, $auth_username, $inapp) {
+    public function getSchemas($change, $model, $auth_username, $inapp)
+    {
         //dd($change,$model);
         $content = "";
-        if ($this->key=="new_ticket_alert") {
+        if ($this->key == "new_ticket_alert") {
             $content = trans('lang.created.ticket', ['subject' => "<b>" . title($model->id) . "</b>", 'created_at' => faveoDate($model->created_at)]);
         } elseif (count($change) > 0) {
-
             foreach ($change as $key => $value) {
                 $get_content = $this->getContent($key, $value, $model, $auth_username, $inapp);
                 if ($get_content) {
@@ -546,7 +560,8 @@ class NotificationController extends Notification {
         return $content;
     }
 
-    public function getContent($key, $value, $model, $auth_username, $inapp) {
+    public function getContent($key, $value, $model, $auth_username, $inapp)
+    {
         //dd($key,$value,$model->title);
         $new = $this->switchNewSchema($key, $value, $model, $auth_username);
         $old = $this->switchOldSchema($key, $value, $model, $auth_username);
@@ -565,9 +580,9 @@ class NotificationController extends Notification {
                 return trans('lang.notification.update', ['model' => 'Source', 'created_at' => $created_at->tz($tz), 'old' => $old, 'new' => $new]);
             case 'title':
                 if ($inapp == true) {
-                    return trans('lang.notification.update.inapp', ['model' => 'Title', 'created_at' => faveoDate($created_at), 'old' => "<b>".$model->title."</b>", 'new' => "<b>".$value."</b>", 'ticket' => ticketNumber($this->ticketid)]);
+                    return trans('lang.notification.update.inapp', ['model' => 'Title', 'created_at' => faveoDate($created_at), 'old' => "<b>" . $model->title . "</b>", 'new' => "<b>" . $value . "</b>", 'ticket' => ticketNumber($this->ticketid)]);
                 }
-                return trans('lang.notification.update', ['model' => 'Title', 'created_at' => $created_at->tz($tz),'old' => "<b>".$model->title."</b>", 'new' => "<b>".$value."</b>"]);
+                return trans('lang.notification.update', ['model' => 'Title', 'created_at' => $created_at->tz($tz), 'old' => "<b>" . $model->title . "</b>", 'new' => "<b>" . $value . "</b>"]);
             case 'help_topic_id':
                 if ($inapp == true) {
                     return trans('lang.notification.update.inapp', ['model' => 'Help topic', 'created_at' => faveoDate($created_at), 'old' => $old, 'new' => $new, 'ticket' => ticketNumber($this->ticketid)]);
@@ -609,17 +624,18 @@ class NotificationController extends Notification {
                 if ($inapp == true) {
                     return trans('lang.notification.duedate.inapp', ['model' => 'Duedate', 'created_at' => $created_at->tz($tz), 'old' => $old, 'new' => $value, 'ticket' => ticketNumber($this->ticketid)]);
                 }
-                return trans('lang.notification.duedate', ['model' => 'Duedate', 'new' =>  carbon($value)->tz($tz)]);
+                return trans('lang.notification.duedate', ['model' => 'Duedate', 'new' => carbon($value)->tz($tz)]);
             case "note":
                 if ($inapp == true) {
                     return trans('lang.notification.note.inapp', ['model' => 'Internal Note', 'new' => $value, 'ticket' => ticketNumber($this->ticketid)]);
                 }
                 return trans('lang.notification.note', ['model' => 'Internal Note', 'new' => $value]);
-             
+
         }
     }
 
-    public function switchNewSchema($key, $value, $model, $auth_username) {
+    public function switchNewSchema($key, $value, $model, $auth_username)
+    {
         switch ($key) {
             case 'priority_id':
                 $priority = "";
@@ -628,8 +644,6 @@ class NotificationController extends Notification {
                     $priority = "<b>" . $schema->priority . "</b>";
                 }
                 return $priority;
-
-
             case 'source':
                 $source = "";
                 $schema = \App\Model\helpdesk\Ticket\Ticket_source::where('id', $value)->select('name')->first();
@@ -637,11 +651,8 @@ class NotificationController extends Notification {
                     $source = "<b>" . $schema->name . "</b>";
                 }
                 return $source;
-
-
             case 'title':
                 return "<b>" . $value . "</b>";
-
             case 'help_topic_id':
                 $topic = "";
                 $schema = \App\Model\helpdesk\Manage\Help_topic::where('id', $value)->select('topic')->first();
@@ -649,7 +660,6 @@ class NotificationController extends Notification {
                     $topic = "<b>" . $schema->topic . "</b>";
                 }
                 return $topic;
-
             case 'sla':
                 $sla = "";
                 $schema = \App\Model\helpdesk\Manage\Sla\Sla_plan::where('id', $value)->select('name')->first();
@@ -657,7 +667,6 @@ class NotificationController extends Notification {
                     $sla = "<b>" . $schema->name . "</b>";
                 }
                 return $sla;
-
             case 'status':
                 $status = "";
                 $schema = \App\Model\helpdesk\Ticket\Ticket_Status::where('id', $value)->select('name')->first();
@@ -665,8 +674,6 @@ class NotificationController extends Notification {
                     $status = "<b>" . $schema->name . "</b>";
                 }
                 return $status;
-
-
             case 'assigned_to':
                 $assigned = "";
                 $schema = \App\User::where('id', $value)->select('first_name', 'last_name', 'user_name')->first();
@@ -691,14 +698,14 @@ class NotificationController extends Notification {
         }
     }
 
-    public function switchOldSchema($key, $value, $model, $auth_username) {
+    public function switchOldSchema($key, $value, $model, $auth_username)
+    {
         switch ($key) {
             case 'priority_id':
                 $schema = $model->priority()->select('priority', 'priority_id')->first();
                 if ($schema) {
                     return "<b>" . $schema->priority . "</b>";
                 }
-
             case 'source':
                 $source = "";
                 $schema = $model->sources()->select('name', 'id')->first();
@@ -706,8 +713,6 @@ class NotificationController extends Notification {
                     $source = "<b>" . $schema->name . "</b>";
                 }
                 return $source;
-
-
             case 'title':
                 $title = "";
                 $schema = $model->whereNotNull('title')->select('title')->first();
@@ -715,7 +720,6 @@ class NotificationController extends Notification {
                     $title = "<b>" . $schema->title . "</b>";
                 }
                 return $title;
-
             case 'help_topic_id':
                 $topic = "";
                 $schema = $model->helptopic()->select('topic')->first();
@@ -723,7 +727,6 @@ class NotificationController extends Notification {
                     $topic = "<b>" . $schema->topic . "</b>";
                 }
                 return $topic;
-
             case 'sla':
                 $sla = "";
                 $schema = $model->slaPlan()->select('name')->first();
@@ -731,7 +734,6 @@ class NotificationController extends Notification {
                     $sla = "<b>" . $schema->name . "</b>";
                 }
                 return $sla;
-
             case 'status':
                 $status = "";
                 $schema = $model->statuses()->select('name')->first();
@@ -739,8 +741,6 @@ class NotificationController extends Notification {
                     $status = "<b>" . $schema->name . "</b>";
                 }
                 return $status;
-
-
             case 'assigned_to':
                 $assigned = "";
                 $schema = $model->assigned()->select('user_name')->first();
@@ -755,7 +755,6 @@ class NotificationController extends Notification {
                     $user = "<b>" . $schema->name() . "</b>";
                 }
                 return $user;
-
             case 'dept_id':
                 $department = "";
                 $schema = $model->departments()->select('name')->first();
@@ -766,7 +765,8 @@ class NotificationController extends Notification {
         }
     }
 
-    public function setParameters($array) {
+    public function setParameters($array)
+    {
         if (is_array($array) && count($array) > 0) {
             if (checkArray('ticketid', $array)) {
                 $this->ticketid = checkArray('ticketid', $array);
@@ -789,13 +789,15 @@ class NotificationController extends Notification {
         }
     }
 
-    public function setParameter($key, $value) {
+    public function setParameter($key, $value)
+    {
         if ($key) {
             $this->$key = $value;
         }
     }
 
-    public function getTicket() {
+    public function getTicket()
+    {
         $tickets = new \App\Model\helpdesk\Ticket\Tickets();
         $ticket = $tickets->find($this->ticketid);
         if ($ticket) {
@@ -803,28 +805,28 @@ class NotificationController extends Notification {
         }
     }
 
-    public function postMail($to_email, $to_name) {
+    public function postMail($to_email, $to_name)
+    {
         $mail = new \App\Http\Controllers\Common\PhpMailController();
         $this->variable['agent'] = $to_name;
         $this->variable['ticket_agent_name'] = $to_name;
         $to = ['email' => $to_email, 'name' => $to_name];
-        try{
-            $mail->sendmail($this->from, $to, $this->message, $this->variable,  $this->thread,$this->auto_respond);
-        }catch(\Exception $ex){
+        try {
+            $mail->sendmail($this->from, $to, $this->message, $this->variable, $this->thread, $this->auto_respond);
+        } catch (\Exception $ex) {
             //dd($ex);
         }
         loging('aler & notification', 'Alert email has sent to ' . json_encode($to) . 'with ' . json_encode([$this->message, $this->variable]), 'info');
     }
 
-    public function setDetails($array) {
-        
+    public function setDetails($array)
+    {
         $collection = array_collapse($array);
         if (count($collection) > 0) {
             foreach ($collection as $key => $value) {
                 if ($key == 'registration_notification_alert') {
                     $key = 'registration_alert';
                 }
-                
                 $from = checkArray('from', $value);
                 $message = checkArray('message', $value);
                 $variables = checkArray('variable', $value);
@@ -833,21 +835,20 @@ class NotificationController extends Notification {
                 $userid = checkArray('userid', $value);
                 $model = checkArray('model', $value);
                 $thread = checkArray('thread', $value);
-                if($key=='reply_alert'){
+                if ($key == 'reply_alert') {
                     $this->auto_respond = false;
                 }
-                
                 $this->setParameters([
-                    'ticketid' => $ticketid,
-                    'key' => $key,
-                    'from' => $from,
-                    'message' => $message,
-                    'variable' => $variables,
-                    'send_mail' => $send_mail,
-                    'userid' => $userid,
-                    'model' => $model,
-                    'thread'=>$thread,
-                        ]
+                        'ticketid' => $ticketid,
+                        'key' => $key,
+                        'from' => $from,
+                        'message' => $message,
+                        'variable' => $variables,
+                        'send_mail' => $send_mail,
+                        'userid' => $userid,
+                        'model' => $model,
+                        'thread' => $thread,
+                    ]
                 );
                 if ($key === 'new_user_alert' || $key === 'new_ticket_alert') {
                     $this->authUserid = $userid;
@@ -855,20 +856,22 @@ class NotificationController extends Notification {
                 }
                 //echo $key."<br>";
                 $this->send();
-//                echo "<hr>";
+                //                echo "<hr>";
             }
-            
-//            dd('yes');
+
+            //            dd('yes');
         }
     }
 
-    public function setFrom($ticket) {
+    public function setFrom($ticket)
+    {
         $phpmail = new \App\Http\Controllers\Common\PhpMailController();
         $from = $phpmail->mailfrom('1', $ticket->dept_id);
         $this->from = $from;
     }
 
-    public function type($ticket) {
+    public function type($ticket)
+    {
         $type = $this->key;
         if ($ticket && is_array($this->change) && key_exists('duedate', $this->change)) {
             $type = "response_due";
@@ -880,22 +883,22 @@ class NotificationController extends Notification {
     }
 
     /**
-     *@category function to check is msg91 settins has been set up or not
-     *@param null
-     *@return null
+     * @category function to check is msg91 settins has been set up or not
+     * @param null
+     * @return null
      *
      */
     public function checkPluginSetup()
     {
         //put check for SMS plugin and settings
         $sms_pluign_status = DB::table('plugins')->select('status')
-        ->where('name', '=', 'SMS')
-        ->where('status', '=', 1)
-        ->first();
+            ->where('name', '=', 'SMS')
+            ->where('status', '=', 1)
+            ->first();
         if ($sms_pluign_status) {
-            if(in_array("App\Plugins\SMS\ServiceProvider", \Config::get('app.providers'))) {
+            if (in_array("App\Plugins\SMS\ServiceProvider", \Config::get('app.providers'))) {
                 if (Schema::hasTable('sms')) {
-                    $sms =DB::table('sms')->get();
+                    $sms = DB::table('sms')->get();
                     if (count($sms) > 0) {
                         return true;
                     }
@@ -913,7 +916,7 @@ class NotificationController extends Notification {
      */
     public function groupCollectionbyField($users, $field, $show_field = ['email'])
     {
-        if($this->keysExistsinCollectionArray($users, $show_field) && $this->keysExistsinCollectionArray($users, $field)) {
+        if ($this->keysExistsinCollectionArray($users, $show_field) && $this->keysExistsinCollectionArray($users, $field)) {
             $tmp = [];
             foreach ($users as $user) {
                 $tmp[$user[$field]][] = $this->setArrayValues($user, $show_field);
@@ -928,16 +931,17 @@ class NotificationController extends Notification {
      *
      *
      */
-    public function keysExistsinCollectionArray($collection_array, $keys) {
-        if(is_array($keys)) {
+    public function keysExistsinCollectionArray($collection_array, $keys)
+    {
+        if (is_array($keys)) {
             foreach ($keys as $key) {
-               if(!array_key_exists ($key , $collection_array->toArray()[0])) {
+                if (!array_key_exists($key, $collection_array->toArray()[0])) {
                     return false;
                 }
             }
             return true;
         } else {
-            return array_key_exists ($keys , $collection_array->toArray()[0]);
+            return array_key_exists($keys, $collection_array->toArray()[0]);
         }
     }
 

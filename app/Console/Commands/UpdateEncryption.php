@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -38,8 +37,7 @@ class UpdateEncryption extends Command
     public function handle()
     {
         $emails = \App\Model\helpdesk\Email\Emails::get();
-
-        foreach($emails as $email){
+        foreach ($emails as $email) {
             $email->password = encrypt("password");
             $email->save();
         }

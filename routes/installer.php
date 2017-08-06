@@ -1,5 +1,4 @@
 <?php
-
 Route::get('serial', [
     'as' => 'serialkey',
     'uses' => 'Installer\helpdesk\InstallController@serialkey'
@@ -12,17 +11,16 @@ Route::post('/post-bill', [
     'as' => 'return.bill',
     'uses' => 'Installer\helpdesk\InstallController@returnFormBilling'
 ]);
-
 Route::get('/JavaScript-disabled', [
     'as' => 'js-disabled',
     'uses' => 'Installer\helpdesk\InstallController@jsDisabled'
 ]);
 Route::get('/step1', [
-    'as' => 'licence', 
+    'as' => 'licence',
     'uses' => 'Installer\helpdesk\InstallController@licence'
 ]);
 Route::post('/step1post', [
-    'as' => 'postlicence', 
+    'as' => 'postlicence',
     'uses' => 'Installer\helpdesk\InstallController@licencecheck'
 ]);
 Route::get('/step2', [
@@ -30,7 +28,7 @@ Route::get('/step2', [
     'uses' => 'Installer\helpdesk\InstallController@prerequisites'
 ]);
 Route::post('/step2post', [
-    'as' => 'postprerequisites', 
+    'as' => 'postprerequisites',
     'uses' => 'Installer\helpdesk\InstallController@prerequisitescheck'
 ]);
 Route::get('/step3', [
@@ -69,28 +67,22 @@ Route::get('/change-file-permission', [
     'as' => 'change-permission',
     'uses' => 'Installer\helpdesk\InstallController@changeFilePermission'
 ]);
-
-
 Route::get('create/env', [
     'as' => 'create.env',
     'uses' => 'Installer\helpdesk\InstallController@createEnv'
 ]);
-
 Route::get('preinstall/check', [
     'as' => 'preinstall.check',
     'uses' => 'Installer\helpdesk\InstallController@checkPreInstall'
 ]);
-
 Route::get('migrate', [
     'as' => 'migrate',
     'uses' => 'Installer\helpdesk\InstallController@migrate'
 ]);
-
 Route::get('seed', [
     'as' => 'seed',
     'uses' => 'Installer\helpdesk\InstallController@seed'
 ]);
-
 Route::get('update/install', [
     'as' => 'update.install',
     'uses' => 'Installer\helpdesk\InstallController@updateInstalEnv'
