@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Agent\helpdesk;
 
 // controllers
@@ -36,10 +37,11 @@ use App\Model\helpdesk\Utility\Date_time_format;
 use App\Model\helpdesk\Utility\Timezones;
 use App\User;
 use Auth;
+use Crypt;
 use DB;
 use Exception;
-use GeoIP;
 // classes
+use GeoIP;
 use Hash;
 use Illuminate\Http\Request;
 use Illuminate\support\Collection;
@@ -47,6 +49,7 @@ use Input;
 use Lang;
 use Mail;
 use PDF;
+use UTC;
 
 /**
  * TicketController.
@@ -55,9 +58,6 @@ use PDF;
  */
 class TicketController extends Controller
 {
-
-    protected $ticket_policy;
-
     /**
      * Create a new controller instance.
      *
@@ -68,7 +68,6 @@ class TicketController extends Controller
         $this->PhpMailController = $PhpMailController;
         $this->NotificationController = $NotificationController;
         $this->middleware('auth');
-        $this->ticket_policy = new \App\Policies\TicketPolicy();
     }
 
     /**
@@ -79,9 +78,10 @@ class TicketController extends Controller
     public function inbox_ticket_list()
     {
         $table = \Datatable::table()
-            ->addColumn(
-                '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
-            ->noScript();
+                ->addColumn(
+                        '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
+                ->noScript();
+
         return view('themes.default1.agent.helpdesk.ticket.inbox', compact('table'));
     }
 
@@ -93,9 +93,10 @@ class TicketController extends Controller
     public function open_ticket_list()
     {
         $table = \Datatable::table()
-            ->addColumn(
-                '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
-            ->noScript();
+                ->addColumn(
+                        '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
+                ->noScript();
+
         return view('themes.default1.agent.helpdesk.ticket.open', compact('table'));
     }
 
@@ -107,9 +108,10 @@ class TicketController extends Controller
     public function answered_ticket_list()
     {
         $table = \Datatable::table()
-            ->addColumn(
-                '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
-            ->noScript();
+                ->addColumn(
+                        '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
+                ->noScript();
+
         return view('themes.default1.agent.helpdesk.ticket.answered', compact('table'));
     }
 
@@ -121,9 +123,10 @@ class TicketController extends Controller
     public function myticket_ticket_list()
     {
         $table = \Datatable::table()
-            ->addColumn(
-                '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
-            ->noScript();
+                ->addColumn(
+                        '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
+                ->noScript();
+
         return view('themes.default1.agent.helpdesk.ticket.myticket', compact('table'));
     }
 
@@ -135,9 +138,10 @@ class TicketController extends Controller
     public function overdue_ticket_list()
     {
         $table = \Datatable::table()
-            ->addColumn(
-                '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
-            ->noScript();
+                ->addColumn(
+                        '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
+                ->noScript();
+
         return view('themes.default1.agent.helpdesk.ticket.overdue', compact('table'));
     }
 
@@ -149,9 +153,10 @@ class TicketController extends Controller
     public function dueTodayTicketlist()
     {
         $table = \Datatable::table()
-            ->addColumn(
-                '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
-            ->noScript();
+                ->addColumn(
+                        '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
+                ->noScript();
+
         return view('themes.default1.agent.helpdesk.ticket.duetodayticket', compact('table'));
     }
 
@@ -163,9 +168,10 @@ class TicketController extends Controller
     public function closed_ticket_list()
     {
         $table = \Datatable::table()
-            ->addColumn(
-                '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
-            ->noScript();
+                ->addColumn(
+                        '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
+                ->noScript();
+
         return view('themes.default1.agent.helpdesk.ticket.closed', compact('table'));
     }
 
@@ -177,9 +183,10 @@ class TicketController extends Controller
     public function assigned_ticket_list()
     {
         $table = \Datatable::table()
-            ->addColumn(
-                '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
-            ->noScript();
+                ->addColumn(
+                        '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
+                ->noScript();
+
         return view('themes.default1.agent.helpdesk.ticket.assigned', compact('table'));
     }
 
@@ -190,10 +197,16 @@ class TicketController extends Controller
      */
     public function newticket(CountryCode $code)
     {
-        if (!$this->ticket_policy->create()) {
-            return redirect('dashboard')->with('fails', Lang::get('lang.permission-denied'));
+        $location = GeoIP::getLocation();
+        $phonecode = $code->where('iso', '=', $location->iso_code)->first();
+        $pcode = '';
+        if ($phonecode) {
+            $pcode = $phonecode->phonecode;
         }
-        return view('themes.default1.agent.helpdesk.ticket.new');
+        $settings = CommonSettings::select('status')->where('option_name', '=', 'send_otp')->first();
+        $email_mandatory = CommonSettings::select('status')->where('option_name', '=', 'email_mandatory')->first();
+
+        return view('themes.default1.agent.helpdesk.ticket.new', compact('email_mandatory', 'settings'))->with('phonecode', $pcode);
     }
 
     /**
@@ -203,116 +216,105 @@ class TicketController extends Controller
      *
      * @return type response
      */
-    public function post_newticket(Request $request, CountryCode $code, $api = false)
+    public function post_newticket(CreateTicketRequest $request, CountryCode $code, $api = false)
     {
-        if (!$this->ticket_policy->create()) {
-            if ($api) {
-                return response()->json(['message' => 'permission denied'], 403);
-            }
-            return redirect('dashboard')->with('fails', 'Permission denied');
-        }
         try {
-            $email = null;
-            $fullname = null;
-            $mobile_number = null;
-            $phonecode = null;
-            $default_values = ['Requester', 'Requester_email', 'Requester_name', 'Requester_mobile',
-                'Requester_mobile', 'Requester_code', 'Group', 'Assigned', 'Subject', 'Description',
-                'Priority', 'Type', 'Status', 'attachment', 'inline', 'email', 'first_name', 'last_name', 'mobile', 'country_code'];
-            $form_data = $request->except($default_values);
-            $requester = $request->input('Requester');
-            if ($request->has('Requester')) {
-                $user = User::find($requester);
-            }
-            if ($request->has('api')) {
-                $api = $request->input('api');
-            }
-            if ($request->has('Requester_email')) {
-                $email = $request->input('Requester_email');
-            } elseif ($user) {
-                $email = $user->email;
-            }
-            if ($request->has('Requester_name')) {
-                $fullname = $request->input('Requester_name');
-            } elseif ($user) {
-                $fullname = $user->first_name;
-            }
-            if ($request->has('Requester_mobile')) {
-                $mobile_number = $request->input('Requester_mobile');
-            } elseif ($user) {
-                $mobile_number = $user->mobile;
-            }
-            if ($request->has('Requester_code')) {
-                $phonecode = $request->input('Requester_code');
-            } elseif ($user) {
-                $phonecode = $user->country_code;
-            }
-            if ($request->has('Group')) {
-                $helptopic = $request->input('Group');
-                $help = Help_topic::where('id', '=', $helptopic)->first();
+            if ($request->input('email')) {
+                $email = $request->input('email');
             } else {
-                $help = Help_topic::first();
-                $helptopic = $help->id;
+                $email = null;
             }
-            if ($request->has('Assigned')) {
-                $assignto = $request->input('Assigned');
+            $fullname = $request->input('first_name').'%$%'.$request->input('last_name');
+            $helptopic = $request->input('helptopic');
+            $sla = $request->input('sla');
+            $duedate = $request->input('duedate');
+            if ($request->input('assignto')) {
+                $assignto = $request->input('assignto');
             } else {
                 $assignto = null;
             }
-            if ($request->has('Subject')) {
-                $subject = $request->input('Subject');
+            $subject = $request->input('subject');
+            $body = $request->input('body');
+            $priority = $request->input('priority');
+            $phone = $request->input('phone');
+            $phonecode = $request->input('code');
+            if ($request->input('mobile')) {
+                $mobile_number = $request->input('mobile');
             } else {
-                $subject = null;
+                $mobile_number = null;
             }
-            if ($request->has('Description')) {
-                $body = $request->input('Description');
-            } else {
-                $body = null;
-            }
-            if ($request->has('Priority')) {
-                $priority = $request->input('Priority');
-            } else {
-                $priority = null;
-            }
-            if ($request->input('Status')) {
-                $status = $request->input('Status');
-            } else {
-                $status = null;
-            }
-            $phone = "";
             $source = Ticket_source::where('name', '=', 'agent')->first();
             $headers = null;
+            $help = Help_topic::where('id', '=', $helptopic)->first();
+            $form_data = null;
             $auto_response = 0;
-            $sla = "";
-            $attach = $request->input('attachment');
-            $inline = $request->input('inline');
-            $result = $this->create_user($email, $fullname, $subject, $body, $phone, $phonecode, $mobile_number, $helptopic, $sla, $priority, $source->id, $headers, $help->department, $assignto, $form_data, $auto_response, $status, $attach, $inline);
+            $status = 1;
+            if ($phone != null || $mobile_number != null) {
+                $location = GeoIP::getLocation();
+                $geoipcode = $code->where('iso', '=', $location->iso_code)->first();
+                if ($phonecode == null) {
+                    $data = [
+                        'fails'              => Lang::get('lang.country-code-required-error'),
+                        'phonecode'          => $geoipcode->phonecode,
+                        'country_code_error' => 1,
+                    ];
+                    if ($api != false) {
+                        return $data;
+                    }
+
+                    return Redirect()->back()->with($data)->withInput($request->except('password'));
+                } else {
+                    $code = CountryCode::select('phonecode')->where('phonecode', '=', $phonecode)->get();
+                    if (!count($code)) {
+                        $data = [
+                            'fails'              => Lang::get('lang.incorrect-country-code-error'),
+                            'phonecode'          => $geoipcode->phonecode,
+                            'country_code_error' => 1,
+                        ];
+                        if ($api != false) {
+                            return $data;
+                        }
+
+                        return Redirect()->back()->with($data)->withInput($request->except('password'));
+                    }
+                }
+            }
+            //create user
+            $result = $this->create_user($email, $fullname, $subject, $body, $phone, $phonecode, $mobile_number, $helptopic, $sla, $priority, $source->id, $headers, $help->department, $assignto, $form_data, $auto_response, $status);
             if ($result[1]) {
                 $status = $this->checkUserVerificationStatus();
                 if ($status == 1) {
-                    if ($api != false) {
-                        return response()->json(['success' => Lang::get('lang.Ticket-created-successfully')]);
+                    if ($api != false)
+                    {
+                        $ticket = Tickets::where('ticket_number', '=', $result[0])->select('id')->first();
+                        return ['ticket_id' => $ticket->id, 'message' => Lang::get('lang.Ticket-created-successfully')];
                     }
+
                     return Redirect('newticket')->with('success', Lang::get('lang.Ticket-created-successfully'));
                 } else {
-                    if ($api != false) {
+                    if ($api != false)
+                    {
                         return response()->json(['success' => Lang::get('lang.Ticket-created-successfully')]);
                     }
+
                     return Redirect('newticket')->with('success', Lang::get('lang.Ticket-created-successfully2'));
                 }
             } else {
-                if ($api != false) {
+                if ($api != false)
+                {
                     return response()->json(['error' => Lang::get('lang.failed-to-create-user-tcket-as-mobile-has-been-taken')], 500);
                 }
+
                 return Redirect('newticket')->with('fails', Lang::get('lang.failed-to-create-user-tcket-as-mobile-has-been-taken'))->withInput($request->except('password'));
             }
         } catch (Exception $e) {
             dd($e);
-            $api = true;
-            if ($api != false) {
+            if ($api != false)
+            {
                 return response()->json(['error' => $e->getMessage()], 500);
             }
-            return Redirect()->back()->with('fails', $e->getMessage());
+
+            return Redirect()->back()->with('fails', '<li>'.$e->getMessage().'</li>');
         }
     }
 
@@ -325,30 +327,24 @@ class TicketController extends Controller
      */
     public function thread($id)
     {
-        $tickets = Tickets::where('tickets.id', $id)
-            ->select('tickets.id', 'ticket_number', 'tickets.user_id', 'tickets.assigned_to', 'source', 'dept_id', 'priority_id', 'sla', 'help_topic_id', 'status', 'tickets.created_at', 'tickets.duedate');
-        if (!$tickets->first()) {
-            return redirect()->back()->with('fails', \Lang::get('lang.invalid_attempt'));
-        }
-        $auth_agent = \Auth::user();
-        $ticket_policy = new \App\Policies\TicketPolicy();
-        if ($auth_agent->role == 'agent') {
-            $dept = Department::where('id', '=', $auth_agent->primary_dpt)->first();
+        if (Auth::user()->role == 'agent') {
+            $dept = Department::where('id', '=', Auth::user()->primary_dpt)->first();
             $tickets = Tickets::where('id', '=', $id)->first();
             if ($tickets->dept_id == $dept->id) {
                 $tickets = $tickets;
-            } elseif ($tickets->assigned_to == $auth_agent->id) {
+            } elseif ($tickets->assigned_to == Auth::user()->id) {
                 $tickets = $tickets;
             } else {
                 $tickets = null;
             }
-            //            $tickets = $tickets->where('dept_id', '=', $dept->id)->orWhere('assigned_to', Auth::user()->id)->first();
-            //            dd($tickets);
-        } elseif ($auth_agent->role == 'admin') {
+//            $tickets = $tickets->where('dept_id', '=', $dept->id)->orWhere('assigned_to', Auth::user()->id)->first();
+//            dd($tickets);
+        } elseif (Auth::user()->role == 'admin') {
             $tickets = Tickets::where('id', '=', $id)->first();
-        } elseif ($auth_agent->role == 'user') {
+        } elseif (Auth::user()->role == 'user') {
             $thread = Ticket_Thread::where('ticket_id', '=', $id)->first();
             $ticket_id = \Crypt::encrypt($id);
+
             return redirect()->route('check_ticket', compact('ticket_id'));
         }
         if ($tickets == null) {
@@ -363,7 +359,8 @@ class TicketController extends Controller
         $max_size_in_bytes = $fileupload[0];
         $max_size_in_actual = $fileupload[1];
         $tickets_approval = Tickets::where('id', '=', $id)->first();
-        return view('themes.default1.agent.helpdesk.ticket.timeline', compact('tickets', 'max_size_in_bytes', 'max_size_in_actual', 'tickets_approval'), compact('thread', 'avg_rating', 'ticket_policy'));
+
+        return view('themes.default1.agent.helpdesk.ticket.timeline', compact('tickets', 'max_size_in_bytes', 'max_size_in_actual', 'tickets_approval'), compact('thread', 'avg_rating'));
     }
 
     public function size()
@@ -378,6 +375,7 @@ class TicketController extends Controller
                 $size += $file->getSize();
             }
         }
+
         return $size;
     }
 
@@ -388,6 +386,7 @@ class TicketController extends Controller
             if (is_object($error)) {
                 $error = $error->toArray();
             }
+
             return response()->json(compact('error'));
             //return $message;
         }
@@ -401,182 +400,204 @@ class TicketController extends Controller
      *
      * @return type bool
      */
-    public function reply(Request $request, $ticketid = "", $mail = true, $system_reply = true, $user_id = '')
+    public function reply(Ticket_Thread $thread, Request $request, Ticket_attachments $ta, $mail = true, $system_reply = true, $user_id = '')
     {
-        $this->validate($request, [
-            'content' => 'required',
-        ], [
-            'content.required' => 'Reply Content Required',
-        ]);
+        \Event::fire('reply.request', [$request]);
         try {
-            if (!$ticketid) {
-                $ticketid = $request->input('ticket_id');
-            }
-            $body = $request->input('content');
-            $email = $request->input('email');
-            $inline = $request->input('inline');
-            $attachment = $request->input('attachment');
-            $source = source($ticketid);
-            $form_data = $request->except('content', 'ticket_id', 'attachment', 'inline');
-            \Event::fire(new \App\Events\ClientTicketFormPost($form_data, $email, $source));
-            if ($system_reply == true && Auth::user()) {
-                $user_id = Auth::user()->id;
+            if (is_array($request->file('attachment'))) {
             } else {
-                $user_id = requester($ticketid);
-                if ($user_id !== "") {
-                    $user_id = $user_id;
+                try {
+                    $size = $this->size();
+                } catch (Exception $ex) {
+                    return $ex->getMessage();
                 }
             }
-            $this->saveReply($ticketid, $body, $user_id, $system_reply, $attachment, $inline, $mail);
+
+            $fileupload = new FileuploadController();
+            $fileupload = $fileupload->file_upload_max_size();
+            $max_size_in_bytes = $fileupload[0];
+            $max_size_in_actual = $fileupload[1];
+
+            $attachments = $request->file('attachment');
+            $check_attachment = null;
+            // Event fire
+            $eventthread = $thread->where('ticket_id', $request->input('ticket_ID'))->first();
+            //dd($eventthread);
+
+            $eventuserid = $eventthread->user_id;
+            $emailadd = User::where('id', $eventuserid)->first()->email;
+            $source = $eventthread->source;
+            $form_data = $request->except('reply_content', 'ticket_ID', 'attachment');
+            \Event::fire(new \App\Events\ClientTicketFormPost($form_data, $emailadd, $source));
+            $reply_content = $request->input('reply_content');
+
+            $thread->ticket_id = $request->input('ticket_ID');
+            $thread->poster = 'support';
+            $thread->body = $request->input('reply_content');
+            if ($system_reply == true) {
+                $thread->user_id = Auth::user()->id;
+            } else {
+                $thread->user_id = $eventuserid;
+                if ($user_id !== '') {
+                    $thread->user_id = $user_id;
+                }
+            }
+            $ticket_id = $request->input('ticket_ID');
+
+            $tickets = Tickets::where('id', '=', $ticket_id)->first();
+            $tickets->isanswered = '1';
+            $tickets->save();
+
+            $ticket_user = User::where('id', '=', $tickets->user_id)->first();
+            if ($system_reply == true) {
+                if ($tickets->assigned_to == 0) {
+                    $tickets->assigned_to = Auth::user()->id;
+                    $tickets->save();
+                    $thread2 = new Ticket_Thread();
+                    $thread2->ticket_id = $thread->ticket_id;
+                    $thread2->user_id = Auth::user()->id;
+                    $thread2->is_internal = 1;
+                    $thread2->body = 'This Ticket have been assigned to '.Auth::user()->first_name.' '.Auth::user()->last_name;
+                    $thread2->save();
+                    $data = [
+                        'id' => $tickets->id,
+                    ];
+                    \Event::fire('ticket-assignment', [$data]);
+                }
+                if ($tickets->status > 1) {
+                    $this->open($ticket_id, new Tickets());
+                }
+            }
+            $thread->save();
+
+            if ($attachments != null) {
+                foreach ($attachments as $attachment) {
+                    if ($attachment != null) {
+                        $name = $attachment->getClientOriginalName();
+                        $type = $attachment->getClientOriginalExtension();
+                        $size = $attachment->getSize();
+                        $data = file_get_contents($attachment->getRealPath());
+                        $attachPath = $attachment->getRealPath();
+                        $ta->create(['thread_id' => $thread->id, 'name' => $name, 'size' => $size, 'type' => $type, 'file' => $data, 'poster' => 'ATTACHMENT']);
+                        $check_attachment = 1;
+                    } else {
+                        $check_attachment = null;
+                    }
+                }
+            }
+
+            if ($check_attachment == 1) {
+                $attachment_files = $this->attachmentSeperate($thread->id);
+            } else {
+                $attachment_files = null;
+            }
+            $threadfirst = Ticket_Thread::where('ticket_id', '=', $ticket_id)->orderBy('id')->first();
+            $ticket_subject = $threadfirst->title;
+            $user_id = $tickets->user_id;
+            $user = User::where('id', '=', $user_id)->first();
+            $email = $user->email;
+            $user_name = $user->first_name;
+            $ticket_number = $tickets->ticket_number;
+            $company = $this->company();
+            $username = $ticket_user->first_name;
+            if (!empty(Auth::user()->agent_sign)) {
+                $agentsign = Auth::user()->agent_sign;
+            } else {
+                $agentsign = null;
+            }
+
+            // Event
+            \Event::fire(new \App\Events\FaveoAfterReply($reply_content, $user->mobile, $user->country_code, $request, $tickets, $thread));
+            if (Auth::user()) {
+                $u_id = Auth::user()->first_name.' '.Auth::user()->last_name;
+            } else {
+                $u_id = $this->getAdmin()->first_name.' '.$this->getAdmin()->last_name;
+            }
+            $data = [
+                'ticket_id' => $request->input('ticket_ID'),
+                'u_id'      => $u_id,
+                'body'      => $request->input('reply_content'),
+            ];
+            if (!$request->has('do-not-send')) {
+                \Event::fire('Reply-Ticket', [$data]);
+            }
+            // sending attachments via php mail function
+            $message = '';
+
+            $line = '---Reply above this line---<br><br>';
+            $collaborators = Ticket_Collaborator::where('ticket_id', '=', $ticket_id)->get();
+            $emails = Emails::where('department', '=', $tickets->dept_id)->first();
+            if (!$email) {
+                $mail = false;
+            }
+
+            if ($mail == true) {
+                $encoded_ticketid = Crypt::encrypt($ticket_id);
+                $link = url('check_ticket/'.$encoded_ticketid);
+                $this->NotificationController->create($ticket_id, Auth::user()->id, '2');
+                $this->PhpMailController->sendmail(
+                        $from = $this->PhpMailController->mailfrom('0', $tickets->dept_id),
+                        $to = ['name' => $user_name, 'email' => $email, 'cc' => $collaborators],
+                        $message = [
+                            'subject'     => $ticket_subject.'[#'.$ticket_number.']',
+                            'body'        => $line.$request->input('reply_content'),
+                            'scenario'    => 'ticket-reply',
+                            'attachments' => $attachment_files,
+                        ],
+                        $template_variables = [
+                            'ticket_number' => $ticket_number,
+                            'user'          => $username,
+                            'agent_sign'    => $agentsign,
+                            'system_link'   => $link,
+                        ]
+                );
+            }
         } catch (\Exception $e) {
-            dd($e);
-            $result = $e->getMessage();
-            return response()->json(compact('result'), 500);
+            $result = ['fails' => $e->getMessage()];
+
+            return response()->json(compact('result'));
         }
-        $result = ["success" => "Replyed successfully"];
+        $result = ['success' => 'Replyed successfully'];
+
         return response()->json(compact('result'));
-    }
-
-    public function saveReply($ticket_id, $body, $user_id, $system_reply, $attachment = [], $inline = [], $mail = true, $poster = 'support')
-    {
-        $ticket = $this->saveReplyTicket($ticket_id, $system_reply);
-        $thread = $ticket->thread()->create([
-            'ticket_id' => $ticket_id,
-            'user_id' => $user_id,
-            'poster' => $poster,
-            'body' => $body,
-        ]);
-        $thread = $this->saveReplyAttachment($thread, $attachment, $inline);
-        $this->replyNotification($ticket, $thread, $mail);
-        return $thread;
-    }
-
-    public function saveReplyTicket($ticket_id, $system_reply)
-    {
-        $tickets = new Tickets();
-        $ticket = $tickets->find($ticket_id);
-        if (!$ticket) {
-            throw new Exception('Invalid ticket number');
-        }
-        $ticket->isanswered = '1';
-        $ticket->save();
-        if ($system_reply == true) {
-            if ($ticket->assigned_to == 0) {
-                $ticket->assigned_to = Auth::user()->id;
-                $ticket->save();
-                $data = [
-                    'id' => $ticket_id,
-                ];
-                \Event::fire('ticket-assignment', [$data]);
-            }
-            if ($ticket->statuses->name !== 'Open') {
-                $this->open($ticket_id, $tickets);
-            }
-        }
-        return $ticket;
-    }
-
-    public function replyNotification($ticket, $thread, $mail)
-    {
-        $request = new Request();
-        $reply_content = $request->input('content');
-        $ticketid = $ticket->id;
-        $ticket_subject = title($ticketid);
-        $requester = $ticket->user;
-        $email = $requester->email;
-        $ticket_number = $ticket->ticket_number;
-        $username = $requester->first_name;
-        if (!empty(Auth::user()->agent_sign)) {
-            $agentsign = Auth::user()->agent_sign;
-        } else {
-            $agentsign = null;
-        }
-        // Event
-        \Event::fire(new \App\Events\FaveoAfterReply($reply_content, $requester->mobile, $requester->country_code, $request, $ticket, $thread));
-        if (Auth::user()) {
-            $u_id = Auth::user()->first_name . ' ' . Auth::user()->last_name;
-        } else {
-            $u_id = $this->getAdmin()->first_name . ' ' . $this->getAdmin()->last_name;
-        }
-        $data = [
-            "ticket_id" => $ticketid,
-            'u_id' => $u_id,
-            'body' => $reply_content,
-        ];
-        if (!$request->has('do-not-send')) {
-            \Event::fire('Reply-Ticket', array($data));
-        }
-        $line = "---Reply above this line---<br><br>";
-        $collaborators = Ticket_Collaborator::where('ticket_id', '=', $ticketid)->get();
-        if (!$email) {
-            $mail = false;
-        }
-        if ($thread->poster == 'client') {
-            $key = 'reply_notification_alert';
-        } else {
-            $key = 'reply_alert';
-        }
-        $notifications[] = [
-            $key => [
-                'from' => $this->PhpMailController->mailfrom('1', $ticket->dept_id),
-                'message' => ['subject' => $ticket_subject . '[#' . $ticket_number . ']',
-                    'body' => utf8_encode($line . $thread->purify(false)),
-                    'scenario' => 'ticket-reply',
-                    'attachments' => $thread->attach()->get()->toArray()
-                ],
-                'variable' => ['ticket_number' => $ticket_number,
-                    'user' => $username, 'agent_sign' => $agentsign],
-                'ticketid' => $ticket->id,
-                'send_mail' => $mail,
-                'model' => $thread,
-                'thread' => $thread,
-            ],
-        ];
-        $notification = new Notifications\NotificationController();
-        $notification->setDetails($notifications);
     }
 
     /**
      * Ticket edit and save ticket data.
      *
-     * @param type $ticket_id
+     * @param type               $ticket_id
      * @param type Ticket_Thread $thread
      *
      * @return type bool
      */
     public function ticketEditPost($ticket_id, Ticket_Thread $thread, Tickets $ticket)
     {
-        if (!$this->ticket_policy->edit()) {
-            $response = ['message' => 'permission denied'];
-            return response()->json(compact('response'), 403);
-        }
-        try {
-            $ticket = $tickets->where('id', '=', $ticket_id)->first();
-            $tkt_dept = $ticket->dept_id;
-            // dd($tkt_dept->dept_id);
-            $priority = Input::get('ticket_priority');
+        if (Input::get('subject') == null) {
+            return 1;
+        } elseif (Input::get('sla_paln') == null) {
+            return 2;
+        } elseif (Input::get('help_topic') == null) {
+            return 3;
+        } elseif (Input::get('ticket_source') == null) {
+            return 4;
+        } elseif (Input::get('ticket_priority') == null) {
+            return 5;
+        } else {
+            $ticket = $ticket->where('id', '=', $ticket_id)->first();
+            $ticket->sla = Input::get('sla_paln');
             $ticket->help_topic_id = Input::get('help_topic');
-            // $dept = Help_topic::select('department')->where('id', '=', $ticket->help_topic_id)->first();
-            // $dept = $tkt_dept->dept_id;
-            $sla = $this->getSla(Input::get('ticket_type'), $ticket->user_id, $tkt_dept, Input::get('ticket_source'), $priority);
-            $priority_id = $this->getPriority($priority, $sla);
-            $ticket->sla = $sla;
             $ticket->source = Input::get('ticket_source');
-            $ticket->priority_id = $priority_id;
-            $ticket->type = Input::get('ticket_type');
-            $ticket->dept_id = $tkt_dept;
-            $ticket = $this->updateOverdue($ticket, $sla);
+            $ticket->priority_id = Input::get('ticket_priority');
+            $dept = Help_topic::select('department')->where('id', '=', $ticket->help_topic_id)->first();
+            $ticket->dept_id = $dept->department;
             $ticket->save();
+
             $threads = $thread->where('ticket_id', '=', $ticket_id)->first();
             $threads->title = Input::get('subject');
             $threads->save();
-            \Event::fire('notification', [$threads]);
-        } catch (\Exception $ex) {
-            $result = $ex->getMessage();
-            return response()->json(compact('result'), 500);
+
+            return 0;
         }
-        $result = ["success" => "Edited successfully"];
-        return response()->json(compact('result'));
     }
 
     /**
@@ -589,18 +610,19 @@ class TicketController extends Controller
     public function ticket_print($id)
     {
         $tickets = Tickets::
-        leftJoin('ticket_thread', function ($join) {
-            $join->on('tickets.id', '=', 'ticket_thread.ticket_id')
-                ->whereNotNull('ticket_thread.title');
-        })
-            ->leftJoin('department', 'tickets.dept_id', '=', 'department.id')
-            ->leftJoin('help_topic', 'tickets.help_topic_id', '=', 'help_topic.id')
-            ->where('tickets.id', '=', $id)
-            ->select('ticket_thread.title', 'tickets.ticket_number', 'department.name as department', 'help_topic.topic as helptopic')
-            ->first();
+                leftJoin('ticket_thread', function ($join) {
+                    $join->on('tickets.id', '=', 'ticket_thread.ticket_id')
+                        ->whereNotNull('ticket_thread.title');
+                })
+                ->leftJoin('department', 'tickets.dept_id', '=', 'department.id')
+                ->leftJoin('help_topic', 'tickets.help_topic_id', '=', 'help_topic.id')
+                ->where('tickets.id', '=', $id)
+                ->select('ticket_thread.title', 'tickets.ticket_number', 'department.name as department', 'help_topic.topic as helptopic')
+                ->first();
         $ticket = Tickets::where('tickets.id', '=', $id)->first();
         $html = view('themes.default1.agent.helpdesk.ticket.pdf', compact('id', 'ticket', 'tickets'))->render();
         $html1 = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+
         return PDF::load($html1)->show();
     }
 
@@ -634,6 +656,7 @@ class TicketController extends Controller
         $number3 = sprintf('%07s', $number3);
         $array = [$number1, $number2, $number3];
         $number = implode('-', $array);
+
         return $number;
     }
 
@@ -644,6 +667,7 @@ class TicketController extends Controller
         $format = $setting->num_format;
         $type = $setting->num_sequence;
         $number = $this->getNumber($ticket_number, $type, $format);
+
         return $number;
     }
 
@@ -660,6 +684,7 @@ class TicketController extends Controller
             $number = $controller->switchNumber($format, $type);
         }
         $number = $this->generateTicketIfExist($number, $type, $format);
+
         return $number;
     }
 
@@ -670,6 +695,7 @@ class TicketController extends Controller
         if ($ticket) {
             $number = $this->getNumber($number, $type, $format, false);
         }
+
         return $number;
     }
 
@@ -686,6 +712,7 @@ class TicketController extends Controller
         if ($check == true) {
             return $check;
         }
+
         return false;
     }
 
@@ -702,6 +729,7 @@ class TicketController extends Controller
         if (count($check) > 0) {
             return true;
         }
+
         return false;
     }
 
@@ -719,7 +747,7 @@ class TicketController extends Controller
      *
      * @return type bool
      */
-    public function create_user($emailadd, $username, $subject, $body, $phone, $phonecode, $mobile_number, $helptopic, $sla, $priority, $source, $headers, $dept, $assignto, $from_data, $auto_response, $status, $attach = [], $inline = [], $email_content = [])
+    public function create_user($emailadd, $username, $subject, $body, $phone, $phonecode, $mobile_number, $helptopic, $sla, $priority, $source, $headers, $dept, $assignto, $from_data, $auto_response, $status)
     {
         // define global variables
         $email;
@@ -777,155 +805,165 @@ class TicketController extends Controller
                 if ($user_status == 0 || ($email_mandatory->status == 0 || $email_mandatory->status == '0')) {
                     $value = [
                         'full_name' => $username,
-                        'email' => $emailadd,
-                        'code' => $phonecode,
-                        'mobile' => $mobile_number,
+                        'email'     => $emailadd,
+                        'code'      => $phonecode,
+                        'mobile'    => $mobile_number,
                         'user_name' => $unique,
-                        'password' => $password,
+                        'password'  => $password,
                     ];
                     \Event::fire(new \App\Events\LoginEvent($value));
                 }
                 // Event fire
                 \Event::fire(new \App\Events\ReadMailEvent($user_id, $password));
-                $notification[] = [
-                    'registration_notification_alert' => [
-                        'userid' => $user_id,
-                        'from' => $this->PhpMailController->mailfrom('1', '0'),
-                        'message' => ['subject' => null, 'scenario' => 'registration-notification'],
-                        'variable' => ['user' => $user->first_name, 'email_address' => $emailadd, 'user_password' => $password],
-                    ],
-                    'registration_alert' => [
-                        'userid' => $user_id,
-                        'from' => $this->PhpMailController->mailfrom('1', '0'),
-                        'message' => ['subject' => null, 'scenario' => 'registration'],
-                        'variable' => ['user' => $user->first_name, 'email_address' => $emailadd, 'password_reset_link' => faveoUrl('account/activate/' . $token)],
-                    ],
-                    'new_user_alert' => [
-                        'userid' => $user_id,
-                        'model' => $user,
-                        'from' => $this->PhpMailController->mailfrom('1', '0'),
-                        'message' => ['subject' => null, 'scenario' => 'new-user'],
-                        'variable' => ['user' => $user->first_name, 'email_address' => $unique, 'user_profile_link' => faveoUrl('user/' . $user_id)],
-                    ],
-                ];
+                try {
+                    if ($auto_response == 0) {
+                        $this->PhpMailController->sendmail($from = $this->PhpMailController->mailfrom('1', '0'), $to = ['name' => $user->first_name, 'email' => $emailadd], $message = ['subject' => null, 'scenario' => 'registration-notification'], $template_variables = ['user' => $user->first_name, 'email_address' => $emailadd, 'user_password' => $password]);
+                        if ($user_status == 0) {
+                            $this->PhpMailController->sendmail($from = $this->PhpMailController->mailfrom('1', '0'), $to = ['name' => $user->first_name, 'email' => $emailadd], $message = ['subject' => null, 'scenario' => 'registration'], $template_variables = ['user' => $user->first_name, 'email_address' => $emailadd, 'password_reset_link' => url('account/activate/'.$token)]);
+                        }
+                    }
+                } catch (\Exception $e) {
+                    //dd($e);
+                }
             }
         } else {
             $username = $checkemail->first_name;
             $user_id = $checkemail->id;
         }
-        $ticket_number = $this->check_ticket($user_id, $subject, $body, $helptopic, $sla, $priority, $source, $headers, $dept, $assignto, $from_data, $status, $attach, $inline, $email_content);
+        $ticket_number = $this->check_ticket($user_id, $subject, $body, $helptopic, $sla, $priority, $source, $headers, $dept, $assignto, $from_data, $status);
+
         $ticket_number2 = $ticket_number[0];
         $ticketdata = Tickets::where('ticket_number', '=', $ticket_number2)->first();
-        if ($ticketdata->assigned_to) {
-            $notification[] = [
-                'ticket_assign_alert' => [
-                    'ticketid' => $ticketdata->id,
-                    'from' => $this->PhpMailController->mailfrom('1', $ticketdata->dept_id),
-                    'message' => ['subject' => 'Assign ticket ' . '[#' . $ticketdata->ticket_number . ']', 'scenario' => 'assign-ticket'],
-                    'variable' => [
-                        'ticket_number' => $ticketdata->ticket_number,
-                        'ticket_assigner' => Auth::user()->first_name . ' ' . Auth::user()->last_name,
-                        'ticket_link' => faveoUrl('thread/' . $ticketdata->id),
-                    ],
-                    'model' => $ticketdata,
-                ],
-            ];
-        }
-        if ($ticketdata->team_to) {
-            $notification[] = [
-                'ticket_assign_alert' => [
-                    'ticketid' => $ticketdata->id,
-                    'from' => $this->PhpMailController->mailfrom('1', $ticketdata->dept_id),
-                    'message' => ['subject' => 'Assign ticket ' . '[#' . $ticketdata->ticket_number . ']', 'scenario' => 'team_assign_ticket'],
-                    'variable' => [
-                        'ticket_number' => $ticketdata->ticket_number,
-                        'ticket_assigner' => Auth::user()->first_name . ' ' . Auth::user()->last_name,
-                        'ticket_link' => faveoUrl('thread/' . $ticketdata->id),
-                    ],
-                    'model' => $ticketdata,
-                ],
-            ];
-        }
         $threaddata = Ticket_Thread::where('ticket_id', '=', $ticketdata->id)->first();
         $is_reply = $ticket_number[1];
         //dd($source);
         $system = $this->system();
-        $updated_subject = $threaddata->title . '[#' . $ticket_number2 . ']';
+        $updated_subject = $threaddata->title.'[#'.$ticket_number2.']';
         if ($ticket_number2) {
+            // send ticket create details to user
             if ($is_reply == 0) {
                 $mail = 'create-ticket-agent';
-                $message = $threaddata->purify(false);
                 if (Auth::user()) {
                     $sign = Auth::user()->agent_sign;
                 } else {
                     $sign = $company;
                 }
+                $encoded_ticketid = Crypt::encrypt($ticketdata->id);
+                $link = url('check_ticket/'.$encoded_ticketid);
+                if ($source == 3) {
+                    try {
+                        if ($auto_response == 0) {
+                            $encoded_ticketid = Crypt::encrypt($ticketdata->id);
+                            $link = url('check_ticket/'.$encoded_ticketid);
+                            $this->PhpMailController->sendmail($from = $this->PhpMailController->mailfrom('0', $ticketdata->dept_id), $to = ['name' => $username, 'email' => $emailadd], $message = ['subject' => $updated_subject, 'scenario' => 'create-ticket-by-agent', 'body' => $body],
+                                    $template_variables = [
+                                        'agent_sign'    => Auth::user()->agent_sign,
+                                        'ticket_number' => $ticket_number2,
+                                        'system_link'   => $link,
+                                    ]);
+                        }
+                    } catch (\Exception $e) {
+                        //dd($e);
+                    }
+                } else {
+                    $body2 = null;
+                    try {
+                        if ($auto_response == 0) {
+                            $this->PhpMailController->sendmail($from = $this->PhpMailController->mailfrom('0', $ticketdata->dept_id), $to = ['name' => $username, 'email' => $emailadd], $message = ['subject' => $updated_subject, 'scenario' => 'create-ticket'],
+                                    $template_variables = ['user' => $username,
+                                        'ticket_number'           => $ticket_number2,
+                                        'department_sign'         => '',
+                                        'system_link'             => $link,
+                                        ]);
+                        }
+                    } catch (\Exception $e) {
+                    }
+                }
             } elseif ($is_reply == 1) {
-                $this_thread = Ticket_Thread::where('ticket_id', '=', $ticketdata->id)->where('is_internal', 0)->orderBy('id', 'DESC')->first();
                 $mail = 'ticket-reply-agent';
-                $message = $this_thread->purify(false);
             }
-            $notification[] = ['new_ticket_alert' => [
-                'from' => $this->PhpMailController->mailfrom('0', $ticketdata->dept_id),
-                'message' => [
-                    'subject' => $updated_subject,
-                    'body' => $message,
-                    'scenario' => $mail,
-                ],
-                'variable' => [
-                    //'ticket_agent_name' => $email_data['to_user_name'],
-                    'ticket_client_name' => $username,
-                    'ticket_client_email' => $emailadd,
-                    //'user' => $email_data['to_user_name'],
-                    'ticket_number' => $ticket_number2,
-                    'email_address' => $emailadd,
-                    'name' => $ticket_creator,
-                    'system_link' => url('thread/' . $ticketdata->id),
-                    //'agent_sign' => Auth::user()->agent_sign,
-                ],
-                'ticketid' => $ticketdata->id,
-                'model' => $ticketdata,
-                'userid' => $ticketdata->user_id,
-                'thread' => $threaddata,
-            ],
-                'new_ticket_confirmation_alert' => [
-                    'from' => $this->PhpMailController->mailfrom('0', $ticketdata->dept_id),
-                    'message' => [
+
+            $set_mails = [];
+            if (Alert::first() && (Alert::first()->ticket_status == 1 || Alert::first()->ticket_admin_email == 1)) {
+                // send email to admin
+                $admins = User::where('role', '=', 'admin')->get();
+                foreach ($admins as $admin) {
+                    $to_email = $admin->email;
+                    $to_user = $admin->first_name;
+                    $to_user_name = $admin->first_name;
+                    array_push($set_mails, ['to_email' => $to_email, 'to_user' => $to_user, 'to_user_name' => $to_user_name]);
+                }
+            }
+
+            if ($is_reply == 0) {
+                if (Alert::first() && (Alert::first()->ticket_status == 1 || Alert::first()->ticket_department_member == 1)) {
+                    // send email to agents
+                    $agents = User::where('role', '=', 'agent')->get();
+                    foreach ($agents as $agent) {
+                        $department_data = Department::where('id', '=', $ticketdata->dept_id)->first();
+
+                        if ($department_data->name == $agent->primary_dpt) {
+                            $to_email = $agent->email;
+                            $to_user = $agent->first_name;
+                            $to_user_name = $agent->first_name;
+                            array_push($set_mails, ['to_email' => $to_email, 'to_user' => $to_user, 'to_user_name' => $to_user_name]);
+                        }
+                    }
+                }
+//                Event fire for new ticket['']
+            }
+            if ($is_reply == 1) {
+                $client_email = $ticketdata->user->email;
+                $client_user_name = $ticketdata->user->user_name;
+                array_push($set_mails, ['to_email' => $client_email, 'to_user' => $client_user_name, 'to_user_name' => $client_user_name]);
+            }
+
+            if ($ticketdata->assigned_to) {
+                $assigned_to = User::where('id', '=', $ticketdata->assigned_to)->first();
+                $to_email = $assigned_to->email;
+                $to_user = $assigned_to->first_name;
+                $to_user_name = $assigned_to->first_name;
+                array_push($set_mails, ['to_email' => $to_email, 'to_user' => $to_user, 'to_user_name' => $to_user_name]);
+            }
+
+            $emails_to_be_sent = array_unique($set_mails, SORT_REGULAR);
+
+            foreach ($emails_to_be_sent as $email_data) {
+                try {
+                    $this->PhpMailController->sendmail(
+                            $from = $this->PhpMailController->mailfrom('0', $ticketdata->dept_id), $to = [
+                        'user'  => $email_data['to_user'],
+                        'email' => $email_data['to_email'],
+                            ], $message = [
                         'subject' => $updated_subject,
-                        'body' => $threaddata->purify(false),
-                        'scenario' => 'create-ticket',
-                    ],
-                    'variable' => [
-                        //'ticket_agent_name' => $email_data['to_user_name'],
-                        'ticket_client_name' => $username,
+                        'body'    => $body, 'scenario' => $mail,
+                            ], $template_variables = [
+                        'ticket_agent_name'   => $email_data['to_user_name'],
+                        'ticket_client_name'  => $username,
                         'ticket_client_email' => $emailadd,
-                        //'user' => $email_data['to_user_name'],
-                        'ticket_number' => $ticket_number2,
-                        'email_address' => $emailadd,
-                        'name' => $ticket_creator,
-                        'system_link' => url('thread/' . $ticketdata->id),
-                        //'agent_sign' => Auth::user()->agent_sign,
-                    ],
-                    'ticketid' => $ticketdata->id,
-                    'model' => $ticketdata,
-                    'userid' => $ticketdata->user_id,
-                ],
-            ];
+                        'user'                => $email_data['to_user_name'],
+                        'ticket_number'       => $ticket_number2,
+                        'email_address'       => $emailadd,
+                        'name'                => $ticket_creator, ]
+                    );
+                } catch (\Exception $e) {
+                }
+            }
             $data = [
                 'ticket_number' => $ticket_number2,
-                'user_id' => $user_id,
-                'subject' => $subject,
-                'body' => $body,
-                'status' => $status,
-                'Priority' => $priority,
+                'user_id'       => $user_id,
+                'subject'       => $subject,
+                'body'          => $body,
+                'status'        => $status,
+                'Priority'      => $priority,
             ];
             \Event::fire('Create-Ticket', [$data]);
             $data = [
                 'id' => $ticketdata->id,
             ];
             \Event::fire('ticket-assignment', [$data]);
-            $alert = new Notifications\NotificationController();
-            $alert->setDetails($notification);
+            $this->NotificationController->create($ticketdata->id, $user_id, '3');
+
             return ['0' => $ticket_number2, '1' => true];
         }
     }
@@ -938,6 +976,7 @@ class TicketController extends Controller
     public function default_helptopic()
     {
         $helptopic = '1';
+
         return $helptopic;
     }
 
@@ -949,6 +988,7 @@ class TicketController extends Controller
     public function default_sla()
     {
         $sla = '1';
+
         return $sla;
     }
 
@@ -960,29 +1000,8 @@ class TicketController extends Controller
     public function default_priority()
     {
         $priority = '1';
-        return $prioirty;
-    }
 
-    public function checkTicketForEmailReply($subject, $email_content)
-    {
-        $ticket = null;
-        $email_thread = "";
-        $read_subject = explode('[#', $subject);
-        if (isset($read_subject[1])) {
-            $separate = explode(']', $read_subject[1]);
-            $number = substr($separate[0], 0, 20);
-            $ticket = Tickets::where('ticket_number', '=', $number)->first();
-        } elseif (count($email_content) > 0) {
-            $reference_id = checkArray('reference_id', $email_content);
-            //$msg_id = checkArray('message_id', $email_content);
-            if ($reference_id) {
-                $email_thread = \App\Model\helpdesk\Ticket\EmailThread::where('message_id', $reference_id)->select('id', 'ticket_id')->first();
-            }
-            if ($email_thread) {
-                $ticket = $email_thread->ticket()->first();
-            }
-        }
-        return $ticket;
+        return $prioirty;
     }
 
     /**
@@ -997,52 +1016,66 @@ class TicketController extends Controller
      *
      * @return type string
      */
-    public function check_ticket($user_id, $subject, $body, $helptopic, $sla, $priority, $source, $headers, $dept, $assignto, $form_data, $status, $attach = [], $inline = [], $email_content = [])
+    public function check_ticket($user_id, $subject, $body, $helptopic, $sla, $priority, $source, $headers, $dept, $assignto, $form_data, $status)
     {
-        $ticket = $this->checkTicketForEmailReply($subject, $email_content);
-        $thread_body = explode('---Reply above this line---', $body);
-        $body = $thread_body[0];
-        if ($ticket) {
-            $id = $ticket->id;
-            $ticket_number = $ticket->ticket_number;
-            if ($ticket->status > 1) {
-                $ticket->status = 1;
-                $ticket->closed = 0;
-                $ticket->closed_at = date('Y-m-d H:i:s');
-                $ticket->reopened = 1;
-                $ticket->reopened_at = date('Y-m-d H:i:s');
-                $ticket->save();
-                $ticket_status = Ticket_Status::where('id', '=', 1)->first();
-                $user_name = User::where('id', '=', $user_id)->first();
-                if ($user_name->role == 'user') {
-                    $username = $user_name->user_name;
-                } elseif ($user_name->role == 'agent' or $user_name->role == 'admin') {
-                    $username = $user_name->first_name . ' ' . $user_name->last_name;
+        $read_ticket_number = explode('[#', $subject);
+        if (isset($read_ticket_number[1])) {
+            $separate = explode(']', $read_ticket_number[1]);
+            $new_subject = substr($separate[0], 0, 20);
+            $find_number = Tickets::where('ticket_number', '=', $new_subject)->first();
+            $thread_body = explode('---Reply above this line---', $body);
+            $body = $thread_body[0];
+            if (count($find_number) > 0) {
+                $id = $find_number->id;
+                $ticket_number = $find_number->ticket_number;
+                if ($find_number->status > 1) {
+                    $find_number->status = 1;
+                    $find_number->closed = 0;
+                    $find_number->closed_at = date('Y-m-d H:i:s');
+                    $find_number->reopened = 1;
+                    $find_number->reopened_at = date('Y-m-d H:i:s');
+                    $find_number->save();
+
+                    $ticket_status = Ticket_Status::where('id', '=', 1)->first();
+
+                    $user_name = User::where('id', '=', $user_id)->first();
+
+                    if ($user_name->role == 'user') {
+                        $username = $user_name->user_name;
+                    } elseif ($user_name->role == 'agent' or $user_name->role == 'admin') {
+                        $username = $user_name->first_name.' '.$user_name->last_name;
+                    }
+
+                    $ticket_threads = new Ticket_Thread();
+                    $ticket_threads->ticket_id = $id;
+                    $ticket_threads->user_id = $user_id;
+                    $ticket_threads->is_internal = 1;
+                    $ticket_threads->body = $ticket_status->message.' '.$username;
+                    $ticket_threads->save();
+                    // event fire for internal notes
+                    //event to change status
+                    $data = [
+                        'id'         => $ticket_number,
+                        'status'     => 'Open',
+                        'first_name' => $username,
+                        'last_name'  => '',
+                    ];
+                    \Event::fire('change-status', [$data]);
                 }
-                // $ticket_threads = new Ticket_Thread();
-                // $ticket_threads->ticket_id = $id;
-                // $ticket_threads->user_id = $user_id;
-                // $ticket_threads->is_internal = 1;
-                // $ticket_threads->body = $ticket_status->message . ' ' . $username;
-                // $ticket_threads->save();
-                // event fire for internal notes
-                //event to change status
-                $data = [
-                    'id' => $ticket_number,
-                    'status' => 'Open',
-                    'first_name' => $username,
-                    'last_name' => '',
-                ];
-                \Event::fire('change-status', array($data));
-            }
-            if (isset($id)) {
-                if ($this->ticketThread($subject, $body, $id, $user_id, $attach, $inline, $email_content)) {
-                    //                        event fire for reply [$subject, $body, $id, $user_id]
-                    return [$ticket_number, 1];
+                if (isset($id)) {
+                    if ($this->ticketThread($subject, $body, $id, $user_id)) {
+                        //                        event fire for reply [$subject, $body, $id, $user_id]
+                        return [$ticket_number, 1];
+                    }
                 }
+            } else {
+                $ticket_number = $this->createTicket($user_id, $subject, $body, $helptopic, $sla, $priority, $source, $headers, $dept, $assignto, $form_data, $status);
+
+                return [$ticket_number, 0];
             }
         } else {
-            $ticket_number = $this->createTicket($user_id, $subject, $body, $helptopic, $sla, $priority, $source, $headers, $dept, $assignto, $form_data, $status, $attach, $inline, $email_content);
+            $ticket_number = $this->createTicket($user_id, $subject, $body, $helptopic, $sla, $priority, $source, $headers, $dept, $assignto, $form_data, $status);
+
             return [$ticket_number, 0];
         }
     }
@@ -1059,17 +1092,14 @@ class TicketController extends Controller
      *
      * @return type string
      */
-    public function createTicket($user_id, $subject, $body, $helptopic, $sla, $priority, $source, $headers, $dept, $assignto, $form_data, $status, $attach = [], $inline = [])
+    public function createTicket($user_id, $subject, $body, $helptopic, $sla, $priority, $source, $headers, $dept, $assignto, $form_data, $status)
     {
         $ticket_number = '';
         $max_number = Tickets::whereRaw('id = (select max(`id`) from tickets)')->first();
         if ($max_number) {
             $ticket_number = $max_number->ticket_number;
         }
-        if (!$sla) {
-            $sla_plan = Sla_plan::where('status', 1)->first();
-            $sla = $sla_plan->id;
-        }
+
         $user_status = User::select('active')->where('id', '=', $user_id)->first();
         // dd($user_status->active);
         $ticket = new Tickets();
@@ -1079,55 +1109,70 @@ class TicketController extends Controller
         $ticket->help_topic_id = $helptopic;
         $ticket->sla = $sla;
         $ticket->assigned_to = $assignto;
+
         $ticket->priority_id = $priority;
         $ticket->source = $source;
         $ticket_status = $this->checkUserVerificationStatus();
-        $ticket->status = $this->getStatus($user_id, $status);
+        //dd($ticket_status);
+        // if ($ticket_status == 0) {
+        //     //check if user active then allow ticket creation else create unverified ticket
+        //     if ($user_status->active == 1) {
+        //         if ($status == null) {
+        //             $ticket->status = 1;
+        //         } else {
+        //             $ticket->status = $status;
+        //         }
+        //     } else {
+        //         $ticket->status = 6;
+        //     }
+        // } else {
+        //     if ($status == null) {
+        //         $ticket->status = 1;
+        //     } else {
+        //         $ticket->status = $status;
+        //     }
+        // }
+        if ($status == null) {
+            $ticket->status = 1;
+        } else {
+            $ticket->status = $status;
+        }
         $ticket->save();
+
         $sla_plan = Sla_plan::where('id', '=', $sla)->first();
         $ovdate = $ticket->created_at;
         $new_date = date_add($ovdate, date_interval_create_from_date_string($sla_plan->grace_period));
+        $ticket->duedate = $new_date;
+        $ticket->save();
+
         $ticket_number = $ticket->ticket_number;
         $id = $ticket->id;
-        if (is_array($form_data) && count($form_data) > 0) {
-            foreach ($form_data as $key => $data) {
-                if (is_array($data)) {
-                    foreach ($data as $title => $content) {
-                        Ticket_Form_Data::create([
-                            'ticket_id' => $id,
-                            'title' => $title,
-                            'key' => $key,
-                            'content' => $content,
-                        ]);
-                    }
+        // $this->NotificationController->create($id, $user_id, '3');
+        // store Form Data
+        // Form Data comes from raising a ticket from client panel
+        if ($form_data != null) {
+            $help_topic = Help_topic::where('id', '=', $helptopic)->first();
+            //$forms = Fields::where('forms_id', '=', $help_topic->custom_form)->get();
+            $form = \App\Model\helpdesk\Form\Forms::find($help_topic->custom_form);
+            $form_name = '';
+            if ($form) {
+                $form_name = $form->formname;
+            }
+            foreach ($form_data as $key => $form_details) {
+                if (!is_array($form_details)) {
+                    $form_value = new Ticket_Form_Data();
+                    $form_value->ticket_id = $id;
+                    $form_value->title = $key;
+                    $form_value->content = $form_details;
+                    $form_value->save();
                 }
             }
         }
         // store collaborators
         $this->storeCollaborators($headers, $id);
-        if ($this->ticketThread($subject, $body, $id, $user_id, $attach, $inline, $inline) == true) {
-            $ticket->duedate = $new_date;
-            $ticket->save();
+        if ($this->ticketThread($subject, $body, $id, $user_id) == true) {
             return $ticket_number;
         }
-    }
-
-    public function getStatus($requester_id, $status = "")
-    {
-        if (!$status) {
-            $requester = User::where('id', $requester_id)->first();
-            $statuses = new Ticket_Status();
-            $name = 'open';
-            if ($requester->isDeleted() || $requester->isBan()) {
-                $name = 'spam';
-            }
-            $ticket_status = $statuses->where('state', $name)->first();
-            if (!$ticket_status) {
-                $ticket_status = $statuses->first();
-            }
-            $status = $ticket_status->id;
-        }
-        return $status;
     }
 
     /**
@@ -1140,7 +1185,7 @@ class TicketController extends Controller
      *
      * @return type
      */
-    public function ticketThread($subject, $body, $id, $user_id, $attach = [], $inline = [], $email_content = [])
+    public function ticketThread($subject, $body, $id, $user_id)
     {
         $thread = new Ticket_Thread();
         $thread->user_id = $user_id;
@@ -1149,64 +1194,9 @@ class TicketController extends Controller
         $thread->title = $subject;
         $thread->body = $body;
         if ($thread->save()) {
-            $this->saveEmailThread($thread, $email_content);
-            $this->saveReplyAttachment($thread, $attach, $inline);
             \Event::fire('ticket.details', ['ticket' => $thread]); //get the ticket details
             return true;
         }
-    }
-
-    public function saveEmailThread($thread, $content)
-    {
-        $ticket_id = $thread->ticket_id;
-        if (is_array($content) && count($content) > 0) {
-            $thread->emailThread()->create([
-                'ticket_id' => $ticket_id,
-                'message_id' => checkArray('message_id', $content),
-                'uid' => checkArray('uid', $content),
-                'reference_id' => checkArray('reference_id', $content),
-            ]);
-        }
-    }
-
-    public function saveReplyAttachment($thread, $attachments, $inlines)
-    {
-        $drive = storageDrive();
-        $thread_id = $thread->id;
-        $attach = $thread->attach();
-        if ($attachments && count($attachments) > 0) {
-            foreach ($attachments as $attachment) {
-                if (is_object($attachment)) {
-                    $storage = new \App\FaveoStorage\Controllers\StorageController();
-                    $thread = $storage->saveObjectAttachments($thread_id, $attachment);
-                }
-                if (is_array($attachment)) {
-                    $attach->create([
-                        'thread_id' => $thread_id,
-                        'name' => $attachment['filename'],
-                        'size' => $attachment['size'],
-                        'type' => $attachment['type'],
-                        'poster' => 'ATTACHMENT',
-                        'path' => $attachment['path'],
-                        'driver' => $drive,
-                    ]);
-                }
-            }
-        }
-        if ($inlines && count($inlines) > 0) {
-            foreach ($inlines as $inline) {
-                $attach->create([
-                    'thread_id' => $thread_id,
-                    'name' => $inline['filename'],
-                    'size' => $inline['size'],
-                    'type' => $inline['type'],
-                    'poster' => 'INLINE',
-                    'path' => $inline['path'],
-                    'driver' => $drive,
-                ]);
-            }
-        }
-        return $thread;
     }
 
     /**
@@ -1224,35 +1214,30 @@ class TicketController extends Controller
         for ($i = 0; $i < $length; $i++) {
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
+
         return $randomString;
     }
 
     /**
      * function to Ticket Close.
      *
-     * @param type $id
+     * @param type         $id
      * @param type Tickets $ticket
      *
      * @return type string
      */
-    public function close($id, Tickets $ticket, $api = true)
+    public function close($id, Tickets $ticket)
     {
-        if (!$this->ticket_policy->close()) {
-            if ($api) {
-                return response()->json(['message' => 'permission denied'], 403);
-            }
-            return redirect('dashboard')->with('fails', 'Permission denied');
-        }
         $ticket = Tickets::where('id', '=', $id)->first();
         if (Auth::user()->role == 'user') {
             $ticket_status = $ticket->where('id', '=', $id)->where('user_id', '=', Auth::user()->id)->first();
         } else {
             $ticket_status = $ticket->where('id', '=', $id)->first();
         }
-        // checking for unautherised access attempt on other than owner ticket id
-        if ($ticket_status == null) {
-            return redirect()->route('unauth');
-        }
+            // checking for unautherised access attempt on other than owner ticket id
+            if ($ticket_status == null) {
+                return redirect()->route('unauth');
+            }
         $ticket_status->status = 3;
         $ticket_status->closed = 1;
         $ticket_status->closed_at = date('Y-m-d H:i:s');
@@ -1264,13 +1249,15 @@ class TicketController extends Controller
         $thread->ticket_id = $ticket_status->id;
         $thread->user_id = Auth::user()->id;
         $thread->is_internal = 1;
-        $thread->body = $ticket_status_message->message . ' ' . Auth::user()->first_name . ' ' . Auth::user()->last_name;
+        $thread->body = $ticket_status_message->message.' '.Auth::user()->first_name.' '.Auth::user()->last_name;
         $thread->save();
+
         $user_id = $ticket_status->user_id;
         $user = User::where('id', '=', $user_id)->first();
         $email = $user->email;
         $user_name = $user->user_name;
         $ticket_number = $ticket_status->ticket_number;
+
         $system_from = $this->company();
         $sending_emails = Emails::where('department', '=', $ticket_status->dept_id)->first();
         if ($sending_emails == null) {
@@ -1279,36 +1266,31 @@ class TicketController extends Controller
             $from_email = $sending_emails->id;
         }
         try {
-            $this->PhpMailController->sendmail($from = $this->PhpMailController->mailfrom('0', $ticket_status->dept_id), $to = ['name' => $user_name, 'email' => $email], $message = ['subject' => $ticket_subject . '[#' . $ticket_number . ']', 'scenario' => 'close-ticket'], $template_variables = ['ticket_number' => $ticket_number]);
+            $this->PhpMailController->sendmail($from = $this->PhpMailController->mailfrom('0', $ticket_status->dept_id), $to = ['name' => $user_name, 'email' => $email], $message = ['subject' => $ticket_subject.'[#'.$ticket_number.']', 'scenario' => 'close-ticket'], $template_variables = ['ticket_number' => $ticket_number]);
         } catch (\Exception $e) {
             return 0;
         }
         $data = [
-            'id' => $ticket_status->ticket_number,
-            'status' => 'Closed',
-            'first_name' => Auth::user()->first_name,
-            'last_name' => Auth::user()->last_name,
-        ];
+                'id'         => $ticket_status->ticket_number,
+                'status'     => 'Closed',
+                'first_name' => Auth::user()->first_name,
+                'last_name'  => Auth::user()->last_name,
+            ];
         \Event::fire('change-status', [$data]);
-        return 'your ticket' . $ticket_status->ticket_number . ' has been closed';
+
+        return 'your ticket'.$ticket_status->ticket_number.' has been closed';
     }
 
     /**
      * function to Ticket resolved.
      *
-     * @param type $id
+     * @param type         $id
      * @param type Tickets $ticket
      *
      * @return type string
      */
-    public function resolve($id, Tickets $ticket, $api = true)
+    public function resolve($id, Tickets $ticket)
     {
-        if (!$this->ticket_policy->close()) {
-            if ($api) {
-                return response()->json(['message' => 'permission denied'], 403);
-            }
-            return redirect('dashboard')->with('fails', 'Permission denied');
-        }
         if (Auth::user()->role == 'user') {
             $ticket_status = $ticket->where('id', '=', $id)->where('user_id', '=', Auth::user()->id)->first();
         } else {
@@ -1318,7 +1300,7 @@ class TicketController extends Controller
         if ($ticket_status == null) {
             return redirect()->route('unauth');
         }
-        //        $ticket_status = $ticket->where('id', '=', $id)->first();
+//        $ticket_status = $ticket->where('id', '=', $id)->first();
         $ticket_status->status = 2;
         $ticket_status->closed = 1;
         $ticket_status->closed_at = date('Y-m-d H:i:s');
@@ -1329,25 +1311,26 @@ class TicketController extends Controller
         $thread->user_id = Auth::user()->id;
         $thread->is_internal = 1;
         if (Auth::user()->first_name != null) {
-            $thread->body = $ticket_status_message->message . ' ' . Auth::user()->first_name . ' ' . Auth::user()->last_name;
+            $thread->body = $ticket_status_message->message.' '.Auth::user()->first_name.' '.Auth::user()->last_name;
         } else {
-            $thread->body = $ticket_status_message->message . ' ' . Auth::user()->user_name;
+            $thread->body = $ticket_status_message->message.' '.Auth::user()->user_name;
         }
         $thread->save();
         $data = [
-            'id' => $ticket_status->ticket_number,
-            'status' => 'Resolved',
+            'id'         => $ticket_status->ticket_number,
+            'status'     => 'Resolved',
             'first_name' => Auth::user()->first_name,
-            'last_name' => Auth::user()->last_name,
+            'last_name'  => Auth::user()->last_name,
         ];
         \Event::fire('change-status', [$data]);
-        return 'your ticket' . $ticket_status->ticket_number . ' has been resolved';
+
+        return 'your ticket'.$ticket_status->ticket_number.' has been resolved';
     }
 
     /**
      * function to Open Ticket.
      *
-     * @param type $id
+     * @param type         $id
      * @param type Tickets $ticket
      *
      * @return type
@@ -1371,34 +1354,29 @@ class TicketController extends Controller
         $thread->ticket_id = $ticket_status->id;
         $thread->user_id = Auth::user()->id;
         $thread->is_internal = 1;
-        $thread->body = $ticket_status_message->message . ' ' . Auth::user()->first_name . ' ' . Auth::user()->last_name;
+        $thread->body = $ticket_status_message->message.' '.Auth::user()->first_name.' '.Auth::user()->last_name;
         $thread->save();
         $data = [
-            'id' => $ticket_status->ticket_number,
-            'status' => 'Open',
+            'id'         => $ticket_status->ticket_number,
+            'status'     => 'Open',
             'first_name' => Auth::user()->first_name,
-            'last_name' => Auth::user()->last_name,
+            'last_name'  => Auth::user()->last_name,
         ];
         \Event::fire('change-status', [$data]);
-        return 'your ticket' . $ticket_status->ticket_number . ' has been opened';
+
+        return 'your ticket'.$ticket_status->ticket_number.' has been opened';
     }
 
     /**
      * Function to delete ticket.
      *
-     * @param type $id
+     * @param type         $id
      * @param type Tickets $ticket
      *
      * @return type string
      */
-    public function delete($id, Tickets $ticket, $api = true)
+    public function delete($id, Tickets $ticket)
     {
-        if (!$this->ticket_policy->delete()) {
-            if ($api) {
-                return response()->json(['message' => 'permission denied'], 403);
-            }
-            return redirect('dashboard')->with('fails', 'Permission denied');
-        }
         $ticket_delete = $ticket->where('id', '=', $id)->first();
         if ($ticket_delete->status == 5) {
             $ticket_delete->delete();
@@ -1411,12 +1389,13 @@ class TicketController extends Controller
                 $ticket_attachment->delete();
             }
             $data = [
-                'id' => $ticket_delete->ticket_number,
-                'status' => 'Deleted',
+                'id'         => $ticket_delete->ticket_number,
+                'status'     => 'Deleted',
                 'first_name' => Auth::user()->first_name,
-                'last_name' => Auth::user()->last_name,
+                'last_name'  => Auth::user()->last_name,
             ];
             \Event::fire('change-status', [$data]);
+
             return 'your ticket has been delete';
         } else {
             $ticket_delete->is_deleted = 1;
@@ -1427,41 +1406,37 @@ class TicketController extends Controller
             $thread->ticket_id = $ticket_delete->id;
             $thread->user_id = Auth::user()->id;
             $thread->is_internal = 1;
-            $thread->body = $ticket_status_message->message . ' ' . Auth::user()->first_name . ' ' . Auth::user()->last_name;
+            $thread->body = $ticket_status_message->message.' '.Auth::user()->first_name.' '.Auth::user()->last_name;
             $thread->save();
             $data = [
-                'id' => $ticket_delete->ticket_number,
-                'status' => 'Deleted',
+                'id'         => $ticket_delete->ticket_number,
+                'status'     => 'Deleted',
                 'first_name' => Auth::user()->first_name,
-                'last_name' => Auth::user()->last_name,
+                'last_name'  => Auth::user()->last_name,
             ];
             \Event::fire('change-status', [$data]);
-            return 'your ticket' . $ticket_delete->ticket_number . ' has been delete';
+
+            return 'your ticket'.$ticket_delete->ticket_number.' has been delete';
         }
     }
 
     /**
      * Function to ban an email.
      *
-     * @param type $id
+     * @param type         $id
      * @param type Tickets $ticket
      *
      * @return type string
      */
-    public function ban($id, Tickets $ticket, $api = true)
+    public function ban($id, Tickets $ticket)
     {
-        if (!$this->ticket_policy->ban()) {
-            if ($api) {
-                return response()->json(['message' => 'permission denied'], 403);
-            }
-            return redirect('dashboard')->with('fails', 'Permission denied');
-        }
         $ticket_ban = $ticket->where('id', '=', $id)->first();
         $ban_email = $ticket_ban->user_id;
         $user = User::where('id', '=', $ban_email)->first();
         $user->ban = 1;
         $user->save();
         $Email = $user->email;
+
         return 'the user has been banned';
     }
 
@@ -1472,14 +1447,8 @@ class TicketController extends Controller
      *
      * @return type bool
      */
-    public function assign($id, $api = true)
+    public function assign($id)
     {
-        if (!$this->ticket_policy->assign()) {
-            if ($api) {
-                return response()->json(['message' => 'permission denied'], 403);
-            }
-            return redirect('dashboard')->with('fails', 'Permission denied');
-        }
         $ticket_array = [];
         if (strpos($id, ',') !== false) {
             $ticket_array = explode(',', $id);
@@ -1503,13 +1472,13 @@ class TicketController extends Controller
                 $thread->ticket_id = $ticket->id;
                 $thread->user_id = Auth::user()->id;
                 $thread->is_internal = 1;
-                $thread->body = 'This Ticket has been assigned to ' . $assignee;
+                $thread->body = 'This Ticket has been assigned to '.$assignee;
                 $thread->save();
             } elseif ($assign_to[0] == 'user') {
                 $ticket->assigned_to = $assign_to[1];
                 if ($user_detail === null) {
                     $user_detail = User::where('id', '=', $assign_to[1])->first();
-                    $assignee = $user_detail->first_name . ' ' . $user_detail->last_name;
+                    $assignee = $user_detail->first_name.' '.$user_detail->last_name;
                 }
                 $company = $this->company();
                 $system = $this->system();
@@ -1525,19 +1494,21 @@ class TicketController extends Controller
                 $thread->ticket_id = $ticket->id;
                 $thread->user_id = Auth::user()->id;
                 $thread->is_internal = 1;
-                $thread->body = 'This Ticket has been assigned to ' . $assignee;
+                $thread->body = 'This Ticket has been assigned to '.$assignee;
                 $thread->save();
+
                 $agent = $user_detail->first_name;
                 $agent_email = $user_detail->email;
                 $ticket_link = route('ticket.thread', $id);
-                $master = Auth::user()->first_name . ' ' . Auth::user()->last_name;
+                $master = Auth::user()->first_name.' '.Auth::user()->last_name;
                 try {
-                    $this->PhpMailController->sendmail($from = $this->PhpMailController->mailfrom('0', $ticket->dept_id), $to = ['name' => $agent, 'email' => $agent_email], $message = ['subject' => $ticket_subject . '[#' . $ticket_number . ']', 'scenario' => 'assign-ticket'], $template_variables = ['ticket_agent_name' => $agent, 'ticket_number' => $ticket_number, 'ticket_assigner' => $master, 'ticket_link' => $ticket_link]);
+                    $this->PhpMailController->sendmail($from = $this->PhpMailController->mailfrom('0', $ticket->dept_id), $to = ['name' => $agent, 'email' => $agent_email], $message = ['subject' => $ticket_subject.'[#'.$ticket_number.']', 'scenario' => 'assign-ticket'], $template_variables = ['ticket_agent_name' => $agent, 'ticket_number' => $ticket_number, 'ticket_assigner' => $master, 'ticket_link' => $ticket_link]);
                 } catch (\Exception $e) {
                     return 0;
                 }
             }
         }
+
         return 1;
     }
 
@@ -1550,24 +1521,23 @@ class TicketController extends Controller
      */
     public function InternalNote($id)
     {
-        //dd($id);
         $InternalContent = Input::get('InternalContent');
-        //$thread = Ticket_Thread::where('ticket_id', '=', $id)->first();
+        $thread = Ticket_Thread::where('ticket_id', '=', $id)->first();
         $NewThread = new Ticket_Thread();
-        $NewThread->ticket_id = $id;
+        $NewThread->ticket_id = $thread->ticket_id;
         $NewThread->user_id = Auth::user()->id;
         $NewThread->is_internal = 1;
-        $NewThread->thread_type = 'note';
         $NewThread->poster = Auth::user()->role;
-        //$NewThread->title = $thread->title;
+        $NewThread->title = $thread->title;
         $NewThread->body = $InternalContent;
         $NewThread->save();
         $data = [
             'ticket_id' => $id,
-            'u_id' => Auth::user()->first_name . ' ' . Auth::user()->last_name,
-            'body' => $InternalContent,
+            'u_id'      => Auth::user()->first_name.' '.Auth::user()->last_name,
+            'body'      => $InternalContent,
         ];
         \Event::fire('Reply-Ticket', [$data]);
+
         return 1;
     }
 
@@ -1581,7 +1551,7 @@ class TicketController extends Controller
     public function surrender($id)
     {
         $ticket = Tickets::where('id', '=', $id)->first();
-        $InternalContent = Auth::user()->first_name . ' ' . Auth::user()->last_name . ' has Surrendered the assigned Ticket';
+        $InternalContent = Auth::user()->first_name.' '.Auth::user()->last_name.' has Surrendered the assigned Ticket';
         $thread = Ticket_Thread::where('ticket_id', '=', $id)->first();
         $NewThread = new Ticket_Thread();
         $NewThread->ticket_id = $thread->ticket_id;
@@ -1591,8 +1561,10 @@ class TicketController extends Controller
         $NewThread->title = $thread->title;
         $NewThread->body = $InternalContent;
         $NewThread->save();
+
         $ticket->assigned_to = null;
         $ticket->save();
+
         return 1;
     }
 
@@ -1607,6 +1579,7 @@ class TicketController extends Controller
     {
         if (isset($keyword)) {
             $data = ['ticket_number' => Tickets::search($keyword)];
+
             return $data;
         } else {
             return 'no results';
@@ -1624,8 +1597,8 @@ class TicketController extends Controller
     {
         $this->layout->header = $ticket_number;
         $content = View::make('themes.default1.admin.tickets.ticketsearch', with(new Tickets()))
-            ->with('header', $this->layout->header)
-            ->with('ticket_number', \App\Model\Tickets::stores($ticket_number));
+                ->with('header', $this->layout->header)
+                ->with('ticket_number', \App\Model\Tickets::stores($ticket_number));
         if (Request::header('X-PJAX')) {
             return $content;
         } else {
@@ -1664,7 +1637,6 @@ class TicketController extends Controller
                     try {
                         $this->PhpMailController->sendmail($from = $this->PhpMailController->mailfrom('1', '0'), $to = ['name' => $name, 'email' => $email], $message = ['subject' => 'password', 'scenario' => 'registration-notification'], $template_variables = ['user' => $name, 'email_address' => $email, 'user_password' => $password]);
                     } catch (\Exception $e) {
-
                     }
                 } else {
                     $user = $this->checkEmail($email);
@@ -1678,6 +1650,7 @@ class TicketController extends Controller
                 $collaborator_store->save();
             }
         }
+
         return true;
     }
 
@@ -1694,6 +1667,7 @@ class TicketController extends Controller
         } else {
             $company = $company->company_name;
         }
+
         return $company;
     }
 
@@ -1710,6 +1684,7 @@ class TicketController extends Controller
         } else {
             $system = $system->name;
         }
+
         return $system;
     }
 
@@ -1721,9 +1696,10 @@ class TicketController extends Controller
     public function trash()
     {
         $table = \Datatable::table()
-            ->addColumn(
-                '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
-            ->noScript();
+                ->addColumn(
+                        '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
+                ->noScript();
+
         return view('themes.default1.agent.helpdesk.ticket.trash', compact('table'));
     }
 
@@ -1735,9 +1711,10 @@ class TicketController extends Controller
     public function unassigned()
     {
         $table = \Datatable::table()
-            ->addColumn(
-                '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
-            ->noScript();
+                ->addColumn(
+                        '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
+                ->noScript();
+
         return view('themes.default1.agent.helpdesk.ticket.unassigned', compact('table'));
     }
 
@@ -1749,9 +1726,10 @@ class TicketController extends Controller
     public function myticket()
     {
         $table = \Datatable::table()
-            ->addColumn(
-                '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
-            ->noScript();
+                ->addColumn(
+                        '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
+                ->noScript();
+
         return view('themes.default1.agent.helpdesk.ticket.myticket', compact('table'));
     }
 
@@ -1768,6 +1746,7 @@ class TicketController extends Controller
         $input = htmlspecialchars($input, ENT_IGNORE, 'utf-8');
         $input = strip_tags($input);
         $input = stripslashes($input);
+
         return $input;
     }
 
@@ -1781,7 +1760,7 @@ class TicketController extends Controller
     public function autosearch($id)
     {
         $term = \Input::get('term');
-        $user = \App\User::where('email', 'LIKE', '%' . $term . '%')->pluck('email');
+        $user = \App\User::where('email', 'LIKE', '%'.$term.'%')->lists('email');
         echo json_encode($user);
     }
 
@@ -1794,7 +1773,7 @@ class TicketController extends Controller
      */
     public function autosearch2(User $user)
     {
-        $user = $user->pluck('email');
+        $user = $user->lists('email');
         echo json_encode($user);
     }
 
@@ -1812,11 +1791,11 @@ class TicketController extends Controller
         $data = User::where('email', '=', $email)->first();
         if ($data == null) {
             return '<div id="alert11" class="alert alert-warning alert-dismissable">'
-            . '<button id="dismiss11" type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>'
-            . '<i class="icon fa fa-ban"></i>'
-            . 'This Email doesnot exist in the system'
-            . '</div>'
-            . '</div>';
+                    .'<button id="dismiss11" type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>'
+                    .'<i class="icon fa fa-ban"></i>'
+                    .'This Email doesnot exist in the system'
+                    .'</div>'
+                    .'</div>';
         }
         $ticket_collaborator = Ticket_Collaborator::where('ticket_id', '=', $ticket_id)->where('user_id', '=', $data->id)->first();
         if (!isset($ticket_collaborator)) {
@@ -1826,9 +1805,10 @@ class TicketController extends Controller
             $ticket_collaborator->user_id = $data->id;
             $ticket_collaborator->role = 'ccc';
             $ticket_collaborator->save();
-            return '<div id="alert11" class="alert alert-dismissable" style="color:#60B23C;background-color:#F2F2F2;"><button id="dismiss11" type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><h4><i class="icon fa fa-check"></i>Success!</h4><h4><i class="icon fa fa-user"></i>' . $data->user_name . '</h4><div id="message-success1">' . $data->email . '</div></div>';
+
+            return '<div id="alert11" class="alert alert-dismissable" style="color:#60B23C;background-color:#F2F2F2;"><button id="dismiss11" type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><h4><i class="icon fa fa-check"></i>Success!</h4><h4><i class="icon fa fa-user"></i>'.$data->user_name.'</h4><div id="message-success1">'.$data->email.'</div></div>';
         } else {
-            return '<div id="alert11" class="alert alert-warning alert-dismissable"><button id="dismiss11" type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><h4><i class="icon fa fa-warning"></i>' . $data->user_name . '</h4><div id="message-success1">' . $data->email . '<br/>This user already Collaborated</div></div>';
+            return '<div id="alert11" class="alert alert-warning alert-dismissable"><button id="dismiss11" type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><h4><i class="icon fa fa-warning"></i>'.$data->user_name.'</h4><div id="message-success1">'.$data->email.'<br/>This user already Collaborated</div></div>';
         }
     }
 
@@ -1844,7 +1824,8 @@ class TicketController extends Controller
         $name = Input::get('name');
         $email = Input::get('email');
         $validator = \Validator::make(
-            ['email' => $email, 'name' => $name], ['email' => 'required|email']
+            ['email' => $email, 'name' => $name],
+            ['email' => 'required|email']
         );
         if ($validator->fails()) {
             return 'Invalid email address.';
@@ -1865,6 +1846,7 @@ class TicketController extends Controller
             $user->active = 1;
             if ($user->save()) {
                 $user_id = $user->id;
+
                 $this->PhpMailController->sendmail($from = $this->PhpMailController->mailfrom('1', '0'), $to = ['name' => $name, 'email' => $email], $message = ['subject' => 'Password', 'scenario' => 'registration-notification'], $template_variables = ['user' => $name, 'email_address' => $email, 'user_password' => $password]);
             }
             $ticket_collaborator = new Ticket_Collaborator();
@@ -1873,7 +1855,8 @@ class TicketController extends Controller
             $ticket_collaborator->user_id = $user->id;
             $ticket_collaborator->role = 'ccc';
             $ticket_collaborator->save();
-            return '<div id="alert11" class="alert alert-dismissable" style="color:#60B23C;background-color:#F2F2F2;"><button id="dismiss11" type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><h4><i class="icon fa fa-user"></i>' . $user->user_name . '</h4><div id="message-success1">' . $user->email . '</div></div>';
+
+            return '<div id="alert11" class="alert alert-dismissable" style="color:#60B23C;background-color:#F2F2F2;"><button id="dismiss11" type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><h4><i class="icon fa fa-user"></i>'.$user->user_name.'</h4><div id="message-success1">'.$user->email.'</div></div>';
         }
     }
 
@@ -1886,6 +1869,7 @@ class TicketController extends Controller
     {
         $id = Input::get('data1');
         $ticket_collaborator = Ticket_Collaborator::where('id', '=', $id)->delete();
+
         return 1;
     }
 
@@ -1911,7 +1895,7 @@ class TicketController extends Controller
                     $notification = Notification::select('id')->where('model_id', '=', $ticket->id)->get();
                     foreach ($notification as $id) {
                         $user_notification = UserNotification::where(
-                            'notification_id', '=', $id->id);
+                                        'notification_id', '=', $id->id);
                         $user_notification->delete();
                     }
                     $notification = Notification::select('id')->where('model_id', '=', $ticket->id);
@@ -1929,7 +1913,7 @@ class TicketController extends Controller
                             // echo "<br>";
                         }
                         $thread = Ticket_Thread::find($th_id->id);
-                        //                        dd($thread);
+//                        dd($thread);
                         $thread->delete();
                     }
                     $collaborators = Ticket_Collaborator::where('ticket_id', '=', $ticket->id)->get();
@@ -1956,6 +1940,7 @@ class TicketController extends Controller
                 return redirect()->back()->with('success', Lang::get('lang.hard-delete-success-message'));
             }
         }
+
         return redirect()->back()->with('fails', 'None Selected!');
     }
 
@@ -1976,6 +1961,7 @@ class TicketController extends Controller
         $offset = date('Z', strtotime($utc));
         $format = Date_time_format::whereId($format)->first()->format;
         $date = date($format, strtotime($utc) + $offset);
+
         return $date;
     }
 
@@ -1991,6 +1977,7 @@ class TicketController extends Controller
         $tz = $timezone->name;
         date_default_timezone_set($tz);
         $offset = date('Z', strtotime($utc));
+
         return $offset;
     }
 
@@ -2002,6 +1989,7 @@ class TicketController extends Controller
     public static function getDateTimeFormat()
     {
         $set = System::select('date_time_format')->whereId('1')->first();
+
         return $set->date_time_format;
     }
 
@@ -2048,9 +2036,10 @@ class TicketController extends Controller
             }
         }
         $table = \Datatable::table()
-            ->addColumn(
-                '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
-            ->noScript();
+                ->addColumn(
+                        '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
+                ->noScript();
+
         return view('themes.default1.agent.helpdesk.dept-ticket.tickets', compact('dept', 'status', 'table'));
     }
 
@@ -2113,17 +2102,20 @@ class TicketController extends Controller
             if ($ratingrefs !== null) {
                 $ratingrefs->rating_id = $ratID->id;
                 $ratingrefs->ticket_id = $id;
+
                 $ratingrefs->thread_id = '0';
                 $ratingrefs->rating_value = $value;
                 $ratingrefs->save();
             } else {
                 $rating_ref->rating_id = $ratID->id;
                 $rating_ref->ticket_id = $id;
+
                 $rating_ref->thread_id = '0';
                 $rating_ref->rating_value = $value;
                 $rating_ref->save();
             }
         }
+
         return redirect()->back()->with('Success', 'Thank you for your rating!');
     }
 
@@ -2144,22 +2136,27 @@ class TicketController extends Controller
             } else {
                 $ratName = $key1[0];
             }
+
             $ratID = \App\Model\helpdesk\Ratings\Rating::where('name', '=', $ratName)->first();
             $ratingrefs = $rating_ref->where('rating_id', '=', $ratID->id)->where('thread_id', '=', $key1[1])->first();
+
             if ($ratingrefs !== null) {
                 $ratingrefs->rating_id = $ratID->id;
                 $ratingrefs->ticket_id = $id;
+
                 $ratingrefs->thread_id = $key1[1];
                 $ratingrefs->rating_value = $value;
                 $ratingrefs->save();
             } else {
                 $rating_ref->rating_id = $ratID->id;
                 $rating_ref->ticket_id = $id;
+
                 $rating_ref->thread_id = $key1[1];
                 $rating_ref->rating_value = $value;
                 $rating_ref->save();
             }
         }
+
         return redirect()->back()->with('Success', 'Thank you for your rating!');
     }
 
@@ -2169,6 +2166,7 @@ class TicketController extends Controller
     public function system_mail()
     {
         $email = Email::where('id', '=', '1')->first();
+
         return $email->sys_email;
     }
 
@@ -2185,28 +2183,34 @@ class TicketController extends Controller
         $ticket = DB::table('tickets')->select('id', 'lock_at', 'lock_by')->where('id', '=', $id)->first();
         $cad = DB::table('settings_ticket')->select('collision_avoid')->where('id', '=', 1)->first();
         $cad = $cad->collision_avoid; //collision avoid duration defined in system
+
         $to_time = strtotime($ticket->lock_at); //last locking time
+
         $from_time = time(); //user system's cureent time
         // difference in last locking time and user system's current time
         $diff = round(abs($to_time - $from_time) / 60, 2);
+
         if ($diff < $cad && Auth::user()->id != $ticket->lock_by) {
             $user_data = User::select('user_name', 'first_name', 'last_name')->where('id', '=', $ticket->lock_by)->first();
             if ($user_data->first_name != '') {
-                $name = $user_data->first_name . ' ' . $user_data->last_name;
+                $name = $user_data->first_name.' '.$user_data->last_name;
             } else {
                 $name = $user_data->username;
             }
-            return Lang::get('lang.locked-ticket') . " <a href='" . route('user.show', $ticket->lock_by) . "'>" . $name . '</a>&nbsp;' . $diff . '&nbsp' . Lang::get('lang.minutes-ago');  //ticket is locked
+
+            return Lang::get('lang.locked-ticket')." <a href='".route('user.show', $ticket->lock_by)."'>".$name.'</a>&nbsp;'.$diff.'&nbsp'.Lang::get('lang.minutes-ago');  //ticket is locked
         } elseif ($diff < $cad && Auth::user()->id == $ticket->lock_by) {
             $ticket = Tickets::where('id', '=', $id)->first();
             $ticket->lock_at = date('Y-m-d H:i:s');
             $ticket->save();
+
             return 4;  //ticket is locked by same user who is requesting access
         } else {
             if (Auth::user()->id == $ticket->lock_by) {
                 $ticket = Tickets::where('id', '=', $id)->first();
                 $ticket->lock_at = date('Y-m-d H:i:s');
                 $ticket->save();
+
                 return 1; //ticket is available and lock ticket for the same user who locked ticket previously
             } else {
                 $ticket = Tickets::where('id', '=', $id)->first();
@@ -2231,6 +2235,7 @@ class TicketController extends Controller
         $email = Input::get('email');
         $ticket_id = Input::get('ticket_id');
         $send_mail = Input::get('send-mail');
+
         if ($action === 'change-add-owner') {
             $name = Input::get('name');
             $returnValue = $this->changeOwnerAdd($email, $name, $ticket_id);
@@ -2247,7 +2252,7 @@ class TicketController extends Controller
         if ($count === 1) {
             $user_id = $user->id;
             $ticket = Tickets::where('id', '=', $id)->first();
-            if ($user_id === (int)$ticket->user_id) {
+            if ($user_id === (int) $ticket->user_id) {
                 return 400;
             }
             $ticket_number = $ticket->ticket_number;
@@ -2259,20 +2264,24 @@ class TicketController extends Controller
             $thread->ticket_id = $ticket->id;
             $thread->user_id = Auth::user()->id;
             $thread->is_internal = 1;
-            $thread->body = 'This ticket now belongs to ' . $user->user_name;
+            $thread->body = 'This ticket now belongs to '.$user->user_name;
             $thread->save();
+
             //mail functionality
             $company = $this->company();
             $system = $this->system();
+
             $agent = $user->first_name;
             $agent_email = $user->email;
-            $master = Auth::user()->first_name . ' ' . Auth::user()->last_name;
+
+            $master = Auth::user()->first_name.' '.Auth::user()->last_name;
             if (Alert::first()->internal_status == 1 || Alert::first()->internal_assigned_agent == 1) {
                 // ticket assigned send mail
                 Mail::send('emails.Ticket_assign', ['agent' => $agent, 'ticket_number' => $ticket_number, 'from' => $company, 'master' => $master, 'system' => $system], function ($message) use ($agent_email, $agent, $ticket_number, $ticket_subject) {
-                    $message->to($agent_email, $agent)->subject($ticket_subject . '[#' . $ticket_number . ']');
+                    $message->to($agent_email, $agent)->subject($ticket_subject.'[#'.$ticket_number.']');
                 });
             }
+
             return 1;
         } else {
             return 0;
@@ -2292,9 +2301,9 @@ class TicketController extends Controller
         $email = $email;
         $ticket_id = $ticket_id;
         $validator = \Validator::make(
-            ['email' => $email,
-                'name' => $name,], ['email' => 'required|email',
-            ]
+                        ['email' => $email,
+                    'name'       => $name, ], ['email'       => 'required|email',
+                        ]
         );
         $user = User::where('email', '=', $email)->first();
         $count = count($user);
@@ -2315,9 +2324,9 @@ class TicketController extends Controller
                 try {
                     $this->PhpMailController->sendmail($from = $this->PhpMailController->mailfrom('1', '0'), $to = ['name' => $name, 'email' => $email], $message = ['subject' => 'Password', 'scenario' => 'registration-notification'], $template_variables = ['user' => $name, 'email_address' => $email, 'user_password' => $password]);
                 } catch (\Exception $e) {
-
                 }
             }
+
             return 1;
         }
     }
@@ -2328,15 +2337,15 @@ class TicketController extends Controller
             $t_id = Input::get('data1');
             foreach ($t_id as $value) {
                 $title = Ticket_Thread::select('title')->where('ticket_id', '=', $value)->first();
-                echo "<option value='$value'>" . $title->title . '</option>';
+                echo "<option value='$value'>".$title->title.'</option>';
             }
         } else {
             $ticket = Tickets::select('user_id')->where('id', '=', $id)->first();
             $ticket_data = Tickets::select('ticket_number', 'id')
-                ->where('user_id', '=', $ticket->user_id)->where('id', '!=', $id)->where('status', '=', 1)->get();
+                            ->where('user_id', '=', $ticket->user_id)->where('id', '!=', $id)->where('status', '=', 1)->get();
             foreach ($ticket_data as $value) {
                 $title = Ticket_Thread::select('title')->where('ticket_id', '=', $value->id)->first();
-                echo "<option value='$value->id'>" . $title->title . '</option>';
+                echo "<option value='$value->id'>".$title->title.'</option>';
             }
         }
     }
@@ -2360,14 +2369,15 @@ class TicketController extends Controller
                         break;
                     }
                 }
+
                 return $match;
             }
         } else {
             $ticket = Tickets::select('user_id')->where('id', '=', $id)->first();
             $ticket_data = Tickets::select('ticket_number', 'id')
-                ->where('user_id', '=', $ticket->user_id)
-                ->where('id', '!=', $id)
-                ->where('status', '=', 1)->get();
+                            ->where('user_id', '=', $ticket->user_id)
+                            ->where('id', '!=', $id)
+                            ->where('status', '=', 1)->get();
             if (isset($ticket_data) && count($ticket_data) >= 1) {
                 return 1;
             } else {
@@ -2405,13 +2415,13 @@ class TicketController extends Controller
             $thread = Ticket_Thread::where('ticket_id', '=', $value)->first();
             $ticket = Tickets::select('ticket_number')->where('id', '=', $value)->first();
             Ticket_Thread::where('ticket_id', '=', $value)
-                ->update(['ticket_id' => $p_id]);
+                    ->update(['ticket_id' => $p_id]);
             Ticket_Form_Data::where('ticket_id', '=', $value)
-                ->update(['ticket_id' => $p_id]);
+                    ->update(['ticket_id' => $p_id]);
             Ticket_Collaborator::where('ticket_id', '=', $value)
-                ->update(['ticket_id' => $p_id]);
+                    ->update(['ticket_id' => $p_id]);
             Tickets::where('id', '=', $value)
-                ->update(['status' => 3]);
+                    ->update(['status' => 3]);
             //event has $p_id and $value
             \Event::fire('ticket.merge', [['parent' => $p_id, 'child' => $value]]);
             if (!empty(Input::get('reason'))) {
@@ -2421,24 +2431,26 @@ class TicketController extends Controller
             }
             if (!empty(Input::get('title'))) {
                 Ticket_Thread::where('ticket_id', '=', $p_id)->first()
-                    ->update(['title' => Input::get('title')]);
+                        ->update(['title' => Input::get('title')]);
             }
+
             $new_thread = new Ticket_Thread();
             $new_thread->ticket_id = $thread->ticket_id;
             $new_thread->user_id = Auth::user()->id;
             $new_thread->is_internal = 0;
             $new_thread->title = $thread->title;
-            $new_thread->body = Lang::get('lang.get_merge_message') .
-                "&nbsp;&nbsp;<a href='" . route('ticket.thread', [$p_id]) .
-                "'>#" . $parent_ticket->ticket_number . '</a><br><br><b>' . Lang::get('lang.merge-reason') . ':</b>&nbsp;&nbsp;' . $reason;
+            $new_thread->body = Lang::get('lang.get_merge_message').
+                    "&nbsp;&nbsp;<a href='".route('ticket.thread', [$p_id]).
+                    "'>#".$parent_ticket->ticket_number.'</a><br><br><b>'.Lang::get('lang.merge-reason').':</b>&nbsp;&nbsp;'.$reason;
             $new_thread->format = $thread->format;
             $new_thread->ip_address = $thread->ip_address;
+
             $new_parent_thread = new Ticket_Thread();
             $new_parent_thread->ticket_id = $p_id;
             $new_parent_thread->user_id = Auth::user()->id;
             $new_parent_thread->is_internal = 1;
             $new_parent_thread->title = $thread->title;
-            $new_parent_thread->body = Lang::get('lang.ticket') . "&nbsp;<a href='" . route('ticket.thread', [$value]) . "'>#" . $ticket->ticket_number . '</a>&nbsp' . Lang::get('lang.ticket_merged') . '<br><br><b>' . Lang::get('lang.merge-reason') . ':</b>&nbsp;&nbsp;' . $reason;
+            $new_parent_thread->body = Lang::get('lang.ticket')."&nbsp;<a href='".route('ticket.thread', [$value])."'>#".$ticket->ticket_number.'</a>&nbsp'.Lang::get('lang.ticket_merged').'<br><br><b>'.Lang::get('lang.merge-reason').':</b>&nbsp;&nbsp;'.$reason;
             $new_parent_thread->format = $parent_thread->format;
             $new_parent_thread->ip_address = $parent_thread->ip_address;
             if ($new_thread->save() && $new_parent_thread->save()) {
@@ -2448,17 +2460,18 @@ class TicketController extends Controller
             }
         }
         $this->sendMergeNotification($p_id, $t_id);
+
         return $success;
     }
 
     public function getParentTickets($id)
     {
         $title = Ticket_Thread::select('title')->where('ticket_id', '=', $id)->first();
-        echo "<option value='$id'>" . $title->title . '</option>';
+        echo "<option value='$id'>".$title->title.'</option>';
         $tickets = Input::get('data1');
         foreach ($tickets as $value) {
             $title = Ticket_Thread::select('title')->where('ticket_id', '=', $value)->first();
-            echo "<option value='$value'>" . $title->title . '</option>';
+            echo "<option value='$value'>".$title->title.'</option>';
         }
     }
 
@@ -2468,11 +2481,12 @@ class TicketController extends Controller
      *
      * @return Array-object
      */
+
     public static function getTable($tickets)
     {
         return \Datatables::of($tickets)
             ->addColumn('id', function ($tickets) {
-                return "<input type='checkbox' name='select_all[]' id='" . $tickets->id . "' onclick='someFunction(this.id)' class='selectval icheckbox_flat-blue' value='" . $tickets->id . "'></input>";
+                return "<input type='checkbox' name='select_all[]' id='".$tickets->id."' onclick='someFunction(this.id)' class='selectval icheckbox_flat-blue' value='".$tickets->id."'></input>";
             })
             ->addColumn('title', function ($tickets) {
                 if (isset($tickets->ticket_title)) {
@@ -2498,22 +2512,24 @@ class TicketController extends Controller
                     $titles = $tickets->ticket_title;
                 }
                 $tooltip_script = self::tooltip($tickets->id);
-                return "<div class='tooltip1' id='tool" . $tickets->id . "'>
-                            <a href='" . route('ticket.thread', [$tickets->id]) . "'>" . ucfirst($string) . "&nbsp;<span style='color:green'>(" . $tickets->countthread . ") <i class='" . $css . "'></i></span>
-                            </a>" . $collabString . $attachString . $tooltip_script .
-                "<span class='tooltiptext'  id='tooltip" . $tickets->id . "'>Loading...</span></div>";
+
+                return "<div class='tooltip1' id='tool".$tickets->id."'>
+                            <a href='".route('ticket.thread', [$tickets->id])."'>".ucfirst($string)."&nbsp;<span style='color:green'>(".$tickets->countthread.") <i class='".$css."'></i></span>
+                            </a>".$collabString.$attachString.$tooltip_script.
+                            "<span class='tooltiptext'  id='tooltip".$tickets->id."'>Loading...</span></div>";
             })
             ->addColumn('ticket_number', function ($tickets) {
-                return "<a href='" . route('ticket.thread', [$tickets->id]) . "' title='" . $tickets->ticket_number . "'>#" . $tickets->ticket_number . '</a>';
+                return "<a href='".route('ticket.thread', [$tickets->id])."' title='".$tickets->ticket_number."'>#".$tickets->ticket_number.'</a>';
             })
             ->addColumn('priority', function ($tickets) {
                 $rep = ($tickets->last_replier == 'client') ? '#F39C12' : '#000';
                 $priority = $tickets->priority;
                 if ($priority != null) {
-                    $prio = '<button class="btn btn-xs ' . $rep . '" style="background-color: ' . $tickets->priority_color . '; color:#F7FBCB">' . ucfirst($tickets->priority) . '</button>';
+                    $prio = '<button class="btn btn-xs '.$rep.'" style="background-color: '.$tickets->priority_color.'; color:#F7FBCB">'.ucfirst($tickets->priority).'</button>';
                 } else {
                     $prio = $tickets->last_relier_role;
                 }
+
                 return $prio;
             })
             ->addColumn('user_name', function ($tickets) {
@@ -2521,15 +2537,16 @@ class TicketController extends Controller
                 $url = route('user.show', $tickets->user_id);
                 $name = '';
                 if ($from) {
-                    $name = $tickets->first_name . ' ' . $tickets->last_name;
+                    $name = $tickets->first_name.' '.$tickets->last_name;
                 } else {
                     $name = $tickets->user_name;
                 }
                 $color = '';
                 if ($tickets->verified == 0 || $tickets->verified == '0') {
-                    $color = "<i class='fa fa-exclamation-triangle'  title='" . Lang::get('lang.accoutn-not-verified') . "'></i>";
+                    $color = "<i class='fa fa-exclamation-triangle'  title='".Lang::get('lang.accoutn-not-verified')."'></i>";
                 }
-                return "<a href='" . $url . "' title='" . Lang::get('lang.see-profile1') . ' ' . ucfirst($tickets->user_name) . '&apos;' . Lang::get('lang.see-profile2') . "'><span style='color:#508983'>" . ucfirst(str_limit($name, 30)) . ' <span style="color:#f75959">' . $color . '</span></span></a>';
+
+                return "<a href='".$url."' title='".Lang::get('lang.see-profile1').' '.ucfirst($tickets->user_name).'&apos;'.Lang::get('lang.see-profile2')."'><span style='color:#508983'>".ucfirst(str_limit($name, 30)).' <span style="color:#f75959">'.$color.'</span></span></a>';
             })
             ->addColumn('assign_user_name', function ($tickets) {
                 if ($tickets->assigned_to == null) {
@@ -2537,50 +2554,53 @@ class TicketController extends Controller
                 } else {
                     $assign = $tickets->assign_user_name;
                     $url = route('user.show', $tickets->assigned_to);
-                    return "<a href='" . $url . "' title='" . Lang::get('lang.see-profile1') . ' ' . ucfirst($tickets->assign_first_name) . '&apos;' . Lang::get('lang.see-profile2') . "'><span style='color:green'>" . ucfirst($tickets->assign_first_name) . ' ' . ucfirst($tickets->assign_last_name) . '</span></a>';
+
+                    return "<a href='".$url."' title='".Lang::get('lang.see-profile1').' '.ucfirst($tickets->assign_first_name).'&apos;'.Lang::get('lang.see-profile2')."'><span style='color:green'>".ucfirst($tickets->assign_first_name).' '.ucfirst($tickets->assign_last_name).'</span></a>';
                 }
             })
-            ->addColumn('updated_at', function ($tickets) {
-                $TicketDatarow = $tickets->updated_at;
-                $updated = '--';
-                if ($TicketDatarow) {
-                    $updated = $tickets->updated_at;
-                }
-                return '<span style="display:none">' . $updated . '</span>' . faveoDate($updated);
-            })
-            ->addColumn('created_at', function ($tickets) {
-                $TicketDatarow = $tickets->created_at;
-                $updated = '--';
-                if ($TicketDatarow) {
-                    $updated = $tickets->created_at;
-                }
-                return '<span style="display:none">' . $updated . '</span>' . faveoDate($updated);
-            })
-            ->make();
+                ->addColumn('updated_at', function ($tickets) {
+                    $TicketDatarow = $tickets->updated_at;
+                    $updated = '--';
+                    if ($TicketDatarow) {
+                        $updated = $tickets->updated_at;
+                    }
+
+                    return '<span style="display:none">'.$updated.'</span>'.UTC::usertimezone($updated);
+                })
+                ->addColumn('created_at', function ($tickets) {
+                    $TicketDatarow = $tickets->created_at;
+                    $updated = '--';
+                    if ($TicketDatarow) {
+                        $updated = $tickets->created_at;
+                    }
+
+                    return '<span style="display:none">'.$updated.'</span>'.UTC::usertimezone($updated);
+                })
+                ->make();
     }
 
     /**
-     * @category function to call and show ticket details in tool tip via ajax
+     *@category function to call and show ticket details in tool tip via ajax
      *
-     * @param null
+     *@param null
      *
-     * @return string //script to load tooltip data
+     *@return string //script to load tooltip data
      */
     public static function tooltip($ticketid)
     {
         return "<script>
                 var timeoutId;
-                $('#tool" . $ticketid . "').hover(function() {
+                $('#tool".$ticketid."').hover(function() {
                     if (!timeoutId) {
                         timeoutId = window.setTimeout(function() {
                         timeoutId = null; // EDIT: added this line
                                 $.ajax({
-                                url:'" . url('ticket/tooltip') . "',
+                                url:'".url('ticket/tooltip')."',
                                 dataType:'html',
                                 type:'get',
-                                data:{'ticketid':" . $ticketid . "},
+                                data:{'ticketid':".$ticketid."},
                                 success : function(html){
-                                    $('#tooltip" . $ticketid . "').html(html);
+                                    $('#tooltip".$ticketid."').html(html);
                                 },
                             });
                         }, 2000);
@@ -2602,16 +2622,18 @@ class TicketController extends Controller
         $ticket = Tickets::find($ticketid);
         $firstThread = $ticket->thread()->select('user_id', 'poster', 'body')->first();
         $lastThread = $ticket->thread()->select('user_id', 'poster', 'body')->orderBy('id', 'desc')->first();
-        return '<b>' . $firstThread->user->user_name . ' (' . $firstThread->poster . ')</b></br>'
-        . $firstThread->purify() . '<br><hr>'
-        . '<b>' . $lastThread->user->user_name . '(' . $lastThread->poster . ')</b>'
-        . $lastThread->purify() . '<br><hr>';
+
+        return '<b>'.$firstThread->user->user_name.' ('.$firstThread->poster.')</b></br>'
+                .$firstThread->purify().'<br><hr>'
+                .'<b>'.$lastThread->user->user_name.'('.$lastThread->poster.')</b>'
+                .$lastThread->purify().'<br><hr>';
     }
 
     //Auto-close tickets
     public function autoCloseTickets()
     {
         $workflow = \App\Model\helpdesk\Workflow\WorkflowClose::whereId(1)->first();
+
         if ($workflow->condition == 1) {
             $overdues = Tickets::where('status', '=', 1)->where('isanswered', '=', 0)->orderBy('id', 'DESC')->get();
             if (count($overdues) == 0) {
@@ -2620,28 +2642,28 @@ class TicketController extends Controller
                 $i = 0;
                 foreach ($overdues as $overdue) {
                     //                $sla_plan = Sla_plan::where('id', '=', $overdue->sla)->first();
+
                     $ovadate = $overdue->created_at;
-                    $new_date = date_add($ovadate, date_interval_create_from_date_string($workflow->days . ' days')) . '<br/><br/>';
+                    $new_date = date_add($ovadate, date_interval_create_from_date_string($workflow->days.' days')).'<br/><br/>';
                     if (date('Y-m-d H:i:s') > $new_date) {
                         $i++;
                         $overdue->status = 3;
                         $overdue->closed = 1;
                         $overdue->closed_at = date('Y-m-d H:i:s');
                         $overdue->save();
-                        //        if($workflow->send_email == 1) {
-                        //             $this->PhpMailController->sendmail($from = $this->PhpMailController->mailfrom('0', $overdue->dept_id), $to = ['name' => $user_name, 'email' => $email], $message = ['subject' => $ticket_subject.'[#'.$ticket_number.']', 'scenario' => 'close-ticket'], $template_variables = ['ticket_number' => $ticket_number]);
-                        //        }
+//        if($workflow->send_email == 1) {
+//             $this->PhpMailController->sendmail($from = $this->PhpMailController->mailfrom('0', $overdue->dept_id), $to = ['name' => $user_name, 'email' => $email], $message = ['subject' => $ticket_subject.'[#'.$ticket_number.']', 'scenario' => 'close-ticket'], $template_variables = ['ticket_number' => $ticket_number]);
+//        }
                     }
                 }
                 // dd(count($value));
-                //            if ($i > 0) {
-                //                $tickets = new collection($value);
-                //            } else {
-                //                $tickets = null;
-                //            }
+//            if ($i > 0) {
+//                $tickets = new collection($value);
+//            } else {
+//                $tickets = null;
+//            }
             }
         } else {
-
         }
     }
 
@@ -2655,8 +2677,8 @@ class TicketController extends Controller
     public function checkUserVerificationStatus()
     {
         $status = CommonSettings::select('status')
-            ->where('option_name', '=', 'send_otp')
-            ->first();
+                ->where('option_name', '=', 'send_otp')
+                ->first();
         if ($status->status == 0 || $status->status == '0') {
             return 1;
         } else {
@@ -2679,9 +2701,9 @@ class TicketController extends Controller
         try {
             $threads = new Ticket_Thread();
             $thread = $threads->leftJoin('tickets', 'ticket_thread.ticket_id', '=', 'tickets.id')
-                ->leftJoin('users', 'ticket_thread.user_id', '=', 'users.id')
-                ->where('ticket_thread.id', $threadid)
-                ->first();
+                    ->leftJoin('users', 'ticket_thread.user_id', '=', 'users.id')
+                    ->where('ticket_thread.id', $threadid)
+                    ->first();
             //dd($thread);
             if (!$thread) {
                 throw new Exception('Sorry we can not find your request');
@@ -2691,6 +2713,7 @@ class TicketController extends Controller
             $ticket = Tickets::where('id', $thread->ticket_id)->first();
             $html = view('themes.default1.agent.helpdesk.ticket.thread-pdf', compact('thread', 'system', 'company', 'ticket'))->render();
             $html1 = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+
             return PDF::load($html1)->show();
         } catch (Exception $ex) {
             return redirect()->back()->with('fails', $ex->getMessage());
@@ -2701,6 +2724,7 @@ class TicketController extends Controller
     {
         $sources = new Ticket_source();
         $source = $sources->where('name', $name)->first();
+
         return $source;
     }
 
@@ -2708,6 +2732,7 @@ class TicketController extends Controller
     {
         $sources = new Ticket_source();
         $source = $sources->where('id', $sourceid)->first();
+
         return $source;
     }
 
@@ -2718,6 +2743,7 @@ class TicketController extends Controller
         if ($source) {
             $css = $source->css_class;
         }
+
         return $css;
     }
 
@@ -2726,6 +2752,7 @@ class TicketController extends Controller
         $ticket_settings = new \App\Model\helpdesk\Settings\Ticket();
         $ticket_setting = $ticket_settings->find(1);
         $help_topicid = $ticket_setting->help_topic;
+
         return $help_topicid;
     }
 
@@ -2734,6 +2761,7 @@ class TicketController extends Controller
         $ticket_settings = new \App\Model\helpdesk\Settings\Ticket();
         $ticket_setting = $ticket_settings->find(1);
         $sla = $ticket_setting->sla;
+
         return $sla;
     }
 
@@ -2742,6 +2770,7 @@ class TicketController extends Controller
         $ticket_settings = new \App\Model\helpdesk\Settings\Ticket();
         $ticket_setting = $ticket_settings->find(1);
         $priority = $ticket_setting->priority;
+
         return $priority;
     }
 
@@ -2750,6 +2779,7 @@ class TicketController extends Controller
         $systems = new \App\Model\helpdesk\Settings\System();
         $system = $systems->find(1);
         $department = $system->department;
+
         return $department;
     }
 
@@ -2770,6 +2800,7 @@ class TicketController extends Controller
         $ticket = $this->findTicketFromTicketCreateUser($result);
         if ($ticket) {
             $userid = $ticket->user_id;
+
             return $userid;
         }
     }
@@ -2780,6 +2811,7 @@ class TicketController extends Controller
         if (array_key_exists($key, $array)) {
             $value = $array[$key];
         }
+
         return $value;
     }
 
@@ -2787,6 +2819,7 @@ class TicketController extends Controller
     {
         $users = new \App\User();
         $admin = $users->where('role', 'admin')->first();
+
         return $admin;
     }
 
@@ -2804,6 +2837,7 @@ class TicketController extends Controller
                 $attacment[$i]['mime'] = $mime;
             }
         }
+
         return $attacment;
     }
 
@@ -2820,6 +2854,7 @@ class TicketController extends Controller
                     $array[$key]['mime'] = $attach->type;
                     $array[$key]['mode'] = 'data';
                 }
+
                 return $array;
             }
         }
@@ -2832,9 +2867,10 @@ class TicketController extends Controller
     {
         try {
             $table = \Datatable::table()
-                ->addColumn(
-                    '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
-                ->noScript();
+                    ->addColumn(
+                            '', Lang::get('lang.subject'), Lang::get('lang.ticket_id'), Lang::get('lang.priority'), Lang::get('lang.from'), Lang::get('lang.assigned_to'), Lang::get('lang.last_activity'), Lang::get('lang.created-at'))
+                    ->noScript();
+
             return view('themes.default1.agent.helpdesk.followup.followup', compact('table'));
         } catch (Exception $e) {
             return Redirect()->back()->with('fails', $e->getMessage());
@@ -2850,8 +2886,10 @@ class TicketController extends Controller
             foreach ($array as $text) {
                 $title .= $text->text;
             }
+
             return wordwrap($title, 70, "<br>\n");
         }
+
         return wordwrap($subject, 70, "<br>\n");
     }
 
@@ -2861,7 +2899,7 @@ class TicketController extends Controller
         $url = [];
         $encode = [];
         $img = [];
-        foreach ($result as $key => $img_tag) {
+        foreach ($result as $key=>$img_tag) {
             //dd($img_tag);
             preg_match_all('/(src)=("[^"]*")/i', $img_tag[$key], $img[$key]);
         }
@@ -2869,6 +2907,7 @@ class TicketController extends Controller
             $url = $img[$i][2][0];
             $encode = $this->divideUrl($img[$i][2][0]);
         }
+
         return str_replace($url, $encode, $content);
     }
 
@@ -2879,6 +2918,7 @@ class TicketController extends Controller
         $trim = str_replace('"', '', $trim);
         $trim = substr_replace($trim, '', 0, 1);
         $path = public_path($trim);
+
         return $this->fileContent($path);
     }
 
@@ -2889,17 +2929,18 @@ class TicketController extends Controller
         if ($exist) {
             $content = \File::get($path);
             $type = \File::extension($path);
-            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($content);
+            $base64 = 'data:image/'.$type.';base64,'.base64_encode($content);
         }
+
         return $base64;
     }
 
     /**
-     * @category function to send notification of ticket merging to the owners
+     *@category function to send notification of ticket merging to the owners
      *
-     * @param srting array $t_id, $p_id
+     *@param srting array $t_id, $p_id
      *
-     * @return null
+     *@return null
      */
     public function sendMergeNotification($p_id, $t_id)
     {
@@ -2914,34 +2955,11 @@ class TicketController extends Controller
                         array_push($child_ticket_numbers, $value->ticket_number);
                     }
                     // dd(implode(", ",$child_ticket_numbers), $ticket_details->ticket_number);
-                    $this->PhpMailController->sendmail($from = $this->PhpMailController->mailfrom('0', $ticket_details->dept_id), $to = ['user' => $user_detail->full_name, 'email' => $user_detail->email], $message = ['subject' => '', 'body' => '', 'scenario' => 'merge-ticket-notification'], $template_variables = ['user' => $user_detail->full_name, 'ticket_number' => $ticket_details->ticket_number, 'ticket_link' => route('ticket.thread', $p_id), 'merged_ticket_numbers' => implode(', ', $child_ticket_numbers)]);
+                    $this->PhpMailController->sendmail($from = $this->PhpMailController->mailfrom('0', $ticket_details->dept_id), $to = ['user'  => $user_detail->full_name, 'email' => $user_detail->email], $message = ['subject' => '', 'body'    => '', 'scenario' => 'merge-ticket-notification'], $template_variables = ['user' => $user_detail->full_name, 'ticket_number' => $ticket_details->ticket_number, 'ticket_link'   => route('ticket.thread', $p_id), 'merged_ticket_numbers' => implode(', ', $child_ticket_numbers)]);
                 }
             }
         } catch (\Exception $e) {
             //catch the exception
         }
     }
-
-    public function ticketChangeDepartment(Request $request)
-    {
-        if (!$this->ticket_policy->transfer()) {
-            if ($api) {
-                return response()->json(['message' => 'permission denied'], 403);
-            }
-            return redirect('dashboard')->with('fails', 'Permission denied');
-        }
-        $match_dept_name = Department::where('name', '=', $request->tkt_dept_transfer)->select('id')->first();
-        if (!$match_dept_name) {
-            return redirect()->back()->with('fails', Lang::get('lang.this_deparment_not_exists'));
-        } else {
-            $ticket_id = $request->tkt_id;
-            $ticket = Tickets::findOrFail($ticket_id);
-            $ticket->dept_id = $match_dept_name->id;
-            $sla = $this->getSla($ticket->type, $ticket->user_id, $match_dept_name->id, $ticket->source, $ticket->priority_id);
-            $ticket = $this->updateOverdue($ticket, $sla);
-            $ticket->save();
-            return redirect()->back()->with('success', Lang::get('lang.ticket_department_successfully_changed'));
-        }
-    }
-
 }
