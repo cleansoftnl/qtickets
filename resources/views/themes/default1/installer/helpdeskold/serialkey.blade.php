@@ -42,7 +42,7 @@
             <br/><br/>
           </td>
           <td style="">
-            {!! $errors->first('order_no', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('order_no', '<span class="help-block">:message</span>') !!}
             <input type="text" name="order_no" style="margin-left:180px;width:274px;" value="">
             <br/><br/>
           </td>
@@ -53,7 +53,7 @@
             </label>
           </td>
           <td ng-repeat="productKey in productKeys" style="margin-left: 150px;">
-            {!! $errors->first('serial', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('serial', '<span class="help-block">:message</span>') !!}
             <div class="container">
               <input type="text" name="first" id="productKey1" ng-model="productKey.set1" maxlength="4" size="4"
                      style="padding: 3px; margin-left: 180px; width: 50px;">&nbsp;-

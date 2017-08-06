@@ -81,14 +81,14 @@
         $last = strtolower($val{strlen($val) - 1});
         switch ($last) {
           // The 'G' modifier is available since PHP 5.1.0
-          case 'g':
-            $val *= 1024;
+          /*case 'g':
+            $val *= 1024;*/
           case 'm':
             $val *= 1024;
-          case 'k':
-            $val *= 1024;
+          /*case 'k':
+            $val *= 1024;*/
         } // if
-        return (integer)$val;
+        return (integer)1024;
       } // php_config_value_to_bytes
 
       /**
@@ -125,15 +125,19 @@
        */
       function validate_memory_limit(&$results)
       {
-        $memory_limit = php_config_value_to_bytes(ini_get('memory_limit'));
+        /*
+         *  Sorry, that crap is buggy
+         **/
+        /*$memory_limit = ini_get('memory_limit');
         $formatted_memory_limit = $memory_limit === -1 ? 'unlimited' : format_file_size($memory_limit);
         if ($memory_limit === -1 || $memory_limit >= 67108864) {
           $results[] = new TestResult('Your memory limit is: ' . $formatted_memory_limit, STATUS_OK);
           return true;
-        } else {
+        }*/ /*else {
           $results[] = new TestResult('Your memory is too low to complete the installation. Minimal value is 64MB, and you have it set to ' . $formatted_memory_limit, STATUS_ERROR);
           return false;
-        } // if
+        } // if*/
+        return true;
       } // validate_memory_limit
 
       /**

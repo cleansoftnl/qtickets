@@ -9,7 +9,7 @@ return [
       | A helper command is provided for this: `php artisan jwt:generate`
       |
      */
-    'secret' => env('JWT_SECRET', 'HC2GpXn74xm4unWCrog4f0xPr9IgLfQf'),
+    'secret' => env('JWT_SECRET', 'W66ZYyFPQEsbu3HULsaV7slfxlXbWljk'),
     /*
       |--------------------------------------------------------------------------
       | JWT time to live

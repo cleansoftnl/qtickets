@@ -65,7 +65,7 @@
               <div class="col-md-3">
                 <div class="form-group {{ $errors->has('api_enable') ? 'has-error' : '' }}">
                   {!! Form::label('api',Lang::get('lang.api')) !!}
-                  {!! $errors->first('api_enable', '<spam class="help-block">:message</spam>') !!}
+                  {!! $errors->first('api_enable', '<span class="help-block">:message</span>') !!}
                   <div class="row">
                     <div class="col-xs-5">
                       <input type="radio" name="api_enable" value="1" @if($systems->api_enable ==1) checked @endif>&nbsp;
@@ -83,7 +83,7 @@
               <div class="col-md-3">
                 <div class="form-group {{ $errors->has('api_key_mandatory') ? 'has-error' : '' }}">
                   {!! Form::label('api_key_mandatory',Lang::get('lang.api_key_mandatory')) !!}
-                  {!! $errors->first('api_key_mandatory', '<spam class="help-block">:message</spam>') !!}
+                  {!! $errors->first('api_key_mandatory', '<span class="help-block">:message</span>') !!}
                   <div class="row">
                     <div class="col-xs-5">
                       <input type="radio" name="api_key_mandatory" value="1"
@@ -102,7 +102,7 @@
               <div class="col-md-3">
                 <div class="form-group {{ $errors->has('api_key') ? 'has-error' : '' }}">
                   {!! Form::label('api_key',Lang::get('lang.api_key')) !!}
-                  {!! $errors->first('api_key', '<spam class="help-block">:message</spam>') !!}
+                  {!! $errors->first('api_key', '<span class="help-block">:message</span>') !!}
                   {!! Form::text('api_key',$systems->api_key,['class' => 'form-control']) !!}
                 </div>
               </div>

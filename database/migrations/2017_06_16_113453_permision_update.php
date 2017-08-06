@@ -12,15 +12,16 @@ class PermisionUpdate extends Migration
      */
     public function up()
     {
-        \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        Schema::dropIfExists('groups');
-        \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        //\DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        //Schema::dropIfExists('groups');
+        /*Schema::dropIfExists('permision');
+        //\DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         Schema::create('permision', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
             $table->text('permision');
             $table->timestamps();
-        });
+        });*/
     }
 
     /**
@@ -30,6 +31,6 @@ class PermisionUpdate extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('permision');
+        //Schema::dropIfExists('permision');
     }
 }

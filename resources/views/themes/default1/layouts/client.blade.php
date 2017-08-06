@@ -95,13 +95,13 @@
 
               <div class="form-group has-feedback {{ $errors->has('email') ? 'has-error' : '' }}">
                 {!! Form::text('email',null,['placeholder'=>'Email','class' => 'form-control']) !!}
-                {!! $errors->first('email', '<spam class="help-block">:message</spam>') !!}
+                {!! $errors->first('email', '<span class="help-block">:message</span>') !!}
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
               </div>
 
               <div class="form-group has-feedback {{ $errors->has('password') ? 'has-error' : '' }}">
                 {!! Form::password('password',['placeholder'=>'Password','class' => 'form-control']) !!}
-                {!! $errors->first('password', '<spam class="help-block">:message</spam>') !!}
+                {!! $errors->first('password', '<span class="help-block">:message</span>') !!}
                 <span class="glyphicon glyphicon-lock form-control-feedback"></span>
               </div>
               <ul class="list-unstyled pull-left">
@@ -138,8 +138,8 @@
               <i class="fa fa-ban"></i>
               <b>Alert!</b> Failed.
               <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-              <li>{!! $errors->first('email', '<spam class="help-block">:message</spam>') !!}</li>
-              <li>{!! $errors->first('password', '<spam class="help-block ">:message</spam>') !!}</li>
+              <li>{!! $errors->first('email', '<span class="help-block">:message</span>') !!}</li>
+              <li>{!! $errors->first('password', '<span class="help-block ">:message</span>') !!}</li>
             </div>
           @endif
 

@@ -94,17 +94,17 @@
             <div class="col-md-4">
               <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                 {!! Form::label('name',Lang::get('lang.name')) !!}
-                {!! $errors->first('name', '<spam class="help-block" style="red">:message</spam>') !!}
+                {!! $errors->first('name', '<span class="help-block" style="red">:message</span>') !!}
                 {!! Form::text('name',null,['class' => 'form-control']) !!}
               </div>
               <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                 {!! Form::label('email',Lang::get('lang.email')) !!}
-                {!! $errors->first('email', '<spam class="help-block">:message</spam>') !!}
+                {!! $errors->first('email', '<span class="help-block">:message</span>') !!}
                 {!! Form::text('email',null,['class' => 'form-control']) !!}
               </div>
               <div class="form-group {{ $errors->has('website') ? 'has-error' : '' }}">
                 {!! Form::label('website',Lang::get('lang.website')) !!}
-                {!! $errors->first('website', '<spam class="help-block">:message</spam>') !!}
+                {!! $errors->first('website', '<span class="help-block">:message</span>') !!}
                 {!! Form::text('website',null,['class' => 'form-control']) !!}
               </div>
               <button type="submit" class="btn btn-custom btn-lg">{!! Lang::get('lang.post_message') !!}</button>
@@ -112,7 +112,7 @@
             <div class="col-md-8">
               <div class="form-group {{ $errors->has('comment') ? 'has-   error' : '' }}">
                 {!! Form::label('comment',Lang::get('lang.message')) !!}
-                {!! $errors->first('comment', '<spam class="help-block">:message</spam>') !!}
+                {!! $errors->first('comment', '<span class="help-block">:message</span>') !!}
                 {!! Form::textarea('comment',null,['class' => 'form-control','size' => '30x8','id'=>'comment']) !!}
               </div>
             </div>

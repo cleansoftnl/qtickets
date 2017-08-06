@@ -1059,12 +1059,12 @@
                     <div class="form-group">
                       <label>{!! Lang::get('lang.name') !!}</label>
                       <input type="text" name="name" class="form-control">
-                      <spam id="error-name" style="display:none;position:fixed" class="call-out text-red">This is a
+                      <span id="error-name" style="display:none;position:fixed" class="call-out text-red">This is a
                         required field
-                      </spam>
-                      <spam id="error-name1" style="display:none;position:fixed" class="call-out text-red">! Allready
+                      </span>
+                      <span id="error-name1" style="display:none;position:fixed" class="call-out text-red">! Allready
                         Taken
-                      </spam>
+                      </span>
                       <br/>
                     </div>
                   </div>
@@ -1079,7 +1079,7 @@
                     <div class="form-group">
                       <label>{!! Lang::get('lang.website') !!}</label>
                       <input type="url" name="website" placeholder="https://www.example.com" class="form-control">
-                      <spam id="error-website" style="display:none" class="help-block text-red">! Allready Taken</spam>
+                      <span id="error-website" style="display:none" class="help-block text-red">! Allready Taken</span>
                       <br/>
                     </div>
                   </div>

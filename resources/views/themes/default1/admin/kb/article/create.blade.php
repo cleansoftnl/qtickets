@@ -51,21 +51,21 @@
                 <div class="col-md-6 form-group {{ $errors->has('name') ? 'has-error' : '' }}">
 
                   {!! Form::label('name',Lang::get('lang.name')) !!}
-                  {!! $errors->first('name', '<spam class="help-block">:message</spam>') !!}
+                  {!! $errors->first('name', '<span class="help-block">:message</span>') !!}
                   {!! Form::text('name',null,['class' => 'form-control']) !!}
                 </div>
 
                 <div class="col-md-6 form-group {{ $errors->has('slug') ? 'has-error' : '' }}">
 
                   {!! Form::label('slug',Lang::get('lang.slug')) !!}
-                  {!! $errors->first('slug', '<spam class="help-block">:message</spam>') !!}
+                  {!! $errors->first('slug', '<span class="help-block">:message</span>') !!}
                   {!! Form::text('slug',null,['class' => 'form-control']) !!}
                 </div>
               </div>
 
               <div class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
                 {!! Form::label('description',Lang::get('lang.description')) !!}
-                {!! $errors->first('description', '<spam class="help-block">:message</spam>') !!}
+                {!! $errors->first('description', '<span class="help-block">:message</span>') !!}
                 <div class="form-group" style="background-color:white">
                   {!! Form::textarea('description',null,['class' => 'form-control color','size' => '128x20','id'=>'myNicEditor','placeholder'=>'Enter the description']) !!}
                 </div>
@@ -86,7 +86,7 @@
                   <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
 
                     {!! Form::label('type',Lang::get('lang.status')) !!}
-                    {!! $errors->first('type', '<spam class="help-block">:message</spam>') !!}
+                    {!! $errors->first('type', '<span class="help-block">:message</span>') !!}
                     <div class="row">
                       <div class="col-xs-4">
                         {!! Form::radio('type','1',true) !!}{{Lang::get('lang.published')}}
@@ -101,7 +101,7 @@
                   <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
 
                     {!! Form::label('status',Lang::get('lang.visibility')) !!}
-                    {!! $errors->first('status', '<spam class="help-block">:message</spam>') !!}
+                    {!! $errors->first('status', '<span class="help-block">:message</span>') !!}
                     <div class="row">
                       <div class="col-xs-3">
                         {!! Form::radio('status','1',true) !!}{{Lang::get('lang.public')}}
@@ -135,7 +135,7 @@
 
                   <div class="form-group {{ $errors->has('category_id') ? 'has-error' : '' }}">
                     {{-- {!! Form::label('category_id','Category') !!} --}}
-                    {!! $errors->first('category_id', '<spam class="help-block">:message</spam>') !!}
+                    {!! $errors->first('category_id', '<span class="help-block">:message</span>') !!}
                     @while (list($key, $val) = each($category))
                       <div class="row">
                         <div class="form-group">

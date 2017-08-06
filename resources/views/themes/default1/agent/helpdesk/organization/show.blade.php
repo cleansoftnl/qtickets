@@ -268,7 +268,7 @@
                         <?php $priority = App\Model\helpdesk\Ticket\Ticket_Priority::where('priority_id', '=', $ticket->priority_id)->first(); ?>
                         <td class="mailbox-priority">@if($priority != null)
                             <spam
-                              class="btn btn-{{$priority->priority_color}} btn-xs">{{$priority->priority}}</spam>@endif
+                              class="btn btn-{{$priority->priority_color}} btn-xs">{{$priority->priority}}</span>@endif
                         </td>
                         <?php $from = App\User::where('id', '=', $ticket->user_id)->first(); ?>
                         <td class="mailbox-last-reply" style="color:{!! $rep !!}">{!! $username !!}</td>
@@ -396,7 +396,7 @@
                         <?php $priority = App\Model\helpdesk\Ticket\Ticket_Priority::where('priority_id', '=', $ticket->priority_id)->first(); ?>
                         <td class="mailbox-priority">@if($priority != null)
                             <spam
-                              class="btn btn-{{$priority->priority_color}} btn-xs">{{$priority->priority}}</spam>@endif
+                              class="btn btn-{{$priority->priority_color}} btn-xs">{{$priority->priority}}</span>@endif
                         </td>
                         <?php $from = App\User::where('id', '=', $ticket->user_id)->first(); ?>
                         <td class="mailbox-last-reply" style="color:{!! $rep !!}">{!! $username !!}</td>
@@ -529,7 +529,7 @@
                         <?php $priority = App\Model\helpdesk\Ticket\Ticket_Priority::where('priority_id', '=', $ticket->priority_id)->first(); ?>
                         <td class="mailbox-priority">@if($priority != null)
                             <spam
-                              class="btn btn-{{$priority->priority_color}} btn-xs">{{$priority->priority}}</spam>@endif
+                              class="btn btn-{{$priority->priority_color}} btn-xs">{{$priority->priority}}</span>@endif
                         </td>
                         <?php $from = App\User::where('id', '=', $ticket->user_id)->first(); ?>
                         <td class="mailbox-last-reply" style="color:{!! $rep !!}">{!! $username !!}</td>

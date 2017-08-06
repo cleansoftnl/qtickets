@@ -124,7 +124,7 @@ class AgentController extends Controller
         // fixing the user role to agent
         $user->fill($request->except(['permission', 'primary_department', 'agent_time_zone', 'mobile']))->save();
         if (count($permission) > 0) {
-            $user->permision()->create(['permision' => $permission]);
+            $user->permissions()->create(['permision' => $permission]);
         }
         if ($request->get('mobile')) {
             $user->mobile = $request->get('mobile');
@@ -252,7 +252,7 @@ class AgentController extends Controller
             $user->primary_dpt = $request->primary_department;
             $user->agent_tzone = $request->agent_time_zone;
             $user->save();
-            $user->permision()->updateOrCreate(['user_id' => $user->id], ['permision' => json_encode($permission)]);
+            $user->permissions()->updateOrCreate(['user_id' => $user->id], ['permision' => json_encode($permission)]);
             return redirect('agents')->with('success', Lang::get('lang.agent_updated_sucessfully'));
         } catch (Exception $e) {
             return redirect('agents')->with('fails', Lang::get('lang.unable_to_update_agent') . '<li>' . $e->errorInfo[2] . '</li>');

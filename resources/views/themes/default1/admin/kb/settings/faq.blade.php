@@ -45,7 +45,7 @@
 
               <div class="col-md-10 form-group {{ $errors->has('faq') ? 'has-error' : '' }}">
                 {!! Form::label('faq','Description') !!}
-                {!! $errors->first('faq', '<spam class="help-block">:message</spam>') !!}
+                {!! $errors->first('faq', '<span class="help-block">:message</span>') !!}
 
                 {!! Form::textarea('faq',null,['class' => 'form-control','size' => '30x5','id'=>'faq']) !!}
 

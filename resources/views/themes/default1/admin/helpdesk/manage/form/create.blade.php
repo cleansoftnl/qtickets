@@ -44,7 +44,7 @@
           <div class="col-md-6">
             <div class="form-group {{ $errors->has('title') ? 'has-error' : '' }}">
               {!! Form::label('title',Lang::get('lang.title')) !!}
-              {!! $errors->first('title', '<spam class="help-block">:message</spam>') !!}
+              {!! $errors->first('title', '<span class="help-block">:message</span>') !!}
               {!! Form::text('title',null,['class' => 'form-control']) !!}
             </div>
           </div>
@@ -52,7 +52,7 @@
           <div class="col-md-6">
             <div class="form-group {{ $errors->has('label') ? 'has-error' : '' }}">
               {!! Form::label('label',Lang::get('lang.label')) !!}
-              {!! $errors->first('label', '<spam class="help-block">:message</spam>') !!}
+              {!! $errors->first('label', '<span class="help-block">:message</span>') !!}
               {!! Form::text('label',null,['class' => 'form-control']) !!}
             </div>
           </div>
@@ -60,7 +60,7 @@
           <div class="col-md-4">
             <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
               {!! Form::label('type',Lang::get('lang.type')) !!}
-              {!! $errors->first('type', '<spam class="help-block">:message</spam>') !!}
+              {!! $errors->first('type', '<span class="help-block">:message</span>') !!}
               {!!Form::select('type', [''=>'Select a Type','types'=>$type->pluck('type','id')] ,null,['class' => 'form-control'] ) !!}
             </div>
           </div>
@@ -68,7 +68,7 @@
           <div class="col-md-4">
             <div class="form-group {{ $errors->has('visibility') ? 'has-error' : '' }}">
               {!! Form::label('visibility',Lang::get('lang.visibility')) !!}
-              {!! $errors->first('visibility', '<spam class="help-block">:message</spam>') !!}
+              {!! $errors->first('visibility', '<span class="help-block">:message</span>') !!}
               {!!Form::select('visibility', [''=>'Select a Visibility','visibilities' =>$visibility->pluck('visibility','id')],null,['class' => 'form-control'] ) !!}
             </div>
           </div>

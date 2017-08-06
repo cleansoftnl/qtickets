@@ -15,7 +15,7 @@
     <div class="form-group has-feedback {{ $errors->has('full_name') ? 'has-error' : '' }}">
 
       {!! Form::text('full_name',null,['placeholder'=>'Full Name','class' => 'form-control']) !!}
-      {!! $errors->first('full_name', '<spam class="help-block">:message</spam>') !!}
+      {!! $errors->first('full_name', '<span class="help-block">:message</span>') !!}
       <span class="glyphicon glyphicon-user form-control-feedback"></span>
 
     </div>
@@ -24,7 +24,7 @@
     <div class="form-group has-feedback {{ $errors->has('email') ? 'has-error' : '' }}">
 
       {!! Form::text('email',null,['placeholder'=>'Email','class' => 'form-control']) !!}
-      {!! $errors->first('email', '<spam class="help-block">:message</spam>') !!}
+      {!! $errors->first('email', '<span class="help-block">:message</span>') !!}
       <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
 
     </div>
@@ -32,13 +32,13 @@
 
     <div class="form-group has-feedback {{ $errors->has('password') ? 'has-error' : '' }}">
       {!! Form::password('password',['placeholder'=>'Password','class' => 'form-control']) !!}
-      {!! $errors->first('password', '<spam class="help-block">:message</spam>') !!}
+      {!! $errors->first('password', '<span class="help-block">:message</span>') !!}
       <span class="glyphicon glyphicon-lock form-control-feedback"></span>
     </div>
 
     <div class="form-group has-feedback {{ $errors->has('password_confirmation') ? 'has-error' : '' }}">
       {!! Form::password('password_confirmation',['placeholder'=>'Retype Password','class' => 'form-control']) !!}
-      {!! $errors->first('password_confirmation', '<spam class="help-block">:message</spam>') !!}
+      {!! $errors->first('password_confirmation', '<span class="help-block">:message</span>') !!}
       <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
     </div>
 

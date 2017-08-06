@@ -418,7 +418,7 @@ $assignedto = App\User::where('id', '=', $tickets->assigned_to)->first();
                       <div class="col-md-10">
                         <div id="refreshTo">
                           {!! Form::text('To',$user->email,['disabled'=>'disabled','id'=>'email','class'=>'form-control','style'=>'width:55%'])!!}
-                          {!! $errors->first('To', '<spam class="help-block text-red">:message</spam>') !!}
+                          {!! $errors->first('To', '<span class="help-block text-red">:message</span>') !!}
                           <a href="#" data-toggle="modal" data-target="#addccc"> {!! Lang::get('lang.add_cc') !!} </a>
                           <div id="recepients">
                             <?php
@@ -469,7 +469,7 @@ $assignedto = App\User::where('id', '=', $tickets->assigned_to)->first();
                           <textarea style="width:98%;height:20%;" name="reply_content" class="form-control"
                                     id="reply_content"></textarea>
                         </div>
-                        {!! $errors->first('reply_content', '<spam class="help-block text-red">:message</spam>') !!}
+                        {!! $errors->first('reply_content', '<span class="help-block text-red">:message</span>') !!}
                         <script src="{{asset('vendor/unisharp/laravel-ckeditor/ckeditor.js')}}"></script>
                         <script>
                           CKEDITOR.replace('reply_content', {
@@ -556,7 +556,7 @@ $assignedto = App\User::where('id', '=', $tickets->assigned_to)->first();
                           <textarea class="form-control" name="InternalContent" id="InternalContent"
                                     style="width:98%; height:150px;"></textarea>
                         </div>
-                        {!! $errors->first('InternalContent', '<spam class="help-block text-red">:message</spam>') !!}
+                        {!! $errors->first('InternalContent', '<span class="help-block text-red">:message</span>') !!}
                       </div>
                     </div>
                   </div>
@@ -861,7 +861,7 @@ $assignedto = App\User::where('id', '=', $tickets->assigned_to)->first();
             <div class="form-group">
               <label>{!! Lang::get('lang.title') !!} <span class="text-red"> *</span></label>
               <input type="text" name="subject" class="form-control" value="{{$thread->title}}">
-              <spam id="error-subject" style="display:none" class="help-block text-red">This is a required field</spam>
+              <span id="error-subject" style="display:none" class="help-block text-red">This is a required field</span>
             </div>
             <div class="row">
               <div class="col-md-6">
@@ -877,7 +877,7 @@ $assignedto = App\User::where('id', '=', $tickets->assigned_to)->first();
                         ?> >{!! $sla_plan->name." | ".$sla_plan->grace_period !!}</option>
                     @endforeach
                   </select>
-                  <spam id="error-sla" style="display:none" class="help-block text-red">This is a required field</spam>
+                  <span id="error-sla" style="display:none" class="help-block text-red">This is a required field</span>
                 </div>
               </div>
               <div class="col-md-6">
@@ -894,7 +894,7 @@ $assignedto = App\User::where('id', '=', $tickets->assigned_to)->first();
                         ?> >{!! $helptopic->topic !!}</option>
                     @endforeach
                   </select>
-                  <spam id="error-help" style="display:none" class="help-block text-red">This is a required field</spam>
+                  <span id="error-help" style="display:none" class="help-block text-red">This is a required field</span>
                 </div>
               </div>
               <div class="col-md-6">
@@ -910,8 +910,8 @@ $assignedto = App\User::where('id', '=', $tickets->assigned_to)->first();
                         ?> >{!! $ticketsource->value !!}</option>
                     @endforeach
                   </select>
-                  <spam id="error-source" style="display:none" class="help-block text-red">This is a required field
-                  </spam>
+                  <span id="error-source" style="display:none" class="help-block text-red">This is a required field
+                  </span>
                 </div>
               </div>
               <?php ?>
@@ -928,8 +928,8 @@ $assignedto = App\User::where('id', '=', $tickets->assigned_to)->first();
                         ?> >{!! $ticket_priority->priority_desc !!}</option>
                     @endforeach
                   </select>
-                  <spam id="error-priority" style="display:none" class="help-block text-red">This is a required field
-                  </spam>
+                  <span id="error-priority" style="display:none" class="help-block text-red">This is a required field
+                  </span>
                 </div>
               </div>
             </div>
@@ -1025,7 +1025,7 @@ $assignedto = App\User::where('id', '=', $tickets->assigned_to)->first();
                     <input type="hidden" name="action" value="change-owner">
                     <div class="row">
                       <div class="col-md-2">
-                        <spam class="glyphicon glyphicon-user fa-5x"></spam>
+                        <span class="glyphicon glyphicon-user fa-5x"></span>
                       </div>
                       <div id="change-refresh" class="col-md-10">
                         <?php $user = App\User::where('id', '=', $tickets->user_id)->first(); ?>

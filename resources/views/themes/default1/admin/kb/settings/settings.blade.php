@@ -48,17 +48,17 @@
             <div class="row">
               <div class="col-md-3 form-group {{ $errors->has('company_name') ? 'has-error' : '' }}">
                 {!! Form::label('company_name',Lang::get('lang.companyname')) !!}
-                {!! $errors->first('company_name', '<spam class="help-block">:message</spam>') !!}
+                {!! $errors->first('company_name', '<span class="help-block">:message</span>') !!}
                 {!! Form::text('company_name',$settings->company_name,['class' => 'form-control']) !!}
               </div>
               <div class="col-md-3 form-group {{ $errors->has('website') ? 'has-error' : '' }}">
                 {!! Form::label('website',Lang::get('lang.website')) !!}
-                {!! $errors->first('website', '<spam class="help-block">:message</spam>') !!}
+                {!! $errors->first('website', '<span class="help-block">:message</span>') !!}
                 {!! Form::text('website',$settings->website,['class' => 'form-control']) !!}
               </div>
               <div class="col-md-3 form-group {{ $errors->has('phone') ? 'has-error' : '' }}">
                 {!! Form::label('phone',Lang::get('lang.phone')) !!}
-                {!! $errors->first('phone', '<spam class="help-block">:message</spam>') !!}
+                {!! $errors->first('phone', '<span class="help-block">:message</span>') !!}
                 {!! Form::text('phone',$settings->phone,['class' => 'form-control']) !!}
               </div>
               {{--  <div class="col-md-3 form-group {{ $errors->has('phone') ? 'has-error' : '' }}">
@@ -68,7 +68,7 @@
 --}}
               <div class="col-md-12 form-group {{ $errors->has('address') ? 'has-error' : '' }}">
                 {!! Form::label('address',Lang::get('lang.address')) !!}
-                {!! $errors->first('address', '<spam class="help-block">:message</spam>') !!}
+                {!! $errors->first('address', '<span class="help-block">:message</span>') !!}
                 {!! Form::textarea('address',null,['class' => 'form-control','size' => '128x10','id'=>'address','placeholder'=>'Enter the address']) !!}
               </div>
               <div class="col-md-3 form-group">
@@ -81,7 +81,7 @@
               </div>
               <div class="col-md-3 form-group">
                 {!! Form::label('pagination',Lang::get('lang.numberofelementstodisplay')) !!}
-                {!! $errors->first('pagination', '<spam class="help-block">:message</spam>') !!}
+                {!! $errors->first('pagination', '<span class="help-block">:message</span>') !!}
                 {!! Form::text('pagination',$settings->pagination,['class' => 'form-control']) !!}
               </div>
               <div class="col-md-3 form-group">
@@ -94,27 +94,27 @@
         <div class="row">
           <div class="col-md-4 form-group {{ $errors->has('port') ? 'has-error' : '' }}">
             {!! Form::label('port',Lang::get('lang.portnumber')) !!}
-            {!! $errors->first('port', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('port', '<span class="help-block">:message</span>') !!}
             {!! Form::text('port',$settings->port,['class' => 'form-control']) !!}
           </div>
           <div class="col-md-4 form-group {{ $errors->has('host') ? 'has-error' : '' }}">
             {!! Form::label('host',Lang::get('lang.host')) !!}
-            {!! $errors->first('host', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('host', '<span class="help-block">:message</span>') !!}
             {!! Form::text('host',$settings->host,['class' => 'form-control']) !!}
           </div>
           <div class="col-md-4 form-group {{ $errors->has('encryption') ? 'has-error' : '' }}">
             {!! Form::label('encryption',Lang::get('lang.encryption')) !!}
-            {!! $errors->first('encryption', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('encryption', '<span class="help-block">:message</span>') !!}
             {!! Form::text('encryption',$settings->encryption,['class' => 'form-control']) !!}
           </div>
           <div class="col-md-4 form-group {{ $errors->has('email') ? 'has-error' : '' }}">
             {!! Form::label('email',Lang::get('lang.settingsemail')) !!}
-            {!! $errors->first('email', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('email', '<span class="help-block">:message</span>') !!}
             {!! Form::text('email',$settings->email,['class' => 'form-control']) !!}
           </div>
           <div class="col-md-4 form-group {{ $errors->has('password') ? 'has-error' : '' }}">
             {!! Form::label('password',Lang::get('lang.password')) !!}
-            {!! $errors->first('password', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('password', '<span class="help-block">:message</span>') !!}
             {!! Form::password('password',['class' => 'form-control']) !!}
           </div>
           <div class="col-md-4 form-group">

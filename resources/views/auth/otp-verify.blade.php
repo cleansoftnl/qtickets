@@ -65,17 +65,17 @@
         <!-- Email -->
       <div class="form-group has-feedback {{ $errors->has('email') ? 'has-error' : '' }}">
         {!! Form::hidden('email',null,['placeholder'=> Lang::get("lang.email") ,'class' => 'form-control']) !!}
-          <!-- {!! $errors->first('email', '<spam class="help-block">:message</spam>') !!} -->
+          <!-- {!! $errors->first('email', '<span class="help-block">:message</span>') !!} -->
       </div>
 
       <!-- Password -->
       <div class="form-group has-feedback {{ $errors->has('password') ? 'has-error' : '' }}">
         {!! Form::hidden('password',['placeholder'=>Lang::get("lang.password"),'class' => 'form-control']) !!}
-          <!-- {!! $errors->first('password', '<spam class="help-block">:message</spam>') !!} -->
+          <!-- {!! $errors->first('password', '<span class="help-block">:message</span>') !!} -->
       </div>
       <div class="form-group has-feedback {{ $errors->has('otp') ? 'has-error' : '' }}">
         {!! Form::input('text','otp',null,['placeholder'=> Lang::get("lang.enter-otp") ,'class' => 'form-control' , 'required' => true, 'pattern' => "[0-9]{6}", "title" => Lang::get('lang.otp-input-title')]) !!}
-          <!-- {!! $errors->first('email', '<spam class="help-block">:message</spam>') !!} -->
+          <!-- {!! $errors->first('email', '<span class="help-block">:message</span>') !!} -->
       </div>
       @if (Session::has('referer'))
         <input type='hidden' name="referer" value="{!! Session::get('referer') !!}">

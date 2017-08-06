@@ -165,7 +165,7 @@
             {!! Form::label('old_password',Lang::get('lang.old_password')) !!} <span class="text-red"> *</span>
             {!! Form::password('old_password',['class' => 'form-control']) !!}
             {!! $errors->first('old_password', '
-            <spam class="help-block">:message</spam>
+            <span class="help-block">:message</span>
             ') !!}
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
           </div>
@@ -174,7 +174,7 @@
             {!! Form::label('new_password',Lang::get('lang.new_password')) !!} <span class="text-red"> *</span>
             {!! Form::password('new_password',['class' => 'form-control']) !!}
             {!! $errors->first('new_password', '
-            <spam class="help-block">:message</spam>
+            <span class="help-block">:message</span>
             ') !!}
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
           </div>
@@ -183,7 +183,7 @@
             {!! Form::label('confirm_password',Lang::get('lang.confirm_password')) !!} <span class="text-red"> *</span>
             {!! Form::password('confirm_password',['class' => 'form-control']) !!}
             {!! $errors->first('confirm_password', '
-            <spam class="help-block">:message</spam>
+            <span class="help-block">:message</span>
             ') !!}
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
           </div>

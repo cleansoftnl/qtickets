@@ -307,7 +307,7 @@
                     <td class="mailbox-last-reply">client</td>
                     <td class="mailbox-replies">11</td>
                     <td class="mailbox-priority">
-                      <spam class="text-green">Low</spam>
+                      <span class="text-green">Low</span>
                     </td>
                     <td class="mailbox-last-activity">11h 59m 23s</td>
                     <td class="mailbox-date">5h 23m 03s</td>
@@ -320,7 +320,7 @@
                     <td class="mailbox-last-reply">client</td>
                     <td class="mailbox-replies">11</td>
                     <td class="mailbox-priority">
-                      <spam class="text-yellow">Medium</spam>
+                      <span class="text-yellow">Medium</span>
                     </td>
                     <td class="mailbox-last-activity">11h 59m 23s</td>
                     <td class="mailbox-date">5h 23m 03s</td>
@@ -333,7 +333,7 @@
                     <td class="mailbox-last-reply">client</td>
                     <td class="mailbox-replies">11</td>
                     <td class="mailbox-priority">
-                      <spam class="text-red">High</spam>
+                      <span class="text-red">High</span>
                     </td>
                     <td class="mailbox-last-activity">11h 59m 23s</td>
                     <td class="mailbox-date">5h 23m 03s</td>
@@ -346,7 +346,7 @@
                     <td class="mailbox-last-reply">client</td>
                     <td class="mailbox-replies">11</td>
                     <td class="mailbox-priority">
-                      <spam class="text-yellow">Medium</spam>
+                      <span class="text-yellow">Medium</span>
                     </td>
                     <td class="mailbox-last-activity">11h 59m 23s</td>
                     <td class="mailbox-date">5h 23m 03s</td>
@@ -359,7 +359,7 @@
                     <td class="mailbox-last-reply">client</td>
                     <td class="mailbox-replies">11</td>
                     <td class="mailbox-priority">
-                      <spam class="text-red">High</spam>
+                      <span class="text-red">High</span>
                     </td>
                     <td class="mailbox-last-activity">11h 59m 23s</td>
                     <td class="mailbox-date">5h 23m 03s</td>

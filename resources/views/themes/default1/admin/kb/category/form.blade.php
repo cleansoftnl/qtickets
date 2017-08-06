@@ -20,7 +20,7 @@
       <div class="col-xs-4 form-group {{ $errors->has('name') ? 'has-error' : '' }}">
 
         {!! Form::label('name','Name') !!}
-        {!! $errors->first('name', '<spam class="help-block">:message</spam>') !!}
+        {!! $errors->first('name', '<span class="help-block">:message</span>') !!}
         {!! Form::text('name',null,['class' => 'form-control']) !!}
 
       </div>
@@ -30,7 +30,7 @@
       <div class="col-xs-4 form-group {{ $errors->has('status') ? 'has-error' : '' }}">
 
         {!! Form::label('status','Status') !!}
-        {!! $errors->first('status', '<spam class="help-block">:message</spam>') !!}
+        {!! $errors->first('status', '<span class="help-block">:message</span>') !!}
         <div class="row">
           <div class="col-xs-3">
             {!! Form::radio('status','1',true) !!}Active
@@ -44,7 +44,7 @@
     </div>
     <div class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
       {!! Form::label('description','Description') !!}
-      {!! $errors->first('description', '<spam class="help-block">:message</spam>') !!}
+      {!! $errors->first('description', '<span class="help-block">:message</span>') !!}
 
       {!! Form::textarea('description',null,['class' => 'form-control','size' => '50x10','id'=>'myNicEditor','placeholder'=>'Enter the description']) !!}
     </div>

@@ -183,7 +183,7 @@
                     </div>
                     <div class="col-md-10">
                       {!! Form::text('To',$user->email,['class'=>'form-control','style'=>'width:55%'])!!}
-                      {!! $errors->first('To', '<spam class="help-block text-red">:message</spam>') !!}
+                      {!! $errors->first('To', '<span class="help-block text-red">:message</span>') !!}
                     </div>
                   </div>
                 </div>
@@ -197,7 +197,7 @@
                     </div>
                     <div class="col-md-10">
                       <textarea name="reply_content"></textarea>
-                      {!! $errors->first('reply_content', '<spam class="help-block text-red">:message</spam>') !!}
+                      {!! $errors->first('reply_content', '<span class="help-block text-red">:message</span>') !!}
                     </div>
                   </div>
                 </div>
@@ -247,7 +247,7 @@
                     </div>
                     <div class="col-md-10">
                       {!! Form::text('To',$user->email,['class'=>'form-control','style'=>'width:55%'])!!}
-                      {!! $errors->first('To', '<spam class="help-block text-red">:message</spam>') !!}
+                      {!! $errors->first('To', '<span class="help-block text-red">:message</span>') !!}
                     </div>
                   </div>
                 </div>
@@ -260,7 +260,7 @@
                     </div>
                     <div class="col-md-10">
                       <textarea name="reply_content"></textarea>
-                      {!! $errors->first('reply_content', '<spam class="help-block text-red">:message</spam>') !!}
+                      {!! $errors->first('reply_content', '<span class="help-block text-red">:message</span>') !!}
                     </div>
                   </div>
                 </div>

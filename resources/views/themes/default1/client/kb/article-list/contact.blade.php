@@ -43,7 +43,7 @@
       <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
 
         {!! Form::label('name','Name') !!}
-        {!! $errors->first('name', '<spam class="help-block">:message</spam>') !!}
+        {!! $errors->first('name', '<span class="help-block">:message</span>') !!}
         {!! Form::text('name',null,['class' => 'form-control']) !!}
 
       </div>
@@ -51,7 +51,7 @@
       <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
 
         {!! Form::label('email','Email') !!}
-        {!! $errors->first('email', '<spam class="help-block">:message</spam>') !!}
+        {!! $errors->first('email', '<span class="help-block">:message</span>') !!}
         {!! Form::text('email',null,['class' => 'form-control']) !!}
 
       </div>
@@ -59,14 +59,14 @@
       <div class="form-group {{ $errors->has('subject') ? 'has-error' : '' }}">
 
         {!! Form::label('subject','Subject') !!}
-        {!! $errors->first('subject', '<spam class="help-block">:message</spam>') !!}
+        {!! $errors->first('subject', '<span class="help-block">:message</span>') !!}
         {!! Form::text('subject',null,['class' => 'form-control']) !!}
 
       </div>
 
       <div class="form-group {{ $errors->has('message') ? 'has-	error' : '' }}">
         {!! Form::label('message','Messege', ['style' => 'display: block']) !!}
-        {!! $errors->first('message', '<spam class="help-block">:message</spam>') !!}
+        {!! $errors->first('message', '<span class="help-block">:message</span>') !!}
         {!! Form::textarea('message',null,['class' => 'form-control','size' => '30x7','id'=>'message']) !!}
 
       </div>

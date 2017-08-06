@@ -33,12 +33,12 @@
       <div class="wc-setup-content">
         <div class="woocommerce-message woocommerce-tracker">
           <div class="fail">
-            {!! $errors->first('default', '<spam id="fail">:message</spam><br/>') !!}
-            {!! $errors->first('host', '<spam id="fail">:message</spam><br/>') !!}
-            {!! $errors->first('port', '<spam id="fail">:message</spam><br/>') !!}
-            {!! $errors->first('databasename', '<spam id="fail">:message</spam><br/>') !!}
-            {!! $errors->first('username', '<spam id="fail">:message</spam><br/>') !!}
-            {!! $errors->first('password', '<spam id="fail">:message</spam><br/>') !!}
+            {!! $errors->first('default', '<span id="fail">:message</span><br/>') !!}
+            {!! $errors->first('host', '<span id="fail">:message</span><br/>') !!}
+            {!! $errors->first('port', '<span id="fail">:message</span><br/>') !!}
+            {!! $errors->first('databasename', '<span id="fail">:message</span><br/>') !!}
+            {!! $errors->first('username', '<span id="fail">:message</span><br/>') !!}
+            {!! $errors->first('password', '<span id="fail">:message</span><br/>') !!}
             <br/>
           </div>
         </div>

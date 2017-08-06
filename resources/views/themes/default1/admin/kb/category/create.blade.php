@@ -37,7 +37,7 @@
           <div class="col-xs-3 form-group {{ $errors->has('name') ? 'has-error' : '' }}">
 
             {!! Form::label('name',Lang::get('lang.name')) !!}
-            {!! $errors->first('name', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('name', '<span class="help-block">:message</span>') !!}
             {!! Form::text('name',null,['class' => 'form-control']) !!}
 
           </div>
@@ -45,7 +45,7 @@
           <div class="col-xs-3 form-group {{ $errors->has('slug') ? 'has-error' : '' }}">
 
             {!! Form::label('slug',Lang::get('lang.slug')) !!}
-            {!! $errors->first('slug', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('slug', '<span class="help-block">:message</span>') !!}
             {!! Form::text('slug',null,['class' => 'form-control']) !!}
 
           </div>
@@ -53,7 +53,7 @@
           <div class="col-xs-3 form-group {{ $errors->has('parent') ? 'has-error' : '' }}">
 
             {!! Form::label('parent',Lang::get('lang.parent')) !!}
-            {!! $errors->first('parent', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('parent', '<span class="help-block">:message</span>') !!}
             {!!Form::select('parent',[''=>'Select a Group','Categorys'=>$category->pluck('name','name')],null,['class' => 'form-control select']) !!}
 
           </div>
@@ -62,7 +62,7 @@
           <div class="col-xs-3 form-group {{ $errors->has('status') ? 'has-error' : '' }}">
 
             {!! Form::label('status',Lang::get('lang.status')) !!}
-            {!! $errors->first('status', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('status', '<span class="help-block">:message</span>') !!}
             <br/>
 
 
@@ -76,7 +76,7 @@
           <div class="col-md-12 form-group {{ $errors->has('description') ? 'has-error' : '' }}">
 
             {!! Form::label('description',Lang::get('lang.description')) !!}
-            {!! $errors->first('description', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('description', '<span class="help-block">:message</span>') !!}
             {!! Form::textarea('description',null,['class' => 'form-control','id'=>'description','placeholder'=>'Enter the description']) !!}
 
           </div>

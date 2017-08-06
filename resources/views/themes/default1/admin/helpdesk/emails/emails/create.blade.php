@@ -48,19 +48,19 @@
           <div class="col-xs-4 form-group {!! $errors->has('email_address') ? 'has-error' : '' !!}"
                id="email_address_error">
             {!! Form::label('email_address',Lang::get('lang.email_address')) !!} <span class="text-red"> *</span>
-            {!! $errors->first('email_address', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('email_address', '<span class="help-block">:message</span>') !!}
             {!! Form::text('email_address',null,['class' => 'form-control', 'id' => 'email_address']) !!}
           </div>
           <!-- Email name -->
           <div class="col-xs-4 form-group {!! $errors->has('email_name') ? 'has-error' : ''!!}" id="email_name_error">
             {!! Form::label('email_name',Lang::get('lang.from_name')) !!} <span class="text-red"> *</span>
-            {!! $errors->first('email_name', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('email_name', '<span class="help-block">:message</span>') !!}
             {!! Form::text('email_name',null,['class' => 'form-control', 'id' => 'email_name']) !!}
           </div>
           <!-- password -->
           <div class="col-xs-4 form-group {!! $errors->has('password') ? 'has-error' : ''!!}" id="password_error">
             {!! Form::label('password',Lang::get('lang.password')) !!} <span class="text-red"> *</span>
-            {!! $errors->first('password', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('password', '<span class="help-block">:message</span>') !!}
             {!! Form::password('password',['class' => 'form-control', 'id' => 'password']) !!}
           </div>
         </div>
@@ -73,19 +73,19 @@
           <!-- department -->
           <div class="col-xs-4 form-group {!! $errors->has('department') ? 'has-error' : ''!!}" id="department_error">
             {!! Form::label('department',Lang::get('lang.department')) !!}
-            {!! $errors->first('department', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('department', '<span class="help-block">:message</span>') !!}
             {!!Form::select('department', [''=>'--System Default--','departments'=>$departments->pluck('name','id')->toArray()],null,['class' => 'form-control select', 'id' => 'department' ]) !!}
           </div>
           <!-- Priority -->
           <div class="col-xs-4 form-group {!! $errors->has('priority') ? 'has-error' : ''!!}" id="priority_error">
             {!! Form::label('priority',Lang::get('lang.priority')) !!}
-            {!! $errors->first('priority', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('priority', '<span class="help-block">:message</span>') !!}
             {!!Form::select('priority', [''=>'--System Default--','Priorities'=>$priority->pluck('priority_desc','priority_id')->toArray()],null,['class' => 'form-control select', 'id' => 'priority']) !!}
           </div>
           <!-- Help topic -->
           <div class="col-xs-4 form-group {!! $errors->has('help_topic') ? 'has-error' : ''!!}" id="help_topic_error">
             {!! Form::label('help_topic',Lang::get('lang.help_topic')) !!}
-            {!! $errors->first('help_topic', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('help_topic', '<span class="help-block">:message</span>') !!}
             {!!Form::select('help_topic', [''=>'--System Default--','Help Topics'=>$helps->pluck('topic','id')->toArray()],null,['class' => 'form-control select', 'id' => 'help_topic']) !!}
           </div>
           <!-- status -->
@@ -122,25 +122,25 @@
           <div class="col-xs-2 form-group {!! $errors->has('fetching_protocol') ? 'has-error' : ''!!}"
                id="fetching_protocol_error">
             {!! Form::label('fetching_protocol',Lang::get('lang.protocol')) !!}
-            {!! $errors->first('fetching_protocol', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('fetching_protocol', '<span class="help-block">:message</span>') !!}
             {!!Form::select('fetching_protocol',['imap' => 'IMAP', 'pop' => 'POP3'],null,['class' => 'form-control select', 'id' => 'fetching_protocol']) !!}
           </div>
           <div class="col-xs-2 form-group  {!! $errors->has('fetching_host') ? 'has-error' : ''!!}"
                id="fetching_host_error">
             {!! Form::label('fetching_host',Lang::get('lang.host_name')) !!}
-            {!! $errors->first('fetching_host', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('fetching_host', '<span class="help-block">:message</span>') !!}
             {!! Form::text('fetching_host',null,['class' => 'form-control', 'id' => 'fetching_host']) !!}
           </div>
           <div class="col-xs-2 form-group {!! $errors->has('fetching_port') ? 'has-error' : ''!!}"
                id="fetching_port_error">
             {!! Form::label('fetching_port',Lang::get('lang.port_number')) !!}
-            {!! $errors->first('fetching_port', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('fetching_port', '<span class="help-block">:message</span>') !!}
             {!! Form::text('fetching_port',null,['class' => 'form-control', 'id' => 'fetching_port']) !!}
           </div>
           <div class="col-xs-2 form-group {!! $errors->has('fetching_encryption') ? 'has-error' : ''!!}"
                id="fetching_encryption_error">
             {!! Form::label('fetching_encryption',Lang::get('lang.encryption')) !!}
-            {!! $errors->first('fetching_encryption', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('fetching_encryption', '<span class="help-block">:message</span>') !!}
             {!!Form::select('fetching_encryption',[''=>'-----Select-----','ssl' => 'SSL', 'tls' => 'TLS', 'starttls' => 'STARTTLS'],null,['class' => 'form-control select', 'id' => 'fetching_encryption']) !!}
           </div>
           <div class="col-xs-2 form-group {!! $errors->has('imap_authentication') ? 'has-error' : ''!!}"
@@ -178,28 +178,28 @@
           <div class="col-xs-2 form-group {!! $errors->has('sending_protocol') ? 'has-error' : ''!!}"
                id="sending_protocol_error">
             {!! Form::label('sending_protocol',Lang::get('lang.transfer_protocol')) !!}
-            {!! $errors->first('sending_protocol', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('sending_protocol', '<span class="help-block">:message</span>') !!}
             {!!Form::select('sending_protocol',[''=>'Select','Drives'=>$services],null,['class' => 'form-control select','id'=>'service']) !!}
           </div>
           <!-- sending hoost -->
           <div class="col-xs-2 form-group {!! $errors->has('sending_host') ? 'has-error' : ''!!}"
                id="sending_host_error">
             {!! Form::label('sending_host',Lang::get('lang.host_name')) !!}
-            {!! $errors->first('sending_host', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('sending_host', '<span class="help-block">:message</span>') !!}
             {!! Form::text('sending_host',null,['class' => 'form-control']) !!}
           </div>
           <!-- sending port -->
           <div class="col-xs-2 form-group {!! $errors->has('sending_port') ? 'has-error' : ''!!}"
                id="sending_port_error">
             {!! Form::label('sending_port',Lang::get('lang.port_number')) !!}
-            {!! $errors->first('sending_port', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('sending_port', '<span class="help-block">:message</span>') !!}
             {!! Form::text('sending_port',null,['class' => 'form-control']) !!}
           </div>
           <!-- Encryption -->
           <div class="col-xs-2 form-group {!! $errors->has('sending_encryption') ? 'has-error' : ''!!}"
                id="sending_encryption_error">
             {!! Form::label('sending_encryption',Lang::get('lang.encryption')) !!}
-            {!! $errors->first('sending_encryption', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('sending_encryption', '<span class="help-block">:message</span>') !!}
             {!!Form::select('sending_encryption',[''=>'-----Select-----','ssl' => 'SSL', 'tls' => 'TLS', 'starttls' => 'STARTTLS'],null,['class' => 'form-control select']) !!}
           </div>
           <div class="col-xs-2 form-group {!! $errors->has('smtp_authentication') ? 'has-error' : ''!!}"

@@ -50,14 +50,14 @@
           <div class="form-group {{ $errors->has('title') ? 'has-error' : '' }}">
 
             {!! Form::label('title',Lang::get('lang.title')) !!}
-            {!! $errors->first('title', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('title', '<span class="help-block">:message</span>') !!}
             {!! Form::text('title',null,['class' => 'form-control']) !!}
 
           </div>
 
           <div class="form-group {{ $errors->has('content') ? 'has-error' : '' }}">
             {!! Form::label('content',Lang::get('lang.content')) !!}
-            {!! $errors->first('content', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('content', '<span class="help-block">:message</span>') !!}
             {!! Form::textarea('content',null,['class' => 'form-control','size' => '128x10','id'=>'footer','placeholder'=>'Enter the description']) !!}
           </div>
 

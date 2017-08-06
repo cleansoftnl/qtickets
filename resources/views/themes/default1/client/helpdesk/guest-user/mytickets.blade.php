@@ -105,7 +105,7 @@
               <td class="mailbox-Id">#{!! $ticket->ticket_number !!}</td>
               <?php $priority = App\Model\Ticket\Ticket_Priority::where('priority_id', '=', $ticket->priority_id)->first();?>
               <td class="mailbox-priority">
-                <spam class="btn btn-{{$priority->priority_color}} btn-xs">{{$priority->priority}}</spam>
+                <span class="btn btn-{{$priority->priority_color}} btn-xs">{{$priority->priority}}</span>
               </td>
 
               <td class="mailbox-last-reply" style="color:{!! $rep !!}">{!! $username !!}</td>

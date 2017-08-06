@@ -605,7 +605,7 @@
         }
       });
     });
-    var permision = {!!$user->permision()->pluck("permision")!!};
+    var permision = {!!$user->permissions()->pluck("permision")!!};
     console.log(permision);
     $.each(permision[0], function (key, value) {
       if (key == "create_ticket") {

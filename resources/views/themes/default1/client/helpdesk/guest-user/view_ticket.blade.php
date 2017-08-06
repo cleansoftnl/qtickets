@@ -279,7 +279,7 @@
                     </div>
                     <div class="col-md-10">
                       {!! Form::text('To',$user->email,['id'=>'email','class'=>'form-control','style'=>'width:55%'])!!}
-                      {!! $errors->first('To', '<spam class="help-block text-red">:message</spam>') !!}
+                      {!! $errors->first('To', '<span class="help-block text-red">:message</span>') !!}
 
                       <input type="checkbox"> <a href="#" onclick="AddCcc()" data-toggle="modal" data-target="#addccc">
                         Add Ccc </a>
@@ -311,7 +311,7 @@
                     </div>
                     <div class="col-md-10">
                       <textarea style="width:98%;height:200px;" name="reply_content" id="reply_content"></textarea>
-                      {!! $errors->first('reply_content', '<spam class="help-block text-red">:message</spam>') !!}
+                      {!! $errors->first('reply_content', '<span class="help-block text-red">:message</span>') !!}
                       <br/>
                       {{-- <div type="file" class="btn btn-default btn-file"><i class="fa fa-paperclip"> </i> Attachment<input type="file" name="attachment[]" multiple/></div><br/>
                       Max. 10MB --}}
@@ -349,7 +349,7 @@
                       <div class="col-md-10">
                         <textarea class="form-control" name="InternalContent" id="InternalContent"
                                   style="width:98%; height:150px;"></textarea>
-                        {!! $errors->first('InternalContent', '<spam class="help-block text-red">:message</spam>') !!}
+                        {!! $errors->first('InternalContent', '<span class="help-block text-red">:message</span>') !!}
                       </div>
                     </div>
                   </div>
@@ -641,13 +641,13 @@
             <div class="form-group">
               <label>Title</label>
               <input type="text" name="subject" class="form-control" value="{{$thread->title}}" required>
-              {!! $errors->first('subject', '<spam class="help-block text-red">:message</spam>') !!}
+              {!! $errors->first('subject', '<span class="help-block text-red">:message</span>') !!}
             </div>
             <div class="form-group">
               <label>Body</label>
               <textarea name="body" class="form-control" style="width:100%;height:200px;"
                         required>{!! $thread->body !!}</textarea>
-              {!! $errors->first('body', '<spam class="help-block text-red">:message</spam>') !!}
+              {!! $errors->first('body', '<span class="help-block text-red">:message</span>') !!}
             </div>
           </div>
           <div id="show" style="display:none;">
@@ -710,11 +710,11 @@
                   @endif
                 @endforeach
               </select>
-              <!-- <spam class="glyphicon glyphicon-search form-control-feedback"></spam> -->
+              <!-- <span class="glyphicon glyphicon-search form-control-feedback"></span> -->
             </div>
             <div class="row">
               <div class="col-md-2">
-                <spam class="glyphicon glyphicon-user fa-5x"></spam>
+                <span class="glyphicon glyphicon-user fa-5x"></span>
               </div>
               <div class="col-md-10">
                 <?php $user = App\User::where('id', '=', $tickets->user_id)->first();?>

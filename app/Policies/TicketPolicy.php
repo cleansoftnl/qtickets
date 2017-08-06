@@ -16,8 +16,8 @@ class TicketPolicy
     public function checkPermission($key)
     {
         $check = true;
-        if (\Auth::user() && \Auth::user()->permision()->first()) {
-            $permision = \Auth::user()->permision()->first()->permision;
+        if (\Auth::user() && \Auth::user()->permissions()->first()) {
+            $permision = \Auth::user()->permissions()->first()->permision;
             if (is_array($permision) && checkArray($key, $permision)) {
                 $check = true;
             } else {

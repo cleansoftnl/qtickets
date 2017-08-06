@@ -49,7 +49,7 @@
                 <div class=" col-xs-4 form-group {{ $errors->has('google') ? 'has-error' : '' }}">
 
                   {!! Form::label('google','google') !!}
-                  {!! $errors->first('google', '<spam class="help-block">:message</spam>') !!}
+                  {!! $errors->first('google', '<span class="help-block">:message</span>') !!}
                   {!! Form::text('google',null,['class' => 'form-control']) !!}
 
                 </div>
@@ -57,7 +57,7 @@
                 <div class=" col-xs-4 form-group {{ $errors->has('twitter') ? 'has-error' : '' }}">
 
                   {!! Form::label('twitter','twitter') !!}
-                  {!! $errors->first('twitter', '<spam class="help-block">:message</spam>') !!}
+                  {!! $errors->first('twitter', '<span class="help-block">:message</span>') !!}
                   {!! Form::text('twitter',null,['class' => 'form-control']) !!}
 
                 </div>
@@ -65,7 +65,7 @@
                 <div class=" col-xs-4 form-group {{ $errors->has('facebook') ? 'has-error' : '' }}">
 
                   {!! Form::label('facebook','facebook') !!}
-                  {!! $errors->first('facebook', '<spam class="help-block">:message</spam>') !!}
+                  {!! $errors->first('facebook', '<span class="help-block">:message</span>') !!}
                   {!! Form::text('facebook',null,['class' => 'form-control']) !!}
 
                 </div>
@@ -77,7 +77,7 @@
                 <div class=" col-xs-4 form-group {{ $errors->has('linkedin') ? 'has-error' : '' }}">
 
                   {!! Form::label('linkedin','linkedin') !!}
-                  {!! $errors->first('linkedin', '<spam class="help-block">:message</spam>') !!}
+                  {!! $errors->first('linkedin', '<span class="help-block">:message</span>') !!}
                   {!! Form::text('linkedin',null,['class' => 'form-control']) !!}
 
                 </div>
@@ -85,7 +85,7 @@
                 <div class=" col-xs-4 form-group {{ $errors->has('stumble') ? 'has-error' : '' }}">
 
                   {!! Form::label('stumble','stumble') !!}
-                  {!! $errors->first('stumble', '<spam class="help-block">:message</spam>') !!}
+                  {!! $errors->first('stumble', '<span class="help-block">:message</span>') !!}
                   {!! Form::text('stumble',null,['class' => 'form-control']) !!}
 
                 </div>
@@ -93,7 +93,7 @@
                 <div class=" col-xs-4 form-group {{ $errors->has('deviantart') ? 'has-error' : '' }}">
 
                   {!! Form::label('deviantart','deviantart') !!}
-                  {!! $errors->first('deviantart', '<spam class="help-block">:message</spam>') !!}
+                  {!! $errors->first('deviantart', '<span class="help-block">:message</span>') !!}
                   {!! Form::text('deviantart',null,['class' => 'form-control']) !!}
 
                 </div>
@@ -105,7 +105,7 @@
                 <div class=" col-xs-4 form-group {{ $errors->has('flickr') ? 'has-error' : '' }}">
 
                   {!! Form::label('flickr','flickr') !!}
-                  {!! $errors->first('flickr', '<spam class="help-block">:message</spam>') !!}
+                  {!! $errors->first('flickr', '<span class="help-block">:message</span>') !!}
                   {!! Form::text('flickr',null,['class' => 'form-control']) !!}
 
                 </div>
@@ -113,7 +113,7 @@
                 <div class=" col-xs-4 form-group {{ $errors->has('skype') ? 'has-error' : '' }}">
 
                   {!! Form::label('skype','skype') !!}
-                  {!! $errors->first('skype', '<spam class="help-block">:message</spam>') !!}
+                  {!! $errors->first('skype', '<span class="help-block">:message</span>') !!}
                   {!! Form::text('skype',null,['class' => 'form-control']) !!}
 
                 </div>
@@ -121,7 +121,7 @@
                 <div class=" col-xs-4 form-group {{ $errors->has('rss') ? 'has-error' : '' }}">
 
                   {!! Form::label('rss','rss') !!}
-                  {!! $errors->first('rss', '<spam class="help-block">:message</spam>') !!}
+                  {!! $errors->first('rss', '<span class="help-block">:message</span>') !!}
                   {!! Form::text('rss',null,['class' => 'form-control']) !!}
 
                 </div>
@@ -133,7 +133,7 @@
                 <div class=" col-xs-4 form-group {{ $errors->has('youtube') ? 'has-error' : '' }}">
 
                   {!! Form::label('youtube','youtube') !!}
-                  {!! $errors->first('youtube', '<spam class="help-block">:message</spam>') !!}
+                  {!! $errors->first('youtube', '<span class="help-block">:message</span>') !!}
                   {!! Form::text('youtube',null,['class' => 'form-control']) !!}
 
                 </div>
@@ -141,7 +141,7 @@
                 <div class=" col-xs-4 form-group {{ $errors->has('vimeo') ? 'has-error' : '' }}">
 
                   {!! Form::label('vimeo','vimeo') !!}
-                  {!! $errors->first('vimeo', '<spam class="help-block">:message</spam>') !!}
+                  {!! $errors->first('vimeo', '<span class="help-block">:message</span>') !!}
                   {!! Form::text('vimeo',null,['class' => 'form-control']) !!}
 
                 </div>
@@ -149,7 +149,7 @@
                 <div class=" col-xs-4 form-group {{ $errors->has('pinterest') ? 'has-error' : '' }}">
 
                   {!! Form::label('pinterest','pinterest') !!}
-                  {!! $errors->first('pinterest', '<spam class="help-block">:message</spam>') !!}
+                  {!! $errors->first('pinterest', '<span class="help-block">:message</span>') !!}
                   {!! Form::text('pinterest',null,['class' => 'form-control']) !!}
 
                 </div>
@@ -161,7 +161,7 @@
                 <div class=" col-xs-6 form-group {{ $errors->has('dribbble') ? 'has-error' : '' }}">
 
                   {!! Form::label('dribbble','dribbble') !!}
-                  {!! $errors->first('dribbble', '<spam class="help-block">:message</spam>') !!}
+                  {!! $errors->first('dribbble', '<span class="help-block">:message</span>') !!}
                   {!! Form::text('dribbble',null,['class' => 'form-control']) !!}
 
                 </div>
@@ -169,7 +169,7 @@
                 <div class=" col-xs-6 form-group {{ $errors->has('instagram') ? 'has-error' : '' }}">
 
                   {!! Form::label('instagram','instagram') !!}
-                  {!! $errors->first('instagram', '<spam class="help-block">:message</spam>') !!}
+                  {!! $errors->first('instagram', '<span class="help-block">:message</span>') !!}
                   {!! Form::text('instagram',null,['class' => 'form-control']) !!}
 
                 </div>

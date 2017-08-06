@@ -11,8 +11,11 @@ class CreateGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('groups', function (Blueprint $table) {
+        Schema::create('permision', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id');
+            $table->text('groups');
+            $table->text('permision');
             $table->string('name');
             $table->boolean('group_status');
             $table->boolean('can_create_ticket');
@@ -39,6 +42,6 @@ class CreateGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('groups');
+        //Schema::drop('groups');
     }
 }

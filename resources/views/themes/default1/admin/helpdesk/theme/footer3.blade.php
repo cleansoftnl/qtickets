@@ -41,12 +41,12 @@
         <div class="box-body table-responsive">
           <div class="form-group {{ $errors->has('title') ? 'has-error' : '' }}">
             {!! Form::label('title',Lang::get('lang.title') ) !!}
-            {!! $errors->first('title', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('title', '<span class="help-block">:message</span>') !!}
             {!! Form::text('title',null,['class' => 'form-control']) !!}
           </div>
           <div class="form-group {{ $errors->has('footer') ? 'has-error' : '' }}">
             {!! Form::label('footer', Lang::get('lang.footer') ) !!}
-            {!! $errors->first('footer', '<spam class="help-block">:message</spam>') !!}
+            {!! $errors->first('footer', '<span class="help-block">:message</span>') !!}
             {!! Form::textarea('footer',null,['class' => 'form-control','size' => '30x5','id'=>'footer']) !!}
           </div>
         </div>
