@@ -221,7 +221,7 @@ return [
         'Redirect' => 'Illuminate\Support\Facades\Redirect',
         'Redis' => 'Illuminate\Support\Facades\Redis',
         'Request' => 'Illuminate\Support\Facades\Request',
-        'Response' => 'Illuminate\Support\Facades\Response',
+        'Response' => 'Illuminate\Http\Response',
         'Route' => 'Illuminate\Support\Facades\Route',
         'Schema' => 'Illuminate\Support\Facades\Schema',
         'Session' => 'Illuminate\Support\Facades\Session',
