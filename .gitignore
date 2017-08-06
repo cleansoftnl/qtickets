@@ -1,8 +1,10 @@
 # Please try and keep this file organized by alphabetical order. Single files first, then directories.
-.env
-Homestead.yaml
-Homestead.json
 /config/lfm.php
+.env
+
+Homestead.json
+Homestead.yaml
+
 /nbproject/private/
 /node_modules
 /public/error_log

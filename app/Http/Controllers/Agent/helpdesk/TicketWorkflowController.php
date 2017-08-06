@@ -40,7 +40,7 @@ class TicketWorkflowController extends Controller
      *
      * @return type response
      */
-    public function workflow($fromaddress, $fromname, $subject, $body, $phone, $phonecode, $mobile_number, $helptopic, $sla, $priority, $source, $collaborator, $dept, $assign, $team_assign, $ticket_status, $form_data, $auto_response)
+    public function workflow($fromaddress, $fromname, $subject, $body, $phone, $phonecode, $mobile_number, $helptopic, $sla, $priority, $source, $collaborator, $dept, $assign, $team_assign, $ticket_status, $form_data, $auto_response,$attachments="",$email_content=[])
     {
         $contact_details = ['email' => $fromaddress, 'email_name' => $fromname, 'subject' => $subject, 'message' => $body];
         $ticket_settings_details = ['help_topic' => $helptopic, 'sla' => $sla, 'priority' => $priority, 'source' => $source, 'dept' => $dept, 'assign' => $assign, 'team' => $team_assign, 'status' => $ticket_status, 'reject' => false];
@@ -171,7 +171,7 @@ class TicketWorkflowController extends Controller
         if ($ticket_settings_details['reject'] == true) {
             return ['0' => false, '1' => false];
         } else {
-            $create_ticket = $this->TicketController->create_user($contact_details['email'], $contact_details['email_name'], $contact_details['subject'], $contact_details['message'], $phone, $phonecode, $mobile_number, $ticket_settings_details['help_topic'], $ticket_settings_details['sla'], $ticket_settings_details['priority'], $source, $collaborator, $ticket_settings_details['dept'], $ticket_settings_details['assign'], $form_data, $auto_response, $ticket_settings_details['status']);
+            $create_ticket = $this->TicketController->create_user($contact_details['email'], $contact_details['email_name'], $contact_details['subject'], $contact_details['message'], $phone, $phonecode, $mobile_number, $ticket_settings_details['help_topic'], $ticket_settings_details['sla'], $ticket_settings_details['priority'], $source, $collaborator, $ticket_settings_details['dept'], $ticket_settings_details['assign'], $form_data, $auto_response, $ticket_settings_details['status'],$attachments,$email_content);
 
             return $create_ticket;
         }
@@ -201,11 +201,11 @@ class TicketWorkflowController extends Controller
         } elseif ($condition == 'ends') {
             $return = $this->checkEnds($statement, $to_check);
         }
-//        elseif($condition == 'match') {
-//
-//        } elseif($condition == 'not_match') {
-//
-//        }
+        //        elseif($condition == 'match') {
+        //
+        //        } elseif($condition == 'not_match') {
+        //
+        //        }
         return $return;
     }
 
@@ -312,15 +312,15 @@ class TicketWorkflowController extends Controller
         }
     }
 
-//    function startsWith($to_check, $statement) {
-//        // search backwards starting from haystack length characters from the end
-//        return $statement === "" || strrpos($to_check, $statement, -strlen($to_check)) !== false;
-//    }
+    //    function startsWith($to_check, $statement) {
+    //        // search backwards starting from haystack length characters from the end
+    //        return $statement === "" || strrpos($to_check, $statement, -strlen($to_check)) !== false;
+    //    }
 
-//    function endsWith($to_check, $statement) {
-//        // search forward starting from end minus needle length characters
-//        return $statement === "" || (($temp = strlen($to_check) - strlen($statement)) >= 0 && strpos($to_check, $statement, $temp) !== false);
-//    }
+    //    function endsWith($to_check, $statement) {
+    //        // search forward starting from end minus needle length characters
+    //        return $statement === "" || (($temp = strlen($to_check) - strlen($statement)) >= 0 && strpos($to_check, $statement, $temp) !== false);
+    //    }
 
     /**
      * function to apply the action to a ticket.

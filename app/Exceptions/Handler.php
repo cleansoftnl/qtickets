@@ -30,6 +30,8 @@ class Handler extends ExceptionHandler
         HttpResponseException::class,
         ModelNotFoundException::class,
         \Symfony\Component\HttpKernel\Exception\HttpException::class,
+        \Illuminate\Validation\ValidationException::class,
+        \DaveJamesMiller\Breadcrumbs\Exception::class,
     ];
 
     /**
@@ -67,6 +69,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+        
         switch ($e) {
             case $e instanceof \Illuminate\Http\Exception\HttpResponseException:
                 return parent::render($request, $e);
@@ -89,9 +92,15 @@ class Handler extends ExceptionHandler
      */
     public function render500($request, $e)
     {
+        $seg = $request->segments();
+        if (in_array('api', $seg)) {
+            return response()->json(['error' => $e->getMessage()],500);
+        }
         if (config('app.debug') == true) {
             return parent::render($request, $e);
         } elseif ($e instanceof ValidationException) {
+            return parent::render($request, $e);
+        } elseif ($e instanceof \Illuminate\Validation\ValidationException) {
             return parent::render($request, $e);
         }
 
@@ -173,6 +182,9 @@ class Handler extends ExceptionHandler
 //                    return parent::render($request, $e);
 //                }
             case $e instanceof TokenMismatchException:
+                if($request->ajax()){
+                    return response()->json(['message'=>\Lang::get('lang.session-expired')],402);
+                }
                 return redirect()->back()->with('fails', \Lang::get('lang.session-expired'));
             default:
                 return $this->render500($request, $e);

@@ -1,5 +1,8 @@
 <?php
-$middleware = array_merge(\Config::get('lfm.middlewares'), ['\Unisharp\Laravelfilemanager\middleware\MultiUser']);
+$middleware = array_merge(\Config::get('lfm.middlewares'), [
+    '\Unisharp\Laravelfilemanager\middlewares\MultiUser',
+    '\Unisharp\Laravelfilemanager\middlewares\CreateDefaultFolder'
+]);
 $prefix = \Config::get('lfm.prefix', 'laravel-filemanager');
 $as = 'unisharp.lfm.';
 $namespace = '\Unisharp\Laravelfilemanager\controllers';
@@ -11,6 +14,12 @@ Route::group(compact('middleware', 'prefix', 'as', 'namespace'), function () {
     Route::get('/', [
         'uses' => 'LfmController@show',
         'as' => 'show'
+    ]);
+
+    // Show integration error messages
+    Route::get('/errors', [
+        'uses' => 'LfmController@getErrors',
+        'as' => 'getErrors'
     ]);
 
     // upload
@@ -77,7 +86,13 @@ Route::group(compact('middleware', 'prefix', 'as', 'namespace'), function () {
         'as' => 'getDelete'
     ]);
 
-    Route::get('/demo', function () {
-        return view('laravel-filemanager::demo');
-    });
+    Route::get('/demo', 'DemoController@index');
+
+    // Get file when base_directory isn't public
+    $images_url = '/' . \Config::get('lfm.images_folder_name') . '/{base_path}/{image_name}';
+    $files_url = '/' . \Config::get('lfm.files_folder_name') . '/{base_path}/{file_name}';
+    Route::get($images_url, 'RedirectController@getImage')
+        ->where('image_name', '.*');
+    Route::get($files_url, 'RedirectController@getFIle')
+        ->where('file_name', '.*');
 });
