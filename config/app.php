@@ -155,10 +155,14 @@ return [
         'Illuminate\Session\SessionServiceProvider',
         'Illuminate\Translation\TranslationServiceProvider',
         'Illuminate\Validation\ValidationServiceProvider',
+
+
         'Illuminate\View\ViewServiceProvider',
         Illuminate\Notifications\NotificationServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
+
+
         /*
          * Application Service Providers...
          */
@@ -167,6 +171,10 @@ return [
         'App\Providers\RouteServiceProvider',
         'App\Providers\ConfigServiceProvider',
         'App\Providers\ComposerServiceProvider',
+
+
+
+
         'Propaganistas\LaravelPhone\LaravelPhoneServiceProvider',
         'Bugsnag\BugsnagLaravel\BugsnagLaravelServiceProvider',
         'Vsmoraes\Pdf\PdfServiceProvider',
@@ -174,6 +182,7 @@ return [
         'Chumper\Datatable\DatatableServiceProvider',
         'Chumper\Zipper\ZipperServiceProvider',
         'Tymon\JWTAuth\Providers\JWTAuthServiceProvider',
+        Nwidart\Modules\LaravelModulesServiceProvider::class,
         \Torann\GeoIP\GeoIPServiceProvider::class,
         Unisharp\Laravelfilemanager\LaravelFilemanagerServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
@@ -229,6 +238,10 @@ return [
         'URL' => 'Illuminate\Support\Facades\URL',
         'Validator' => 'Illuminate\Support\Facades\Validator',
         'View' => 'Illuminate\Support\Facades\View',
+
+
+
+
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
         'phone' => 'The :attribute field contains an invalid number.',
@@ -252,6 +265,7 @@ return [
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'UnAuth' => 'App\Http\Controllers\Client\helpdesk\UnAuthController',
         'Finder' => App\Helper\Finder::class,
+        'Module' => Nwidart\Modules\Facades\Module::class,
         'Datatables' => Yajra\Datatables\Facades\Datatables::class,
         'Notification' => Illuminate\Support\Facades\Notification::class,
     ],
