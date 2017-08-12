@@ -9,7 +9,6 @@ Thumbs.db
 /error_log
 /auth.json
 /public/error_log
-/Modules
 
 /ninja.sublime-project
 /ninja.sublime-workspace
@@ -24,6 +23,7 @@ tests/_support/_generated/
 
 # composer stuff
 /c3.php
+/composer.lock
 
 _ide_helper.php
 .env
@@ -36,6 +36,7 @@ Homestead.yaml
 
 /bootstrap/compiled.php
 /bootstrap/environment.php
+/config/fcm.php
 /config/staging
 /config/development
 /config/production
@@ -44,6 +45,7 @@ Homestead.yaml
 /config/packages/anahkiasen/rocketeer/
 /nbproject/private/
 /node_modules
+/persist
 /public/logo
 /public/build
 /public/error_log
@@ -56,8 +58,11 @@ Homestead.yaml
 /resources/assets/bower
 /storage
 /storage/app/attachments
+/storage/oauth-private.key
+/storage/oauth-public.key
 /storage/*.key
 /vendor
 /vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php
+/composer.lock
 
-
+/bootstrap/cache/services.php
